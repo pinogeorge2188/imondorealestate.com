@@ -1254,7 +1254,7 @@ async function loadPropsFromFirebase() {
       const props = owner.proprietati || [];
       props.forEach(p => {
         const status = (p.status || '').toLowerCase();
-        if (p.publishToWebsite && (status === 'activ' || status === 'active' || status === '')) {
+        if (status === 'activ' || status === 'active') {
           allProps.push({ ...p, _ownerId: doc.id });
         }
       });
