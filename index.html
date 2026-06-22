@@ -456,41 +456,6 @@ footer{background:var(--ink);padding:5rem 4% 0}
 /* ANIM */
 @keyframes fup{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 .hanim{animation:fup .7s ease both}
-/* PROPERTY MODAL */
-.pm-overlay{position:fixed;inset:0;z-index:3000;background:rgba(20,18,16,.85);display:none;align-items:flex-start;justify-content:center;padding:1.5rem 1rem;overflow-y:auto}
-.pm-overlay.open{display:flex}
-.pm{background:var(--s1);max-width:980px;width:100%;margin:auto;animation:pmIn .35s ease}
-@keyframes pmIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
-.pm-close{position:absolute;top:1rem;right:1rem;width:40px;height:40px;background:rgba(20,18,16,.7);border:none;color:#fff;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10}
-.pm-gallery{position:relative;height:420px;overflow:hidden;background:var(--s3)}
-.pm-gallery img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0;transition:opacity .4s}
-.pm-gallery img.on{opacity:1}
-.pm-gallery-nav{position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:.4rem;z-index:5}
-.pm-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.4);cursor:pointer;transition:.2s}
-.pm-dot.on{background:var(--gold)}
-.pm-prev,.pm-next{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;background:rgba(20,18,16,.5);border:none;color:#fff;font-size:1rem;cursor:pointer;z-index:5;transition:.2s}
-.pm-prev{left:.8rem}.pm-next{right:.8rem}
-.pm-prev:hover,.pm-next:hover{background:var(--gold)}
-.pm-body{padding:2rem 2.5rem}
-.pm-top{display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:flex-start;margin-bottom:1.5rem}
-.pm-price{font-family:'Cormorant Garamond',serif;font-size:2.2rem;color:var(--gold)}
-.pm-title{font-size:1.1rem;color:var(--ink);margin-bottom:.3rem;font-family:'Jost',sans-serif;font-weight:400}
-.pm-loc{font-size:.85rem;color:var(--ink4)}
-.pm-badge-wrap{display:flex;gap:.5rem;flex-direction:column;align-items:flex-end}
-.pm-specs{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-bottom:1.5rem;padding:1.2rem;background:var(--s2)}
-.pm-spec{text-align:center}
-.pm-spec-val{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--ink);display:block}
-.pm-spec-lab{font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink4)}
-.pm-desc{font-size:.9rem;color:var(--ink3);line-height:1.85;margin-bottom:1.5rem}
-.pm-facilitati{margin-bottom:1.5rem}
-.pm-facilitati h4{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink4);margin-bottom:.8rem;font-family:'Jost',sans-serif}
-.pm-fac-list{display:flex;flex-wrap:wrap;gap:.5rem}
-.pm-fac{padding:.3rem .8rem;background:var(--s2);border:1px solid var(--border);font-size:.78rem;color:var(--ink3)}
-.pm-contact{background:var(--ink2);padding:1.5rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
-.pm-contact-text h4{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:#fff;margin-bottom:.3rem}
-.pm-contact-text p{font-size:.82rem;color:rgba(255,255,255,.45)}
-.pm-contact-btns{display:flex;gap:.8rem;flex-wrap:wrap}
-@media(max-width:600px){.pm-gallery{height:260px}.pm-body{padding:1.2rem}.pm-specs{grid-template-columns:repeat(2,1fr)}.pm-top{grid-template-columns:1fr}.pm-contact{flex-direction:column}}
 </style>
 </head>
 <body>
@@ -1245,12 +1210,13 @@ function buildPropCard(p, idx) {
     suprafata ? `📐 ${suprafata} mp` : null,
     etaj ? `🏢 Et. ${etaj}` : null
   ].filter(Boolean);
-  const propData = encodeURIComponent(JSON.stringify(p));
-  return `<div class="pcard" data-type="${typeAttr}" style="opacity:0;animation:fadeInUp .5s ease ${idx * 0.08}s forwards" onclick="openPropModal(this)" data-prop='${propData.substring(0,2000)}'>
+  // Link către pagina individuală (rezolvă bug-ul data-prop/substring de la descrieri lungi)
+  const propUrl = 'proprietate.html?id=' + encodeURIComponent(p.id || '');
+  return `<a class="pcard" href="${propUrl}" data-type="${typeAttr}" style="opacity:0;animation:fadeInUp .5s ease ${idx * 0.08}s forwards;display:block">
     <div class="pi">
       <img src="${img}" alt="${titlu}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&q=85'">
       <span class="ptag ${tagClass}">${tagText}</span>
-      <div class="pfav" onclick="event.stopPropagation()">♡</div>
+      <div class="pfav" onclick="event.preventDefault();event.stopPropagation()">♡</div>
       <div class="pref">${ref}</div>
     </div>
     <div class="pbody">
@@ -1259,7 +1225,7 @@ function buildPropCard(p, idx) {
       <div class="ploc">📍 ${zona}</div>
       <div class="pspecs">${specs.map(s=>`<span>${s}</span>`).join('')}</div>
     </div>
-  </div>`;
+  </a>`;
 }
 
 async function loadPropsFromFirebase() {
@@ -1338,112 +1304,6 @@ document.head.appendChild(fStyle);
 // Boot Firebase (non-blocking — static cards show while loading)
 loadPropsFromFirebase();
 
-</script>
-<!-- PROPERTY DETAIL MODAL -->
-<div class="pm-overlay" id="pmOverlay" onclick="closePropModal(event)">
-  <div class="pm" id="pmBox">
-    <button class="pm-close" onclick="document.getElementById('pmOverlay').classList.remove('open');document.body.style.overflow=''">✕</button>
-    <div class="pm-gallery" id="pmGallery"></div>
-    <div class="pm-body">
-      <div class="pm-top">
-        <div>
-          <div class="pm-price" id="pmPrice"></div>
-          <div class="pm-title" id="pmTitle"></div>
-          <div class="pm-loc" id="pmLoc"></div>
-        </div>
-        <div class="pm-badge-wrap" id="pmBadge"></div>
-      </div>
-      <div class="pm-specs" id="pmSpecs"></div>
-      <div class="pm-desc" id="pmDesc"></div>
-      <div class="pm-facilitati" id="pmFac"></div>
-      <div class="pm-contact">
-        <div class="pm-contact-text">
-          <h4>Interesat de această proprietate?</h4>
-          <p>Contactează-ne pentru o vizionare gratuită</p>
-        </div>
-        <div class="pm-contact-btns">
-          <a href="tel:+40752942828" class="btn btn-gd" style="padding:.8rem 1.6rem">📞 Sună acum</a>
-          <a href="https://wa.me/40752942828" target="_blank" class="btn btn-ol" style="padding:.8rem 1.6rem">💬 WhatsApp</a>
-          <a href="#contact" class="btn btn-dk" style="padding:.8rem 1.6rem" onclick="document.getElementById('pmOverlay').classList.remove('open');document.body.style.overflow=''">Trimite mesaj →</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-// PROPERTY MODAL
-let pmImgs=[], pmIdx=0;
-
-window.openPropModal = function(card) {
-  try {
-    const raw = decodeURIComponent(card.dataset.prop);
-    const p = JSON.parse(raw);
-    const isRent = (p.tip_tranzactie||p.tipTranzactie||'').toLowerCase().includes('inchir');
-    const pret = p.pret || p.pret_nou || 0;
-    const price = pret ? new Intl.NumberFormat('de-DE').format(pret) + ' €' + (isRent ? ' / lună' : '') : '—';
-    const camere = p.camere || p.nrCamere || '—';
-    const suprafata = p.suprafata || '—';
-    const etaj = p.etaj || '—';
-    const zona = p.zona || p.adresa || '—';
-    const titlu = p.denumire || p.titlu || ((p.tipologie||'Proprietate') + (p.camere ? ' ' + p.camere + ' camere' : '') + ', ' + zona);
-
-    // Price & title
-    document.getElementById('pmPrice').textContent = price;
-    document.getElementById('pmTitle').textContent = titlu;
-    document.getElementById('pmLoc').textContent = '📍 ' + (p.adresa ? p.adresa + ', ' : '') + zona;
-
-    // Badge
-    const tagText = isRent ? 'De închiriat' : 'De vânzare';
-    const tagClass = isRent ? 'ptag-i' : 'ptag-v';
-    document.getElementById('pmBadge').innerHTML = `<span class="ptag ${tagClass}" style="position:static;font-size:.72rem;padding:.4rem 1rem">${tagText}</span><span style="font-size:.72rem;color:var(--ink4)">${p.id||''}</span>`;
-
-    // Specs
-    document.getElementById('pmSpecs').innerHTML = [
-      {val: camere, lab: 'Camere'},
-      {val: (suprafata !== '—' ? suprafata + ' mp' : '—'), lab: 'Suprafață'},
-      {val: etaj, lab: 'Etaj'},
-      {val: p.an_constructie || '—', lab: 'An construcție'}
-    ].map(s=>`<div class="pm-spec"><span class="pm-spec-val">${s.val}</span><span class="pm-spec-lab">${s.lab}</span></div>`).join('');
-
-    // Description
-    const desc = p.descriere || p.note || ('Proprietate ' + (p.tipologie||'') + ' în ' + zona + '. ' + (p.camere ? p.camere + ' camere, ' : '') + (p.suprafata ? p.suprafata + ' mp. ' : '') + 'Contactați-ne pentru detalii și vizionare.');
-    document.getElementById('pmDesc').textContent = desc;
-
-    // Facilitati
-    const fac = p.facilitati || [];
-    document.getElementById('pmFac').innerHTML = fac.length ? `<h4>Dotări & facilități</h4><div class="pm-fac-list">${fac.map(f=>`<span class="pm-fac">✓ ${f}</span>`).join('')}</div>` : '';
-
-    // Gallery
-    pmImgs = p.poze || p.imagini || [];
-    if(!pmImgs.length) pmImgs = ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=980&q=85'];
-    pmIdx = 0;
-    renderGallery();
-
-    document.getElementById('pmOverlay').classList.add('open');
-    document.body.style.overflow = 'hidden';
-  } catch(e) { console.error(e); }
-};
-
-function renderGallery() {
-  const g = document.getElementById('pmGallery');
-  g.innerHTML = pmImgs.map((src,i)=>`<img src="${src}" class="${i===pmIdx?'on':''}" alt="Foto ${i+1}" onerror="this.src='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=980&q=85'">`).join('') +
-    (pmImgs.length > 1 ? `
-    <button class="pm-prev" onclick="pmNav(-1)">‹</button>
-    <button class="pm-next" onclick="pmNav(1)">›</button>
-    <div class="pm-gallery-nav">${pmImgs.map((_,i)=>`<div class="pm-dot ${i===pmIdx?'on':''}" onclick="pmGo(${i})"></div>`).join('')}</div>` : '');
-}
-
-window.pmNav = function(dir) { pmGo((pmIdx + dir + pmImgs.length) % pmImgs.length); };
-window.pmGo = function(i) { pmIdx = i; renderGallery(); };
-
-window.closePropModal = function(e) {
-  if(e.target === document.getElementById('pmOverlay')) {
-    document.getElementById('pmOverlay').classList.remove('open');
-    document.body.style.overflow = '';
-  }
-};
-document.addEventListener('keydown', e => { if(e.key==='Escape'){document.getElementById('pmOverlay').classList.remove('open');document.body.style.overflow='';} });
 </script>
 </body>
 </html>

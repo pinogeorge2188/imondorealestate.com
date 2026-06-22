@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proprietate | IMONDO Real Estate București</title>
+<meta name="description" content="Detalii proprietate — IMONDO Real Estate, agenție imobiliară premium în București.">
+<!-- Open Graph implicit (share); title-ul se actualizează dinamic pentru browser.
+     NOTĂ: crawler-ele social nu execută JS → preview-ul la share folosește valorile implicite.
+     Soluție completă (OG per proprietate) — de evaluat în Sesiunea 6. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="IMONDO Real Estate">
+<meta property="og:image" content="https://imondorealestate.com/George.png.png">
+<meta id="ogTitle" property="og:title" content="Proprietate — IMONDO Real Estate">
+<meta id="ogDesc" property="og:description" content="Detalii proprietate premium în București.">
+<link id="canonical" rel="canonical" href="https://imondorealestate.com/proprietate.html">
+<link rel="icon" type="image/png" sizes="64x64" href="favicon-64.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0D0D0D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/shared.css">
+<style>
+/* ── PROPRIETATE (detaliu) ── */
+.prop-wrap{padding:40px 4% 90px}
+.prop-loading,.prop-error{text-align:center;padding:90px 4%}
+.prop-loading .spin{width:34px;height:34px;border:2px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1.2rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.prop-error h2{font-size:2rem;margin-bottom:1rem}.prop-error h2 em{color:var(--gold);font-style:italic}
+.prop-error p{color:var(--ink3);max-width:440px;margin:0 auto 2rem}
+/* galerie */
+.pd-gallery{position:relative;height:520px;overflow:hidden;background:var(--s3);margin-bottom:2.5rem}
+.pd-gallery img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0;transition:opacity .4s}
+.pd-gallery img.on{opacity:1}
+.pd-prev,.pd-next{position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;background:rgba(20,18,16,.55);border:none;color:#fff;font-size:1.2rem;cursor:pointer;z-index:5;transition:.2s}
+.pd-prev{left:1rem}.pd-next{right:1rem}.pd-prev:hover,.pd-next:hover{background:var(--gold)}
+.pd-dots{position:absolute;bottom:1.2rem;left:50%;transform:translateX(-50%);display:flex;gap:.45rem;z-index:5}
+.pd-dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.45);cursor:pointer;transition:.2s}
+.pd-dot.on{background:var(--gold)}
+.pd-badge{position:absolute;top:1.2rem;left:1.2rem;z-index:5;font-size:.6rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:.4rem .9rem}
+/* layout */
+.pd-grid{display:grid;grid-template-columns:1fr 360px;gap:3.5rem;align-items:start}
+.pd-price{font-family:'Cormorant Garamond',serif;font-size:2.6rem;color:var(--gold);line-height:1}
+.pd-price small{font-family:'Jost',sans-serif;font-size:1rem;color:var(--ink4);font-weight:300}
+.pd-title{font-size:1.4rem;margin:.6rem 0 .3rem;font-family:'Jost',sans-serif;font-weight:400;color:var(--ink)}
+.pd-loc{font-size:.9rem;color:var(--ink4);margin-bottom:1.8rem}
+.pd-specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:2.5rem}
+.pd-spec{background:var(--s0);padding:1.3rem 1rem;text-align:center}
+.pd-spec-val{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--ink);display:block;line-height:1}
+.pd-spec-lab{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink4);margin-top:.4rem;display:block}
+.pd-sec{margin-bottom:2.5rem}
+.pd-sec h3{font-size:1.4rem;margin-bottom:1rem;padding-bottom:.6rem;border-bottom:1px solid var(--border)}
+.pd-desc{font-size:.92rem;color:var(--ink3);line-height:1.9;white-space:pre-line}
+.pd-fac-list{display:flex;flex-wrap:wrap;gap:.6rem}
+.pd-fac{padding:.4rem .9rem;background:var(--s1);border:1px solid var(--border);font-size:.8rem;color:var(--ink3)}
+.pd-map{height:200px;background:var(--s2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.5rem;color:var(--ink4);font-size:.85rem;cursor:pointer;transition:background var(--t);text-align:center}
+.pd-map:hover{background:var(--s3)}
+/* sidebar consultant */
+.pd-aside{position:sticky;top:90px;border:1px solid var(--border);background:var(--w);padding:1.8rem}
+.pd-aside h4{font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:.3rem}
+.pd-aside .sub{font-size:.8rem;color:var(--ink4);margin-bottom:1.4rem}
+.pd-aside .btn{width:100%;justify-content:center;margin-bottom:.7rem}
+.pd-aside .ref{margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--border);font-size:.72rem;color:var(--ink4);letter-spacing:.05em}
+/* similar */
+.pd-similar{background:var(--s1);padding:90px 4%}
+.pd-similar h2{font-size:clamp(1.8rem,3vw,2.6rem);margin-bottom:2.5rem;text-align:center}
+.pd-similar h2 em{color:var(--gold);font-style:italic}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.pcard{background:var(--w);transition:transform .4s,box-shadow .4s;overflow:hidden;display:block;color:inherit}
+.pcard:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(20,18,16,.1)}
+.pi{height:230px;overflow:hidden;position:relative}
+.pi img{transition:transform .6s ease}.pcard:hover .pi img{transform:scale(1.05)}
+.ptag{position:absolute;top:1rem;left:1rem;font-size:.55rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:.3rem .7rem}
+.ptag-v{background:var(--ink);color:var(--w)}.ptag-i{background:var(--gold);color:var(--w)}
+.pbody{padding:1.3rem}
+.pprice{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--ink);margin-bottom:.3rem}
+.pprice small{font-family:'Jost',sans-serif;font-size:.8rem;color:var(--ink4)}
+.ptitle{font-size:.86rem;margin-bottom:.3rem}
+.ploc{font-size:.74rem;color:var(--ink4)}
+@media(max-width:900px){.pd-grid{grid-template-columns:1fr}.pd-aside{position:static}.pd-gallery{height:360px}.pgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="site-header"></div>
+<div id="site-breadcrumb"></div>
+
+<!-- LOADING -->
+<div class="prop-loading" id="propLoading">
+  <div class="spin"></div>
+  <p style="font-size:.85rem;color:var(--ink4)">Se încarcă proprietatea...</p>
+</div>
+
+<!-- ERROR -->
+<div class="prop-error" id="propError" style="display:none">
+  <span class="tag">Eroare</span>
+  <h2>Proprietatea nu a fost <em>găsită</em></h2>
+  <p id="propErrorMsg">Anunțul căutat nu mai este disponibil sau a fost retras. Explorează restul portofoliului nostru.</p>
+  <a href="vanzari.html" class="btn btn-gd">Vezi proprietățile →</a>
+  <a href="index.html" class="btn btn-ol">Acasă</a>
+</div>
+
+<!-- CONȚINUT -->
+<div class="prop-wrap" id="propContent" style="display:none">
+  <div class="container">
+    <div class="pd-gallery" id="pdGallery"></div>
+    <div class="pd-grid">
+      <div class="pd-main">
+        <div class="pd-price" id="pdPrice"></div>
+        <div class="pd-title" id="pdTitle"></div>
+        <div class="pd-loc" id="pdLoc"></div>
+        <div class="pd-specs" id="pdSpecs"></div>
+        <div class="pd-sec" id="pdDescSec">
+          <h3>Descriere</h3>
+          <div class="pd-desc" id="pdDesc"></div>
+        </div>
+        <div class="pd-sec" id="pdFacSec" style="display:none">
+          <h3>Dotări &amp; facilități</h3>
+          <div class="pd-fac-list" id="pdFac"></div>
+        </div>
+        <div class="pd-sec">
+          <h3>Localizare</h3>
+          <a class="pd-map" id="pdMap" target="_blank" rel="noopener">
+            <span style="font-size:1.4rem">🗺️</span>
+            <span id="pdMapText">Deschide harta zonei</span>
+          </a>
+        </div>
+      </div>
+      <aside class="pd-aside">
+        <h4>Interesat?</h4>
+        <div class="sub">Programează o vizionare gratuită cu un consultant IMONDO.</div>
+        <a href="tel:+40752942828" class="btn btn-gd">📞 Sună acum</a>
+        <a id="pdWa" href="https://wa.me/40752942828" target="_blank" rel="noopener" class="btn btn-dk">💬 WhatsApp</a>
+        <a href="contact.html" class="btn btn-ol">Trimite mesaj →</a>
+        <div class="ref" id="pdRef"></div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- SIMILARE -->
+<section class="pd-similar" id="pdSimilarSec" style="display:none">
+  <h2>Proprietăți <em>similare</em></h2>
+  <div class="pgrid container" id="pdSimilar" style="padding:0 4%"></div>
+</section>
+
+<div id="site-footer"></div>
+
+<script>
+window.IMONDO_PAGE = { active:'sales', crumbs:[
+  {t:'nav_props', label:'Proprietăți', href:'vanzari.html'},
+  {t:'', label:'Detaliu', href:'#'}
+] };
+</script>
+<script src="assets/i18n.js"></script>
+<script src="assets/include.js"></script>
+<script type="module">
+/* Aceeași config Firebase ca homepage (proiect imondo-crm) */
+const FIREBASE_CONFIG = window.IMONDO_FIREBASE_CONFIG || {
+  apiKey: "AIzaSyCisA7tcMYHAv46aqcne3DpKL1_YIKiApE",
+  authDomain: "imondo-crm.firebaseapp.com",
+  projectId: "imondo-crm",
+  storageBucket: "imondo-crm.firebasestorage.app",
+  messagingSenderId: "777057248353",
+  appId: "1:777057248353:web:3a4fee4d6618451eb3f620"
+};
+const FALLBACK_IMG = 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=980&q=85';
+
+const $ = id => document.getElementById(id);
+function showError(msg){
+  $('propLoading').style.display='none';
+  $('propContent').style.display='none';
+  if(msg) $('propErrorMsg').textContent = msg;
+  $('propError').style.display='block';
+}
+
+function getId(){ return new URLSearchParams(location.search).get('id'); }
+function isRentOf(p){ return (p.tip_tranzactie||p.tipTranzactie||'').toLowerCase().includes('inchir'); }
+function fmtPrice(p){
+  const pret = p.pret || p.pret_nou || 0;
+  return pret ? new Intl.NumberFormat('de-DE').format(pret) + ' €' + (isRentOf(p) ? ' <small>/ lună</small>' : '') : 'Preț la cerere';
+}
+function titleOf(p){
+  const camere = p.camere || p.nrCamere || '';
+  const zona = p.zona || p.adresa || '';
+  return p.denumire || p.titlu || ((p.tipologie||p.tipProprietate||'Proprietate') + (camere ? ' ' + camere + ' camere' : '') + (zona ? ', ' + zona : ''));
+}
+
+let allProps = [];
+let galImgs = [], galIdx = 0;
+window.pdGo = i => { galIdx = i; renderGallery(); };
+window.pdNav = d => pdGo((galIdx + d + galImgs.length) % galImgs.length);
+function renderGallery(){
+  const g = $('pdGallery');
+  g.innerHTML = galImgs.map((s,i)=>`<img src="${s}" class="${i===galIdx?'on':''}" alt="Foto ${i+1}" onerror="this.src='${FALLBACK_IMG}'">`).join('')
+    + (galImgs.length>1 ? `<button class="pd-prev" onclick="pdNav(-1)">‹</button><button class="pd-next" onclick="pdNav(1)">›</button>
+       <div class="pd-dots">${galImgs.map((_,i)=>`<div class="pd-dot ${i===galIdx?'on':''}" onclick="pdGo(${i})"></div>`).join('')}</div>` : '');
+}
+
+function buildSimilarCard(p){
+  const isRent = isRentOf(p);
+  const imgs = p.poze || p.imagini || [];
+  const img = imgs[0] || FALLBACK_IMG;
+  const url = 'proprietate.html?id=' + encodeURIComponent(p.id||'');
+  return `<a class="pcard" href="${url}">
+    <div class="pi"><img src="${img}" alt="${titleOf(p)}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
+      <span class="ptag ${isRent?'ptag-i':'ptag-v'}">${isRent?'De închiriat':'De vânzare'}</span></div>
+    <div class="pbody"><div class="pprice">${fmtPrice(p)}</div><div class="ptitle">${titleOf(p)}</div><div class="ploc">📍 ${p.zona||p.adresa||'—'}</div></div>
+  </a>`;
+}
+
+function render(p){
+  const isRent = isRentOf(p);
+  const titlu = titleOf(p);
+  const zona = p.zona || p.adresa || '';
+
+  /* title + OG dinamic (browser) */
+  document.title = titlu + ' | IMONDO Real Estate';
+  $('ogTitle').setAttribute('content', titlu + ' — IMONDO Real Estate');
+  const metaDesc = (p.descriere ? p.descriere.slice(0,150) : ('Proprietate în ' + zona)) ;
+  $('ogDesc').setAttribute('content', metaDesc);
+  document.querySelector('meta[name=description]').setAttribute('content', metaDesc);
+  $('canonical').setAttribute('href', 'https://imondorealestate.com/proprietate.html?id=' + encodeURIComponent(p.id||''));
+
+  /* galerie */
+  galImgs = (p.poze || p.imagini || []).filter(Boolean);
+  if(!galImgs.length) galImgs = [FALLBACK_IMG];
+  galIdx = 0; renderGallery();
+  $('pdGallery').insertAdjacentHTML('beforeend', `<span class="pd-badge ${isRent?'ptag-i':'ptag-v'}">${isRent?'De închiriat':'De vânzare'}</span>`);
+
+  /* preț / titlu / loc */
+  $('pdPrice').innerHTML = fmtPrice(p);
+  $('pdTitle').textContent = titlu;
+  $('pdLoc').textContent = '📍 ' + [p.adresa, zona].filter(Boolean).join(', ');
+
+  /* specs */
+  const specs = [
+    {v:p.camere||p.nrCamere, l:'Camere'},
+    {v:(p.suprafata?p.suprafata+' mp':null), l:'Suprafață'},
+    {v:p.etaj, l:'Etaj'},
+    {v:p.an_constructie, l:'An construcție'},
+    {v:p.tipologie||p.tipProprietate, l:'Tip'}
+  ].filter(s=>s.v!==undefined && s.v!==null && s.v!=='');
+  $('pdSpecs').innerHTML = specs.map(s=>`<div class="pd-spec"><span class="pd-spec-val">${s.v}</span><span class="pd-spec-lab">${s.l}</span></div>`).join('');
+
+  /* descriere COMPLETĂ (fără limită) */
+  $('pdDesc').textContent = p.descriere || p.note || ('Proprietate ' + (p.tipologie||'') + ' în ' + zona + '. Contactați-ne pentru detalii complete și vizionare.');
+
+  /* facilități */
+  const fac = (p.facilitati||[]).filter(Boolean);
+  if(fac.length){ $('pdFacSec').style.display=''; $('pdFac').innerHTML = fac.map(f=>`<span class="pd-fac">✓ ${f}</span>`).join(''); }
+
+  /* hartă (link Google Maps) */
+  const q = encodeURIComponent([p.adresa, zona, 'București'].filter(Boolean).join(', '));
+  $('pdMap').href = 'https://www.google.com/maps/search/?api=1&query=' + q;
+  $('pdMapText').textContent = (zona||'București') + ' — deschide harta';
+
+  /* WhatsApp precompletat */
+  const waText = encodeURIComponent('Bună ziua! Sunt interesat(ă) de proprietatea "' + titlu + '" (ref. ' + (p.id||'') + ') de pe imondorealestate.com. Aș dori mai multe detalii.');
+  $('pdWa').href = 'https://wa.me/40752942828?text=' + waText;
+
+  /* ref */
+  $('pdRef').textContent = 'Ref. ' + (p.id || '—');
+
+  /* afișare */
+  $('propLoading').style.display='none';
+  $('propContent').style.display='';
+
+  /* similare: aceeași tranzacție sau aceeași zonă, exclus curentul */
+  const sim = allProps.filter(x => x.id !== p.id && (isRentOf(x)===isRent || (x.zona&&x.zona===p.zona))).slice(0,3);
+  if(sim.length){ $('pdSimilar').innerHTML = sim.map(buildSimilarCard).join(''); $('pdSimilarSec').style.display=''; }
+}
+
+async function init(){
+  const id = getId();
+  if(!id){ showError('Lipsește identificatorul proprietății din adresă.'); return; }
+  try{
+    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js');
+    const { getFirestore, collection, getDocs } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+    const appId = 'imondo-prop';
+    const fbApp = getApps().find(a=>a.name===appId) || initializeApp(FIREBASE_CONFIG, appId);
+    const db = getFirestore(fbApp);
+
+    const snap = await getDocs(collection(db,'proprietari'));
+    snap.forEach(doc=>{
+      (doc.data().proprietati||[]).forEach(p=>{
+        const st=(p.status||'').toLowerCase();
+        if(st==='activ'||st==='active') allProps.push({...p,_ownerId:doc.id});
+      });
+    });
+
+    const prop = allProps.find(p => String(p.id) === String(id));
+    if(!prop){ showError('Anunțul căutat nu mai este disponibil sau a fost retras.'); return; }
+    render(prop);
+  }catch(err){
+    console.warn('IMONDO proprietate:', err.message);
+    showError('Nu am putut încărca proprietatea. Verifică conexiunea și încearcă din nou.');
+  }
+}
+init();
+</script>
+</body>
+</html>
