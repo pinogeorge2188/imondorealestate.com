@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact | IMONDO Real Estate — Agenție Imobiliară București</title>
+<meta name="description" content="Contactează IMONDO Real Estate — agenție imobiliară premium în București. Telefon, WhatsApp, email și formular. Lun–Vin 09:00–19:00.">
+<link rel="canonical" href="https://imondorealestate.com/contact.html">
+<link rel="icon" type="image/png" sizes="64x64" href="favicon-64.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0D0D0D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/shared.css">
+<style>
+/* stiluri specifice contact */
+.cgrid{display:grid;grid-template-columns:1fr 1.2fr;gap:7rem}
+.ci p{font-size:.88rem;color:var(--ink3);line-height:1.9;margin-bottom:2rem}
+.citem{display:flex;gap:1rem;margin-bottom:1.6rem;align-items:flex-start}
+.cico{width:38px;height:38px;flex-shrink:0;background:var(--s2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.85rem}
+.clab{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink4);margin-bottom:.2rem}
+.cval{font-size:.88rem;color:var(--ink)}
+.cval a{color:var(--ink);transition:color var(--t)}.cval a:hover{color:var(--gold)}
+.cform{display:flex;flex-direction:column;gap:.9rem}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.fg{display:flex;flex-direction:column;gap:.35rem}
+.fg label{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink4)}
+.fg input,.fg select,.fg textarea{background:var(--w);border:1px solid var(--border);color:var(--ink);padding:.8rem 1rem;font-family:'Jost',sans-serif;font-size:.85rem;font-weight:300;outline:none;width:100%;transition:border-color var(--t)}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold)}
+.fg textarea{resize:vertical;min-height:100px}
+.fok{display:none;padding:1.5rem;background:var(--s2);border:1px solid var(--border2);color:var(--gold);font-size:.88rem;text-align:center}
+@media(max-width:1024px){.cgrid{grid-template-columns:1fr;gap:3rem}}
+@media(max-width:768px){.frow{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="site-header"></div>
+<div id="site-breadcrumb"></div>
+
+<section class="section">
+  <div class="container">
+    <div class="cgrid">
+      <div class="ci" data-r="l">
+        <span class="tag" data-t="contact_eyebrow">Contactează-ne</span>
+        <h1 style="font-size:clamp(2rem,4vw,3.2rem)"><span data-t="contact_h">Hai să</span> <em style="color:var(--gold);font-style:italic" data-t="contact_h_em">vorbim.</em></h1>
+        <div class="gold-line"></div>
+        <p data-t="contact_p">Fie că vrei să vinzi, să cumperi sau doar să înțelegi piața — suntem aici. Fără presiuni, fără angajamente. Doar o discuție sinceră.</p>
+        <div class="citem"><div class="cico">📞</div><div><div class="clab" data-t="c_phone">Telefon</div><div class="cval"><a href="tel:+40752942828">+40 752 942 828</a></div></div></div>
+        <div class="citem"><div class="cico">💬</div><div><div class="clab">WhatsApp</div><div class="cval"><a href="https://wa.me/40752942828" target="_blank" rel="noopener">+40 752 942 828</a></div></div></div>
+        <div class="citem"><div class="cico">✉️</div><div><div class="clab" data-t="c_email">Email</div><div class="cval"><a href="mailto:officeimondo@gmail.com">officeimondo@gmail.com</a></div></div></div>
+        <div class="citem"><div class="cico">📍</div><div><div class="clab" data-t="c_addr">Adresă</div><div class="cval">București, Sector 1<br>România</div></div></div>
+        <div class="citem"><div class="cico">🕐</div><div><div class="clab" data-t="c_prog">Program</div><div class="cval" data-t="c_hours">Lun–Vin: 09:00–19:00 · Sâmbătă: 10:00–16:00</div></div></div>
+      </div>
+      <div data-r="r">
+        <form class="cform" id="cForm" onsubmit="submitForm(event)">
+          <div class="frow">
+            <div class="fg"><label data-t="f_fname">Prenume *</label><input type="text" name="prenume" required></div>
+            <div class="fg"><label data-t="f_lname">Nume *</label><input type="text" name="nume" required></div>
+          </div>
+          <div class="fg"><label data-t="f_email">Email *</label><input type="email" name="email" required></div>
+          <div class="fg"><label data-t="f_phone">Telefon</label><input type="tel" name="telefon"></div>
+          <div class="fg"><label data-t="f_subject">Subiect</label>
+            <select name="subiect">
+              <option data-t="fs1">Vreau să vând o proprietate</option>
+              <option data-t="fs2">Vreau să cumpăr</option>
+              <option data-t="fs3">Vreau să închiriez</option>
+              <option data-t="fs4">Evaluare gratuită</option>
+              <option data-t="fs5">Consultanță investiții</option>
+            </select>
+          </div>
+          <input type="hidden" name="sursa" value="contact.html">
+          <div class="fg"><label data-t="f_msg">Mesaj</label><textarea name="mesaj"></textarea></div>
+          <button type="submit" class="btn btn-gd" style="width:100%;justify-content:center;padding:1rem" data-t="f_send">Trimite mesajul →</button>
+          <div class="fok" id="fOk" data-t="f_ok">✦ Mulțumim! Te contactăm în maximum 2 ore.</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+
+<script>
+window.IMONDO_PAGE = { active:'contact', crumbs:[{t:'nav_contact', label:'Contact', href:'contact.html'}] };
+</script>
+<script src="assets/i18n.js"></script>
+<script src="assets/include.js"></script>
+<script>
+/* FORM — Formspree (același endpoint ca homepage) */
+async function submitForm(e){
+  e.preventDefault();
+  const f=document.getElementById('cForm');
+  const btn=f.querySelector('button[type=submit]');
+  btn.textContent='Se trimite...';btn.disabled=true;f.style.opacity='.6';f.style.pointerEvents='none';
+  try{
+    const res=await fetch('https://formspree.io/f/mwvzagkq',{method:'POST',body:new FormData(f),headers:{'Accept':'application/json'}});
+    if(res.ok){f.style.display='none';document.getElementById('fOk').style.display='block';}
+    else{btn.textContent='Eroare — încearcă din nou';btn.disabled=false;f.style.opacity='1';f.style.pointerEvents='auto';}
+  }catch(err){btn.textContent='Eroare — încearcă din nou';btn.disabled=false;f.style.opacity='1';f.style.pointerEvents='auto';}
+}
+</script>
+</body>
+</html>

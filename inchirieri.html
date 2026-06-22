@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proprietăți de închiriat | IMONDO Real Estate București</title>
+<meta name="description" content="Apartamente, case și vile de închiriat în București și Ilfov — portofoliu IMONDO Real Estate. Listare completă și filtre în curând.">
+<link rel="canonical" href="https://imondorealestate.com/inchirieri.html">
+<link rel="icon" type="image/png" sizes="64x64" href="favicon-64.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0D0D0D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/shared.css">
+</head>
+<body>
+<div id="site-header"></div>
+<div id="site-breadcrumb"></div>
+
+<section class="page-hero">
+  <div class="page-hero-bg">Închirieri</div>
+  <div class="container">
+    <span class="tag" data-t="rent_eyebrow">Portofoliu selectat</span>
+    <h1><span data-t="rent_h">Proprietăți de închiriat</span><br><em data-t="rent_h_em">în București & Ilfov</em></h1>
+    <div class="gold-line"></div>
+    <p data-t="rent_sub">Locuințe verificate, proprietari serioși. Filtre și listare completă — în curând.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <!-- SCHELET — listarea Firebase + filtrele vin în Sesiunea 4 -->
+    <div class="placeholder-note">
+      <strong>În lucru:</strong> grila de proprietăți (citire live din Firestore, <code>tip_tranzactie = "Închiriere"</code>, <code>status === 'activ'</code>) și filtrele se adaugă în <strong>Sesiunea 4</strong>. Scheletul, header-ul, footer-ul și stilurile de brand sunt gata.
+    </div>
+    <div id="pgrid"><!-- populat în Sesiunea 4 --></div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+
+<script>
+window.IMONDO_PAGE = { active:'rent', crumbs:[{t:'nav_rent', label:'Închirieri', href:'inchirieri.html'}] };
+</script>
+<script src="assets/i18n.js"></script>
+<script src="assets/include.js"></script>
+</body>
+</html>

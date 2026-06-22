@@ -1,0 +1,140 @@
+/* ════════════════════════════════════════════
+   IMONDO — SHARED.CSS
+   Stiluri comune pentru paginile interioare.
+   index.html rămâne self-contained (Varianta B).
+   NU schimba paleta/fonturile — identice cu index.
+   ════════════════════════════════════════════ */
+
+/* ── TOKENS ── */
+:root{
+  --w:#FFFFFF;--s0:#FDFCFA;--s1:#F8F5F0;--s2:#F0EBE2;--s3:#E4DDD2;
+  --ink:#141210;--ink2:#272320;--ink3:#6B6458;--ink4:#A09890;
+  --gold:#B8925A;--gold2:#CCA870;--gold3:rgba(184,146,90,.1);
+  --border:rgba(20,18,16,.08);--border2:rgba(184,146,90,.2);
+  --t:.3s ease;--r:0px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{background:var(--s0);color:var(--ink);font-family:'Jost',sans-serif;font-weight:300;line-height:1.75;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:400;line-height:1.1}
+a{text-decoration:none;color:inherit;transition:color var(--t)}
+img{display:block;width:100%;height:100%;object-fit:cover}
+::-webkit-scrollbar{width:2px}::-webkit-scrollbar-thumb{background:var(--gold)}
+
+/* ── UTILS ── */
+.container{max-width:1380px;margin:0 auto;padding:0 4%}
+.tag{font-size:.6rem;font-weight:500;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:.9rem}
+.gold-line{width:28px;height:1px;background:var(--gold);margin:1.2rem 0}
+.gold-line.c{margin-left:auto;margin-right:auto}
+
+/* ── BUTOANE ── */
+.btn{display:inline-flex;align-items:center;gap:.5rem;font-family:'Jost',sans-serif;font-size:.65rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;border:none;padding:.75rem 1.6rem;transition:all var(--t)}
+.btn-dk{background:var(--ink);color:var(--w)}.btn-dk:hover{background:var(--ink2)}
+.btn-gd{background:var(--gold);color:var(--w)}.btn-gd:hover{background:var(--gold2)}
+.btn-ol{background:transparent;color:var(--ink);border:1px solid var(--border);padding:.7rem 1.4rem}.btn-ol:hover{border-color:var(--ink);background:var(--ink);color:var(--w)}
+
+/* ── LANGUAGE BAR ── */
+.lang-bar{background:var(--ink2);padding:.55rem 4%;display:flex;justify-content:flex-end;align-items:center;gap:2rem}
+.lang-bar-left{display:flex;align-items:center;gap:1.5rem}
+.lang-bar-left span{font-size:.65rem;color:rgba(255,255,255,.35);letter-spacing:.08em}
+.lang-switch{display:flex;gap:.3rem}
+.lang-btn{background:none;border:none;font-family:'Jost',sans-serif;font-size:.65rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.38);cursor:pointer;padding:.2rem .5rem;transition:color var(--t);border-bottom:1px solid transparent}
+.lang-btn:hover,.lang-btn.on{color:var(--gold);border-bottom-color:var(--gold)}
+.lang-bar-contact{font-size:.65rem;color:rgba(255,255,255,.35);display:flex;align-items:center;gap:1.5rem}
+.lang-bar-contact a{color:rgba(255,255,255,.38);transition:color var(--t)}
+.lang-bar-contact a:hover{color:var(--gold)}
+
+/* ── NAV ── */
+nav{background:rgba(253,252,250,.97);backdrop-filter:blur(20px);height:72px;display:flex;align-items:center;padding:0 4%;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1000;transition:box-shadow var(--t)}
+nav.s{box-shadow:0 2px 40px rgba(20,18,16,.07)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;width:100%}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:400;letter-spacing:.08em;color:var(--ink)}
+.logo em{font-style:normal;color:var(--gold)}
+.nav-links{display:flex;gap:2.5rem;list-style:none;align-items:center}
+.nav-links>li{position:relative}
+.nav-links a{font-size:.68rem;font-weight:400;letter-spacing:.12em;text-transform:uppercase;color:var(--ink4);position:relative;padding-bottom:3px;display:inline-flex;align-items:center;gap:.3rem}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--gold);transition:width var(--t)}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a:hover::after{width:100%}
+.nav-links a.active{color:var(--ink)}
+.nav-links a.active::after{width:100%}
+
+/* ── DROPDOWN (Proprietăți) ── */
+.has-drop>a .caret{font-size:.5rem;transition:transform var(--t)}
+.has-drop:hover>a .caret{transform:rotate(180deg)}
+.drop{position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(8px);background:var(--s0);border:1px solid var(--border);min-width:190px;padding:.5rem 0;opacity:0;visibility:hidden;transition:all var(--t);box-shadow:0 12px 40px rgba(20,18,16,.1);z-index:1001}
+.has-drop:hover .drop{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+.drop li{list-style:none}
+.drop a{display:block;padding:.6rem 1.4rem;font-size:.66rem;letter-spacing:.1em;color:var(--ink3)}
+.drop a::after{display:none}
+.drop a:hover{background:var(--s1);color:var(--gold)}
+
+.nav-r{display:flex;gap:.8rem;align-items:center}
+.hbg{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+.hbg span{width:22px;height:1px;background:var(--ink);display:block}
+.mob-nav{display:none;position:fixed;top:72px;left:0;right:0;background:var(--s0);border-bottom:1px solid var(--border);padding:1.5rem 4%;z-index:999;flex-direction:column;gap:.4rem;max-height:calc(100vh - 72px);overflow-y:auto}
+.mob-nav.open{display:flex}
+.mob-nav a{font-size:.9rem;color:var(--ink);padding:.6rem 0;border-bottom:1px solid var(--border)}
+.mob-nav .mob-sub a{font-size:.8rem;color:var(--ink3);padding-left:1rem}
+.mob-nav .mob-label{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);padding:.6rem 0 .2rem}
+
+/* ── BREADCRUMB ── */
+.breadcrumb{background:var(--s1);border-bottom:1px solid var(--border);padding:.9rem 4%}
+.breadcrumb .container{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.breadcrumb a,.breadcrumb span{font-size:.66rem;letter-spacing:.08em;color:var(--ink4);text-transform:uppercase}
+.breadcrumb a:hover{color:var(--gold)}
+.breadcrumb .sep{color:var(--border2)}
+.breadcrumb .current{color:var(--ink)}
+
+/* ── PAGE HERO (interior) ── */
+.page-hero{background:var(--ink2);padding:90px 4% 80px;position:relative;overflow:hidden}
+.page-hero .container{position:relative;z-index:2}
+.page-hero .tag{color:var(--gold)}
+.page-hero h1{color:var(--w);font-size:clamp(2.2rem,4vw,3.6rem);margin-bottom:1rem;max-width:760px}
+.page-hero h1 em{color:var(--gold);font-style:italic}
+.page-hero p{color:#E8E4DC;font-size:.92rem;line-height:1.85;max-width:520px;margin-top:1rem}
+.page-hero .gold-line{background:var(--gold)}
+.page-hero-bg{position:absolute;font-family:'Cormorant Garamond',serif;font-size:20vw;color:rgba(255,255,255,.02);top:50%;right:-3%;transform:translateY(-50%);line-height:1;pointer-events:none;white-space:nowrap}
+
+/* ── SECȚIUNE GENERICĂ ── */
+.section{padding:100px 4%}
+.section.alt{background:var(--s1)}
+.placeholder-note{border:1px dashed var(--border2);background:var(--gold3);padding:1.2rem 1.5rem;font-size:.82rem;color:var(--ink3);margin:1.5rem 0;line-height:1.7}
+.placeholder-note strong{color:var(--gold)}
+.coming-soon{text-align:center;padding:80px 4%}
+.coming-soon .cs-badge{display:inline-block;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border2);padding:.5rem 1.2rem;margin-bottom:1.5rem}
+.coming-soon h2{font-size:clamp(2rem,4vw,3.2rem);margin-bottom:1rem}
+.coming-soon h2 em{color:var(--gold);font-style:italic}
+.coming-soon p{color:var(--ink3);max-width:480px;margin:1rem auto 2rem;font-size:.92rem;line-height:1.85}
+
+/* ── FOOTER ── */
+footer{background:var(--ink);padding:5rem 4% 0}
+.fgrid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:4rem}
+.flogo{font-family:'Cormorant Garamond',serif;font-size:1.45rem;color:var(--w);display:block;margin-bottom:1rem;letter-spacing:.06em}
+.flogo em{font-style:normal;color:var(--gold)}
+.fbrand p{font-size:.78rem;color:rgba(255,255,255,.3);line-height:1.85;max-width:270px}
+.fcol h4{font-size:.58rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:1.1rem;font-family:'Jost',sans-serif;font-weight:500}
+.fcol ul{list-style:none}
+.fcol ul li{margin-bottom:.55rem}
+.fcol ul li a{font-size:.8rem;color:rgba(255,255,255,.32);transition:color var(--t)}
+.fcol ul li a:hover{color:var(--gold)}
+.flegal{border-top:1px solid rgba(255,255,255,.06);padding:1.8rem 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.flegal-links{display:flex;gap:1.5rem;flex-wrap:wrap}
+.flegal-links a{font-size:.65rem;color:rgba(255,255,255,.28);transition:color var(--t);cursor:pointer}
+.flegal-links a:hover{color:var(--gold)}
+.fcopy{font-size:.65rem;color:rgba(255,255,255,.2)}
+.fbot-row{border-top:1px solid rgba(255,255,255,.04);padding:1.2rem 0 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
+
+/* ── WA BUTTON ── */
+.wa{position:fixed;bottom:1.8rem;right:1.8rem;z-index:800;width:50px;height:50px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;box-shadow:0 4px 20px rgba(37,211,102,.35);cursor:pointer;transition:transform var(--t);text-decoration:none}
+.wa:hover{transform:scale(1.1)}
+
+/* ── REVEAL ── */
+[data-r]{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease}
+[data-r="l"]{transform:translateX(-24px)}[data-r="r"]{transform:translateX(24px)}
+[data-r].in{opacity:1;transform:none}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1200px){.fgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:1024px){.nav-links,.nav-r{display:none}.hbg{display:flex}.lang-bar-left{display:none}}
+@media(max-width:768px){.section{padding-top:70px;padding-bottom:70px}.page-hero{padding-top:60px;padding-bottom:60px}.fgrid{grid-template-columns:1fr}.fbot-row{flex-direction:column;text-align:center;gap:1rem}}

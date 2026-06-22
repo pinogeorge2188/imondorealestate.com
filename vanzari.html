@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proprietăți de vânzare | IMONDO Real Estate București</title>
+<meta name="description" content="Apartamente, case și vile de vânzare în București și Ilfov — portofoliu IMONDO Real Estate. Listare completă și filtre în curând.">
+<link rel="canonical" href="https://imondorealestate.com/vanzari.html">
+<link rel="icon" type="image/png" sizes="64x64" href="favicon-64.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0D0D0D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/shared.css">
+</head>
+<body>
+<div id="site-header"></div>
+<div id="site-breadcrumb"></div>
+
+<section class="page-hero">
+  <div class="page-hero-bg">Vânzări</div>
+  <div class="container">
+    <span class="tag" data-t="sales_eyebrow">Portofoliu selectat</span>
+    <h1><span data-t="sales_h">Proprietăți de vânzare</span><br><em data-t="sales_h_em">în București & Ilfov</em></h1>
+    <div class="gold-line"></div>
+    <p data-t="sales_sub">Apartamente, case și vile selectate cu grijă. Filtre și listare completă — în curând.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <!-- SCHELET — listarea Firebase + filtrele (zonă/camere/buget/tipologie) vin în Sesiunea 4 -->
+    <div class="placeholder-note">
+      <strong>În lucru:</strong> grila de proprietăți (citire live din Firestore, <code>tip_tranzactie = "Vânzare"</code>, <code>status === 'activ'</code>) și filtrele se adaugă în <strong>Sesiunea 4</strong>. Scheletul, header-ul, footer-ul și stilurile de brand sunt gata.
+    </div>
+    <div id="pgrid"><!-- populat în Sesiunea 4 --></div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+
+<script>
+window.IMONDO_PAGE = { active:'sales', crumbs:[{t:'nav_sales', label:'Vânzări', href:'vanzari.html'}] };
+</script>
+<script src="assets/i18n.js"></script>
+<script src="assets/include.js"></script>
+</body>
+</html>
