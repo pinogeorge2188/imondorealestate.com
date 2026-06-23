@@ -46,6 +46,7 @@ window.T_SHARED = {
     filt_type:"Tip proprietate",filt_zone:"Zonă",filt_rooms:"Camere",filt_budget:"Buget maxim (€)",
     filt_all:"Toate",filt_any:"Orice",filt_reset:"Resetează",filt_budget_ph:"ex: 250000",
     list_sale:"De vânzare",list_rent:"De închiriat",count_label:"rezultate",
+    filt_area:"Suprafață (mp)",filt_floor:"Etaj",filt_facilities:"Facilități",filt_min:"min",filt_max:"max",filt_rooms4:"4+",
     empty_h:"Nicio proprietate găsită",empty_p:"Încearcă să ajustezi filtrele sau revino curând — adăugăm anunțuri constant.",empty_cta:"Resetează filtrele"
   },
   en:{
@@ -82,6 +83,7 @@ window.T_SHARED = {
     filt_type:"Property type",filt_zone:"Area",filt_rooms:"Rooms",filt_budget:"Max budget (€)",
     filt_all:"All",filt_any:"Any",filt_reset:"Reset",filt_budget_ph:"e.g. 250000",
     list_sale:"For sale",list_rent:"For rent",count_label:"results",
+    filt_area:"Area (sqm)",filt_floor:"Floor",filt_facilities:"Facilities",filt_min:"min",filt_max:"max",filt_rooms4:"4+",
     empty_h:"No properties found",empty_p:"Try adjusting the filters or check back soon — we add listings constantly.",empty_cta:"Reset filters"
   },
   es:{
@@ -118,6 +120,7 @@ window.T_SHARED = {
     filt_type:"Tipo de propiedad",filt_zone:"Zona",filt_rooms:"Habitaciones",filt_budget:"Presupuesto máx. (€)",
     filt_all:"Todas",filt_any:"Cualquiera",filt_reset:"Restablecer",filt_budget_ph:"ej: 250000",
     list_sale:"En venta",list_rent:"En alquiler",count_label:"resultados",
+    filt_area:"Superficie (m²)",filt_floor:"Planta",filt_facilities:"Comodidades",filt_min:"mín",filt_max:"máx",filt_rooms4:"4+",
     empty_h:"No se encontraron propiedades",empty_p:"Intenta ajustar los filtros o vuelve pronto — añadimos anuncios constantemente.",empty_cta:"Restablecer filtros"
   },
   fr:{
@@ -154,6 +157,7 @@ window.T_SHARED = {
     filt_type:"Type de bien",filt_zone:"Quartier",filt_rooms:"Pièces",filt_budget:"Budget max (€)",
     filt_all:"Tous",filt_any:"Indifférent",filt_reset:"Réinitialiser",filt_budget_ph:"ex: 250000",
     list_sale:"À vendre",list_rent:"À louer",count_label:"résultats",
+    filt_area:"Surface (m²)",filt_floor:"Étage",filt_facilities:"Équipements",filt_min:"min",filt_max:"max",filt_rooms4:"4+",
     empty_h:"Aucun bien trouvé",empty_p:"Essayez d'ajuster les filtres ou revenez bientôt — nous ajoutons des annonces en permanence.",empty_cta:"Réinitialiser les filtres"
   }
 };
