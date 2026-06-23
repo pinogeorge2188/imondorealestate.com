@@ -551,10 +551,10 @@ footer{background:var(--ink);padding:5rem 4% 0}
 <div id="searchbar">
   <div class="container">
     <div class="sb-inner">
-      <div class="sf"><label data-t="s_type">Tip tranzacție</label><select><option data-t="s_sale">De vânzare</option><option data-t="s_rent">De închiriat</option></select></div>
+      <div class="sf"><label data-t="s_type">Tip tranzacție</label><select id="hsType"><option value="vanzare" data-t="s_sale">De vânzare</option><option value="inchiriere" data-t="s_rent">De închiriat</option></select></div>
       <div class="sf"><label data-t="s_zone">Zonă</label>
-        <select>
-          <option data-t="s_all">Toate zonele</option>
+        <select id="hsZona">
+          <option value="" data-t="s_all">Toate zonele</option>
           <optgroup label="— București —">
             <option>Floreasca</option><option>Dorobanți</option><option>Aviatorilor</option>
             <option>Băneasa</option><option>Herăstrău</option><option>Domenii</option>
@@ -570,9 +570,9 @@ footer{background:var(--ink);padding:5rem 4% 0}
           </optgroup>
         </select>
       </div>
-      <div class="sf"><label data-t="s_rooms">Camere</label><select><option data-t="s_any">Orice</option><option>Studio</option><option>2 camere</option><option>3 camere</option><option>4+ camere</option></select></div>
-      <div class="sf"><label data-t="s_budget">Buget maxim</label><input type="text" placeholder="ex: 250.000 €"></div>
-      <button class="sb-go" data-t="s_search">Caută →</button>
+      <div class="sf"><label data-t="s_rooms">Camere</label><select id="hsCamere"><option value="" data-t="s_any">Orice</option><option value="1">Studio / 1</option><option value="2">2 camere</option><option value="3">3 camere</option><option value="4">4+ camere</option></select></div>
+      <div class="sf"><label data-t="s_budget">Buget maxim</label><input id="hsBuget" type="text" inputmode="numeric" placeholder="ex: 250000"></div>
+      <button class="sb-go" data-t="s_search" onclick="heroSearch()">Caută →</button>
     </div>
   </div>
 </div>
@@ -619,7 +619,7 @@ footer{background:var(--ink);padding:5rem 4% 0}
         <span class="tag" data-t="props_tag">Portofoliu selectat</span>
         <h2 style="font-size:clamp(2rem,3.5vw,3rem)"><span data-t="props_h1">Proprietăți</span> <em style="color:var(--gold);font-style:italic" data-t="props_h2">de excepție</em></h2>
       </div>
-      <a href="#contact" class="btn btn-ol" data-t="props_all">Vezi tot portofoliul →</a>
+      <a href="vanzari.html" class="btn btn-ol" data-t="props_all">Vezi tot portofoliul →</a>
     </div>
     <div class="filter-row" data-r>
       <button class="fb on" data-f="toate" data-t="f_all">Toate</button>
@@ -668,7 +668,7 @@ footer{background:var(--ink);padding:5rem 4% 0}
       </div>
       <!-- FALLBACK DEMO END -->
     </div>
-    <div class="props-more" data-r><a href="#contact" class="btn btn-dk" data-t="props_more">Vezi toate proprietățile →</a></div>
+    <div class="props-more" data-r><a href="vanzari.html" class="btn btn-dk" data-t="props_more">Vezi toate proprietățile →</a></div>
   </div>
 </section>
 
@@ -1110,6 +1110,27 @@ document.querySelectorAll('.fb').forEach(b=>b.addEventListener('click',()=>{
 
 /* ZONE FILTER */
 function filterZone(cat,btn){document.querySelectorAll('.ztb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.querySelectorAll('.zcard').forEach(z=>{z.style.display=(cat==='toate'||z.dataset.zone===cat)?'':'none'})}
+
+/* HERO SEARCH → URL vanzari.html / inchirieri.html cu parametri */
+function heroSearch(){
+  const type = document.getElementById('hsType').value || 'vanzare';
+  const base = type==='inchiriere' ? 'inchirieri.html' : 'vanzari.html';
+  const params = new URLSearchParams();
+  const zona = document.getElementById('hsZona').value;
+  const camere = document.getElementById('hsCamere').value;
+  const buget = (document.getElementById('hsBuget').value||'').replace(/\D/g,'');
+  if(zona) params.set('zona', zona);
+  if(camere) params.set('camere', camere);
+  if(buget) params.set('buget', buget);
+  const qs = params.toString();
+  location.href = base + (qs ? '?'+qs : '');
+}
+
+/* ZONE CLICABILE → vanzari.html?zona=<nume zonă> */
+document.querySelectorAll('#zones .zcard').forEach(z=>{
+  const zn = z.querySelector('.zname'); if(!zn) return;
+  z.addEventListener('click',()=>{ location.href = 'vanzari.html?zona=' + encodeURIComponent(zn.textContent.trim()); });
+});
 
 /* TABS */
 function switchTab(id,btn){document.querySelectorAll('.tc').forEach(t=>t.classList.remove('on'));document.querySelectorAll('.stab').forEach(b=>b.classList.remove('on'));document.getElementById(id).classList.add('on');btn.classList.add('on')}

@@ -30,11 +30,10 @@
 
 <section class="section">
   <div class="container">
-    <!-- SCHELET — listarea Firebase + filtrele vin în Sesiunea 4 -->
-    <div class="placeholder-note">
-      <strong>În lucru:</strong> grila de proprietăți (citire live din Firestore, <code>tip_tranzactie = "Închiriere"</code>, <code>status === 'activ'</code>) și filtrele se adaugă în <strong>Sesiunea 4</strong>. Scheletul, header-ul, footer-ul și stilurile de brand sunt gata.
-    </div>
-    <div id="pgrid"><!-- populat în Sesiunea 4 --></div>
+    <div id="listFilter"></div>
+    <div class="list-meta"><div id="listMeta"></div></div>
+    <div id="listLoading" class="list-loading"><div class="spin"></div><p style="font-size:.85rem;color:var(--ink4)">Se încarcă proprietățile...</p></div>
+    <div id="listGrid"></div>
   </div>
 </section>
 
@@ -45,5 +44,7 @@ window.IMONDO_PAGE = { active:'rent', crumbs:[{t:'nav_rent', label:'Închirieri'
 </script>
 <script src="assets/i18n.js"></script>
 <script src="assets/include.js"></script>
+<script src="assets/listings.js"></script>
+<script>initListings({ type:'inchiriere' });</script>
 </body>
 </html>

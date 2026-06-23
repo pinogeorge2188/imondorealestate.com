@@ -42,7 +42,11 @@ window.T_SHARED = {
     c_hours:"Lun–Vin: 09:00–19:00 · Sâmbătă: 10:00–16:00",
     f_fname:"Prenume *",f_lname:"Nume *",f_email:"Email *",f_phone:"Telefon",f_subject:"Subiect",
     fs1:"Vreau să vând o proprietate",fs2:"Vreau să cumpăr",fs3:"Vreau să închiriez",fs4:"Evaluare gratuită",fs5:"Consultanță investiții",
-    f_msg:"Mesaj",f_send:"Trimite mesajul →",f_ok:"✦ Mulțumim! Te contactăm în maximum 2 ore."
+    f_msg:"Mesaj",f_send:"Trimite mesajul →",f_ok:"✦ Mulțumim! Te contactăm în maximum 2 ore.",
+    filt_type:"Tip proprietate",filt_zone:"Zonă",filt_rooms:"Camere",filt_budget:"Buget maxim (€)",
+    filt_all:"Toate",filt_any:"Orice",filt_reset:"Resetează",filt_budget_ph:"ex: 250000",
+    list_sale:"De vânzare",list_rent:"De închiriat",count_label:"rezultate",
+    empty_h:"Nicio proprietate găsită",empty_p:"Încearcă să ajustezi filtrele sau revino curând — adăugăm anunțuri constant.",empty_cta:"Resetează filtrele"
   },
   en:{
     tagline:"Premium real estate agency",
@@ -74,7 +78,11 @@ window.T_SHARED = {
     c_hours:"Mon–Fri: 09:00–19:00 · Saturday: 10:00–16:00",
     f_fname:"First name *",f_lname:"Last name *",f_email:"Email *",f_phone:"Phone",f_subject:"Subject",
     fs1:"I want to sell a property",fs2:"I want to buy",fs3:"I want to rent",fs4:"Free valuation",fs5:"Investment consulting",
-    f_msg:"Message",f_send:"Send message →",f_ok:"✦ Thank you! We will contact you within 2 hours."
+    f_msg:"Message",f_send:"Send message →",f_ok:"✦ Thank you! We will contact you within 2 hours.",
+    filt_type:"Property type",filt_zone:"Area",filt_rooms:"Rooms",filt_budget:"Max budget (€)",
+    filt_all:"All",filt_any:"Any",filt_reset:"Reset",filt_budget_ph:"e.g. 250000",
+    list_sale:"For sale",list_rent:"For rent",count_label:"results",
+    empty_h:"No properties found",empty_p:"Try adjusting the filters or check back soon — we add listings constantly.",empty_cta:"Reset filters"
   },
   es:{
     tagline:"Agencia inmobiliaria premium",
@@ -106,7 +114,11 @@ window.T_SHARED = {
     c_hours:"Lun–Vie: 09:00–19:00 · Sáb: 10:00–16:00",
     f_fname:"Nombre *",f_lname:"Apellido *",f_email:"Email *",f_phone:"Teléfono",f_subject:"Asunto",
     fs1:"Quiero vender una propiedad",fs2:"Quiero comprar",fs3:"Quiero alquilar",fs4:"Valoración gratuita",fs5:"Consultoría de inversiones",
-    f_msg:"Mensaje",f_send:"Enviar mensaje →",f_ok:"✦ ¡Gracias! Te contactaremos en un máximo de 2 horas."
+    f_msg:"Mensaje",f_send:"Enviar mensaje →",f_ok:"✦ ¡Gracias! Te contactaremos en un máximo de 2 horas.",
+    filt_type:"Tipo de propiedad",filt_zone:"Zona",filt_rooms:"Habitaciones",filt_budget:"Presupuesto máx. (€)",
+    filt_all:"Todas",filt_any:"Cualquiera",filt_reset:"Restablecer",filt_budget_ph:"ej: 250000",
+    list_sale:"En venta",list_rent:"En alquiler",count_label:"resultados",
+    empty_h:"No se encontraron propiedades",empty_p:"Intenta ajustar los filtros o vuelve pronto — añadimos anuncios constantemente.",empty_cta:"Restablecer filtros"
   },
   fr:{
     tagline:"Agence immobilière premium",
@@ -138,6 +150,10 @@ window.T_SHARED = {
     c_hours:"Lun–Ven: 09:00–19:00 · Sam: 10:00–16:00",
     f_fname:"Prénom *",f_lname:"Nom *",f_email:"Email *",f_phone:"Téléphone",f_subject:"Sujet",
     fs1:"Je veux vendre une propriété",fs2:"Je veux acheter",fs3:"Je veux louer",fs4:"Estimation gratuite",fs5:"Conseil en investissement",
-    f_msg:"Message",f_send:"Envoyer le message →",f_ok:"✦ Merci! Nous vous contactons dans 2 heures maximum."
+    f_msg:"Message",f_send:"Envoyer le message →",f_ok:"✦ Merci! Nous vous contactons dans 2 heures maximum.",
+    filt_type:"Type de bien",filt_zone:"Quartier",filt_rooms:"Pièces",filt_budget:"Budget max (€)",
+    filt_all:"Tous",filt_any:"Indifférent",filt_reset:"Réinitialiser",filt_budget_ph:"ex: 250000",
+    list_sale:"À vendre",list_rent:"À louer",count_label:"résultats",
+    empty_h:"Aucun bien trouvé",empty_p:"Essayez d'ajuster les filtres ou revenez bientôt — nous ajoutons des annonces en permanence.",empty_cta:"Réinitialiser les filtres"
   }
 };
