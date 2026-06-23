@@ -907,28 +907,15 @@ footer{background:var(--ink);padding:5rem 4% 0}
 </section>
 
 <!-- VÂNDUTE RECENT -->
-<section id="sold">
+<!-- VÂNDUTE RECENT — populat LIVE din Firestore (status === 'Vândut'); ascuns dacă nu există -->
+<section id="sold" style="display:none">
   <div class="container">
     <div class="sec-head" data-r>
       <span class="tag" data-t="sold_tag">Rezultate reale</span>
       <h2><span data-t="sold_h">Vândute</span> <em data-t="sold_h2">recent</em></h2>
       <div class="gold-line c"></div>
     </div>
-    <!-- [DE COMPLETAT: tranzacții reale — adresă aproximativă, preț/zile reale. Imagini = [DE ÎNLOCUIT cu poze reale] -->
-    <div class="sold-grid">
-      <div class="sold-card" data-r>
-        <div class="sold-img"><img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=700&q=85" alt="Proprietate vândută" loading="lazy"><span class="sold-stamp" data-t="sold_stamp">Vândut</span></div>
-        <div class="sold-body"><h4 data-t="sold1_t">Apartament 3 camere</h4><div class="sold-loc" data-t="sold1_loc">Floreasca, Sector 1</div><div class="sold-meta"><span data-t="sold_price">Preț: [DE COMPLETAT]</span><span><strong data-t="sold_days">[DE COMPLETAT] zile</strong></span></div></div>
-      </div>
-      <div class="sold-card" data-r>
-        <div class="sold-img"><img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=700&q=85" alt="Proprietate vândută" loading="lazy"><span class="sold-stamp" data-t="sold_stamp">Vândut</span></div>
-        <div class="sold-body"><h4 data-t="sold2_t">Vilă cu grădină</h4><div class="sold-loc" data-t="sold2_loc">Băneasa, Sector 1</div><div class="sold-meta"><span data-t="sold_price">Preț: [DE COMPLETAT]</span><span><strong data-t="sold_days">[DE COMPLETAT] zile</strong></span></div></div>
-      </div>
-      <div class="sold-card" data-r>
-        <div class="sold-img"><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=700&q=85" alt="Proprietate vândută" loading="lazy"><span class="sold-stamp" data-t="sold_stamp">Vândut</span></div>
-        <div class="sold-body"><h4 data-t="sold3_t">Apartament 2 camere</h4><div class="sold-loc" data-t="sold3_loc">Herăstrău, Sector 1</div><div class="sold-meta"><span data-t="sold_price">Preț: [DE COMPLETAT]</span><span><strong data-t="sold_days">[DE COMPLETAT] zile</strong></span></div></div>
-      </div>
-    </div>
+    <div class="sold-grid" id="soldGrid"></div>
   </div>
 </section>
 
@@ -1483,8 +1470,51 @@ const fStyle = document.createElement('style');
 fStyle.textContent = '@keyframes fadeInUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}';
 document.head.appendChild(fStyle);
 
+/* ── VÂNDUTE RECENT — citește LIVE din Firestore (status === 'Vândut') ──
+   Aceeași sursă ca loadPropsFromFirebase(), filtrat pe "vândut" în loc de "activ".
+   Doar: badge VÂNDUT + poză + denumire + zonă. Fără preț, fără zile.
+   Dacă nu există nicio proprietate vândută → secțiunea rămâne ascunsă. */
+async function loadSoldFromFirebase() {
+  if (!FIREBASE_CONFIG) return;
+  try {
+    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js');
+    const { getFirestore, collection, getDocs } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+    const appId = 'imondo-site';
+    const fbApp = getApps().find(a=>a.name===appId) || initializeApp(FIREBASE_CONFIG, appId);
+    const db = getFirestore(fbApp);
+
+    const sold = [];
+    const ownersSnap = await getDocs(collection(db, 'proprietari'));
+    ownersSnap.forEach(doc => {
+      (doc.data().proprietati || []).forEach(p => {
+        const status = (p.status || '').toLowerCase();
+        if (status === 'vândut' || status === 'vandut' || status === 'sold') sold.push(p);
+      });
+    });
+
+    if (!sold.length) return; // nicio proprietate vândută → secțiunea rămâne ascunsă
+
+    const grid = document.getElementById('soldGrid');
+    grid.innerHTML = sold.map((p, i) => {
+      const img = (p.poze || p.imagini || [])[0] || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&q=85';
+      const denumire = p.denumire || p.titlu || (p.tipologie || 'Proprietate');
+      const zona = p.zona || p.adresa || '';
+      const stamp = (T[curLang] && T[curLang].sold_stamp) || 'Vândut';
+      return `<div class="sold-card" style="opacity:0;animation:fadeInUp .5s ease ${i*0.08}s forwards">
+        <div class="sold-img"><img src="${img}" alt="${denumire}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&q=85'"><span class="sold-stamp">${stamp}</span></div>
+        <div class="sold-body"><h4>${denumire}</h4>${zona?`<div class="sold-loc">📍 ${zona}</div>`:''}</div>
+      </div>`;
+    }).join('');
+    document.getElementById('sold').style.display = ''; // dezvăluie secțiunea
+  } catch(err) {
+    console.warn('IMONDO Vândute: nu s-a putut încărca.', err.message);
+    // secțiunea rămâne ascunsă
+  }
+}
+
 // Boot Firebase (non-blocking — static cards show while loading)
 loadPropsFromFirebase();
+loadSoldFromFirebase();
 
 </script>
 </body>
