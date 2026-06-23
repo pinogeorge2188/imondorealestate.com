@@ -87,6 +87,16 @@ window.IMONDO_PAGE = { active:'contact', crumbs:[{t:'nav_contact', label:'Contac
 <script src="assets/i18n.js"></script>
 <script src="assets/include.js"></script>
 <script>
+/* Pre-selectează subiectul din ?subiect= (ex: din CTA hero "Vreau evaluarea") */
+(function(){
+  const map = { evaluare:3, investitii:4, vand:0, cumpar:1, inchiriez:2 };
+  const s = new URLSearchParams(location.search).get('subiect');
+  if(s && map[s]!==undefined){
+    const sel = document.querySelector('select[name="subiect"]');
+    if(sel) sel.selectedIndex = map[s];
+  }
+})();
+
 /* FORM — Formspree (același endpoint ca homepage) */
 async function submitForm(e){
   e.preventDefault();
