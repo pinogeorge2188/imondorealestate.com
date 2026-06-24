@@ -182,6 +182,11 @@ footer{background:var(--ink);padding:5rem 4% 0}
 @media(max-width:1024px){.pgrid{grid-template-columns:repeat(2,1fr)}.filter-bar{grid-template-columns:1fr 1fr}.fb-reset{grid-column:span 2;padding:.9rem}}
 @media(max-width:680px){.pgrid{grid-template-columns:1fr}.filter-bar{grid-template-columns:1fr}.fb-reset{grid-column:span 1}}
 
+/* ── TEXT ZONĂ (SEO) ── */
+.zone-text{max-width:840px}
+.zone-text h2{font-size:clamp(1.6rem,3vw,2.3rem);line-height:1.2;margin-bottom:1.4rem}
+.zone-text p{font-size:.92rem;color:var(--ink3);line-height:1.9;margin-bottom:1.2rem}
+
 /* ── REVEAL ── */
 [data-r]{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease}
 [data-r="l"]{transform:translateX(-24px)}[data-r="r"]{transform:translateX(24px)}
