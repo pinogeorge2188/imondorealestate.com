@@ -222,6 +222,23 @@ function render(p){
   document.querySelector('meta[name=description]').setAttribute('content', metaDesc);
   $('canonical').setAttribute('href', 'https://imondorealestate.com/proprietate.html?id=' + encodeURIComponent(p.id||''));
 
+  /* schema Apartment + Offer (dinamic) */
+  try{
+    const pretNum = parseInt(p.pret||p.pret_nou||0,10);
+    const ld = {
+      "@context":"https://schema.org","@type":"Apartment",
+      "name":titlu,
+      "description":(p.descriere||metaDesc||'').slice(0,300),
+      "image":(p.poze||p.imagini||[]).slice(0,5),
+      "numberOfRooms":p.camere||p.nrCamere||undefined,
+      "floorSize": p.suprafata?{"@type":"QuantitativeValue","value":p.suprafata,"unitCode":"MTK"}:undefined,
+      "address":{"@type":"PostalAddress","addressLocality":zona||"București","addressRegion":"București","addressCountry":"RO"}
+    };
+    if(pretNum) ld.offers={"@type":"Offer","price":pretNum,"priceCurrency":"EUR","availability":"https://schema.org/InStock","url":location.href};
+    const s=document.createElement('script'); s.type='application/ld+json'; s.textContent=JSON.stringify(ld);
+    document.head.appendChild(s);
+  }catch(e){}
+
   /* galerie */
   galImgs = (p.poze || p.imagini || []).filter(Boolean);
   if(!galImgs.length) galImgs = [FALLBACK_IMG];

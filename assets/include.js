@@ -147,6 +147,29 @@
   document.querySelectorAll('[data-r]').forEach(el=>ro2.observe(el));
   setTimeout(()=>document.querySelectorAll('[data-r]:not(.in)').forEach(el=>el.classList.add('in')),3000);
 
+  /* ── SCHEMA BreadcrumbList (SEO intern) ── */
+  if(PAGE.crumbs && PAGE.crumbs.length){
+    const base='https://imondorealestate.com/';
+    const items=[{name:(T.ro.crumb_home||'Acasă'),url:base}];
+    PAGE.crumbs.forEach(c=>items.push({name:(c.label||''), url: c.href && c.href!=='#' ? base+c.href : null }));
+    const ld={"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":items.map((it,i)=>{
+      const o={"@type":"ListItem","position":i+1,"name":it.name};
+      if(it.url) o.item=it.url;
+      return o;
+    })};
+    const s=document.createElement('script'); s.type='application/ld+json'; s.textContent=JSON.stringify(ld);
+    document.head.appendChild(s);
+  }
+
+  /* ── TRACKING delegat (telefon/WhatsApp + data-event) — no-op fără GTM/GA/Meta ── */
+  function imTrack(name){try{window.dataLayer=window.dataLayer||[];window.dataLayer.push({event:name});if(typeof gtag==='function')gtag('event',name);if(typeof fbq==='function')fbq('trackCustom',name);}catch(e){}}
+  document.addEventListener('click',e=>{
+    const a=e.target.closest('a[href]'); if(!a) return;
+    const href=a.getAttribute('href')||'';
+    const ev=a.dataset.event || (href.startsWith('tel:')?'click_telefon':/wa\.me|whatsapp/i.test(href)?'click_whatsapp':null);
+    if(ev)imTrack(ev);
+  });
+
   /* aplică limba implicită (RO) pentru a sincroniza eventualele texte injectate */
   setLang('ro');
 })();
