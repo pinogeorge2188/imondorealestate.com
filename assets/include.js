@@ -17,6 +17,7 @@
   const PHONE = "+40752942828", PHONE_FMT = "+40 752 942 828";
   const WA = "https://wa.me/40752942828";
   const EMAIL = "officeimondo@gmail.com";
+  const B = PAGE.base || ''; // prefix pentru pagini în subfolder (ex: zone/ → '../')
 
   /* ── HEADER ── */
   const a = k => PAGE.active===k ? ' class="active"' : '';
@@ -38,47 +39,47 @@
   </div>
   <nav id="nav">
     <div class="nav-in">
-      <a href="index.html" class="logo">IMONDO<em>.</em></a>
+      <a href="${B}index.html" class="logo">IMONDO<em>.</em></a>
       <ul class="nav-links">
-        <li class="has-drop"><a href="vanzari.html"${a('sales')}><span data-t="nav_props">Proprietăți</span> <span class="caret">▾</span></a>
+        <li class="has-drop"><a href="${B}vanzari.html"${a('sales')}><span data-t="nav_props">Proprietăți</span> <span class="caret">▾</span></a>
           <ul class="drop">
-            <li><a href="vanzari.html" data-t="nav_sales">Vânzări</a></li>
-            <li><a href="inchirieri.html" data-t="nav_rent">Închirieri</a></li>
+            <li><a href="${B}vanzari.html" data-t="nav_sales">Vânzări</a></li>
+            <li><a href="${B}inchirieri.html" data-t="nav_rent">Închirieri</a></li>
           </ul>
         </li>
-        <li><a href="proiecte.html"${a('projects')} data-t="nav_projects">Proiecte</a></li>
-        <li><a href="servicii.html"${a('services')} data-t="nav_services">Servicii</a></li>
-        <li><a href="index.html#zones" data-t="nav_zones">Zone</a></li>
-        <li><a href="despre.html"${a('about')} data-t="nav_about">Despre IMONDO</a></li>
-        <li><a href="contact.html"${a('contact')} data-t="nav_contact">Contact</a></li>
+        <li><a href="${B}proiecte.html"${a('projects')} data-t="nav_projects">Proiecte</a></li>
+        <li><a href="${B}servicii.html"${a('services')} data-t="nav_services">Servicii</a></li>
+        <li><a href="${B}index.html#zones" data-t="nav_zones">Zone</a></li>
+        <li><a href="${B}despre.html"${a('about')} data-t="nav_about">Despre IMONDO</a></li>
+        <li><a href="${B}contact.html"${a('contact')} data-t="nav_contact">Contact</a></li>
       </ul>
       <div class="nav-r">
         <a href="tel:${PHONE}" class="btn btn-ol" style="padding:.6rem 1.1rem;font-size:.62rem">${PHONE_FMT}</a>
-        <a href="contact.html" class="btn btn-dk" data-t="nav_cta">Consultanță gratuită</a>
+        <a href="${B}contact.html" class="btn btn-dk" data-t="nav_cta">Consultanță gratuită</a>
       </div>
       <button class="hbg" id="hbg"><span></span><span></span><span></span></button>
     </div>
   </nav>
   <div class="mob-nav" id="mobNav">
     <div class="mob-label" data-t="nav_props">Proprietăți</div>
-    <div class="mob-sub"><a href="vanzari.html" data-t="nav_sales">Vânzări</a></div>
-    <div class="mob-sub"><a href="inchirieri.html" data-t="nav_rent">Închirieri</a></div>
-    <a href="proiecte.html" data-t="nav_projects">Proiecte</a>
-    <a href="servicii.html" data-t="nav_services">Servicii</a>
-    <a href="index.html#zones" data-t="nav_zones">Zone</a>
-    <a href="despre.html" data-t="nav_about">Despre IMONDO</a>
-    <a href="contact.html" data-t="nav_contact">Contact</a>
-    <a href="contact.html" data-t="nav_cta" style="color:var(--gold)">Consultanță gratuită</a>
+    <div class="mob-sub"><a href="${B}vanzari.html" data-t="nav_sales">Vânzări</a></div>
+    <div class="mob-sub"><a href="${B}inchirieri.html" data-t="nav_rent">Închirieri</a></div>
+    <a href="${B}proiecte.html" data-t="nav_projects">Proiecte</a>
+    <a href="${B}servicii.html" data-t="nav_services">Servicii</a>
+    <a href="${B}index.html#zones" data-t="nav_zones">Zone</a>
+    <a href="${B}despre.html" data-t="nav_about">Despre IMONDO</a>
+    <a href="${B}contact.html" data-t="nav_contact">Contact</a>
+    <a href="${B}contact.html" data-t="nav_cta" style="color:var(--gold)">Consultanță gratuită</a>
   </div>`;
 
   /* ── BREADCRUMB ── */
   let breadcrumb = '';
   if(PAGE.crumbs && PAGE.crumbs.length){
-    const items = [`<a href="index.html" data-t="crumb_home">Acasă</a>`];
+    const items = [`<a href="${B}index.html" data-t="crumb_home">Acasă</a>`];
     PAGE.crumbs.forEach((c,i)=>{
       const last = i===PAGE.crumbs.length-1;
       if(last) items.push(`<span class="current" data-t="${c.t}">${c.label||''}</span>`);
-      else items.push(`<a href="${c.href}" data-t="${c.t}">${c.label||''}</a>`);
+      else items.push(`<a href="${B}${c.href}" data-t="${c.t}">${c.label||''}</a>`);
     });
     breadcrumb = `<div class="breadcrumb"><div class="container">${items.join('<span class="sep">›</span>')}</div></div>`;
   }
@@ -88,16 +89,16 @@
   <footer>
     <div class="container">
       <div class="fgrid">
-        <div class="fbrand"><a href="index.html" class="flogo">IMONDO<em>.</em></a><p data-t="foot_p">Agenție imobiliară premium în București. Transparență, profesionalism și rezultate reale — pentru fiecare client în parte.</p></div>
-        <div class="fcol"><h4 data-t="fc1_h">Proprietăți</h4><ul><li><a href="vanzari.html" data-t="fc1_1">De vânzare</a></li><li><a href="inchirieri.html" data-t="fc1_2">De închiriat</a></li><li><a href="proiecte.html" data-t="fc1_3">Proiecte rezidențiale</a></li></ul></div>
-        <div class="fcol"><h4 data-t="fc2_h">Servicii</h4><ul><li><a href="servicii.html" data-t="fc2_1">Pentru proprietari</a></li><li><a href="servicii.html" data-t="fc2_2">Pentru cumpărători</a></li><li><a href="servicii.html" data-t="fc2_3">Pentru chiriași</a></li></ul></div>
-        <div class="fcol"><h4 data-t="fc3_h">Contact</h4><ul><li><a href="tel:${PHONE}">${PHONE_FMT}</a></li><li><a href="mailto:${EMAIL}">${EMAIL}</a></li><li><a href="${WA}" data-t="fc3_wa">WhatsApp</a></li><li><a href="https://imondorealestate.com">imondorealestate.com</a></li><li><a href="contact.html">București, Sector 1</a></li></ul></div>
+        <div class="fbrand"><a href="${B}index.html" class="flogo">IMONDO<em>.</em></a><p data-t="foot_p">Agenție imobiliară premium în București. Transparență, profesionalism și rezultate reale — pentru fiecare client în parte.</p></div>
+        <div class="fcol"><h4 data-t="fc1_h">Proprietăți</h4><ul><li><a href="${B}vanzari.html" data-t="fc1_1">De vânzare</a></li><li><a href="${B}inchirieri.html" data-t="fc1_2">De închiriat</a></li><li><a href="${B}proiecte.html" data-t="fc1_3">Proiecte rezidențiale</a></li></ul></div>
+        <div class="fcol"><h4 data-t="fc2_h">Servicii</h4><ul><li><a href="${B}servicii.html" data-t="fc2_1">Pentru proprietari</a></li><li><a href="${B}servicii.html" data-t="fc2_2">Pentru cumpărători</a></li><li><a href="${B}servicii.html" data-t="fc2_3">Pentru chiriași</a></li></ul></div>
+        <div class="fcol"><h4 data-t="fc3_h">Contact</h4><ul><li><a href="tel:${PHONE}">${PHONE_FMT}</a></li><li><a href="mailto:${EMAIL}">${EMAIL}</a></li><li><a href="${WA}" data-t="fc3_wa">WhatsApp</a></li><li><a href="https://imondorealestate.com">imondorealestate.com</a></li><li><a href="${B}contact.html">București, Sector 1</a></li></ul></div>
       </div>
       <div class="flegal">
         <div class="flegal-links">
-          <a href="index.html" data-t="leg1">Politică de Confidențialitate</a>
-          <a href="index.html" data-t="leg2">Termeni și Condiții</a>
-          <a href="index.html" data-t="leg3">Politică Cookie-uri</a>
+          <a href="${B}index.html" data-t="leg1">Politică de Confidențialitate</a>
+          <a href="${B}index.html" data-t="leg2">Termeni și Condiții</a>
+          <a href="${B}index.html" data-t="leg3">Politică Cookie-uri</a>
           <a href="https://anpc.ro" target="_blank" rel="noopener">ANPC</a>
         </div>
         <span class="fcopy" data-t="leg_copy">© 2025 IMONDO REAL ESTATE S.R.L. · CUI RO 44477606</span>

@@ -7,4 +7,14 @@
   <url><loc>https://imondorealestate.com/servicii.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://imondorealestate.com/despre.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://imondorealestate.com/contact.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://imondorealestate.com/zone/pipera.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://imondorealestate.com/zone/aviatorilor.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://imondorealestate.com/zone/herastrau.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://imondorealestate.com/zone/dorobanti.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://imondorealestate.com/zone/primaverii.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://imondorealestate.com/zone/floreasca.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://imondorealestate.com/zone/cotroceni.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://imondorealestate.com/zone/otopeni.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://imondorealestate.com/zone/unirii.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://imondorealestate.com/zone/aviatiei.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
 </urlset>
