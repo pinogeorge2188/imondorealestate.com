@@ -37,6 +37,38 @@
   </div>
 </section>
 
+<!-- FORMULAR SEGMENTAT — CUMPĂRĂTORI -->
+<section class="lead-form-sec">
+  <div class="lead-form-grid">
+    <div class="lead-form-intro" data-r="l">
+      <span class="tag" data-t="lf_buy_tag">Pentru cumpărători</span>
+      <h2><span data-t="lf_buy_h">Cauți să</span> <em data-t="lf_buy_h_em">cumperi?</em></h2>
+      <p data-t="lf_buy_p">Spune-ne ce cauți și bugetul tău. Îți trimitem proprietăți potrivite, inclusiv oferte off-market.</p>
+      <ul class="lf-points">
+        <li data-t="lf_buy_p1">Acces la proprietăți off-market</li>
+        <li data-t="lf_buy_p2">Consultanță onestă despre prețuri și zone</li>
+        <li data-t="lf_buy_p3">Negociere în favoarea ta</li>
+      </ul>
+    </div>
+    <div data-r="r">
+      <form class="cform" action="https://formspree.io/f/mwvzagkq" method="POST" data-lead="cumparatori">
+        <input type="hidden" name="sursa" value="vanzari — cumparatori">
+        <div class="frow">
+          <div class="fg"><label data-t="f_fname">Prenume *</label><input type="text" name="prenume" required></div>
+          <div class="fg"><label data-t="f_lname">Nume *</label><input type="text" name="nume" required></div>
+        </div>
+        <div class="frow">
+          <div class="fg"><label data-t="f_email">Email *</label><input type="email" name="email" required></div>
+          <div class="fg"><label data-t="f_phone">Telefon</label><input type="tel" name="telefon"></div>
+        </div>
+        <div class="fg"><label data-t="lf_what">Ce cauți / detalii</label><textarea name="mesaj" placeholder="Zonă, nr. camere, buget, tip proprietate..."></textarea></div>
+        <button type="submit" class="btn btn-gd" style="justify-content:center;padding:1rem" data-t="f_send">Trimite →</button>
+      </form>
+      <div class="fok" data-t="f_ok">✦ Mulțumim! Te contactăm în maximum 2 ore.</div>
+    </div>
+  </div>
+</section>
+
 <div id="site-footer"></div>
 
 <script>

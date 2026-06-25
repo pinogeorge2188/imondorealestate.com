@@ -37,6 +37,38 @@
   </div>
 </section>
 
+<!-- FORMULAR SEGMENTAT — CHIRIAȘI -->
+<section class="lead-form-sec">
+  <div class="lead-form-grid">
+    <div class="lead-form-intro" data-r="l">
+      <span class="tag" data-t="lf_rent_tag">Pentru chiriași</span>
+      <h2><span data-t="lf_rent_h">Cauți o</span> <em data-t="lf_rent_h_em">locuință de închiriat?</em></h2>
+      <p data-t="lf_rent_p">Spune-ne ce cauți. Îți prezentăm doar opțiuni verificate, cu proprietari serioși și contracte clare.</p>
+      <ul class="lf-points">
+        <li data-t="lf_rent_p1">Portofoliu verificat de proprietăți</li>
+        <li data-t="lf_rent_p2">Vizionări eficiente, fără timp pierdut</li>
+        <li data-t="lf_rent_p3">Asistență la semnarea contractului</li>
+      </ul>
+    </div>
+    <div data-r="r">
+      <form class="cform" action="https://formspree.io/f/mwvzagkq" method="POST" data-lead="chiriasi">
+        <input type="hidden" name="sursa" value="inchirieri — chiriasi">
+        <div class="frow">
+          <div class="fg"><label data-t="f_fname">Prenume *</label><input type="text" name="prenume" required></div>
+          <div class="fg"><label data-t="f_lname">Nume *</label><input type="text" name="nume" required></div>
+        </div>
+        <div class="frow">
+          <div class="fg"><label data-t="f_email">Email *</label><input type="email" name="email" required></div>
+          <div class="fg"><label data-t="f_phone">Telefon</label><input type="tel" name="telefon"></div>
+        </div>
+        <div class="fg"><label data-t="lf_what">Ce cauți / detalii</label><textarea name="mesaj" placeholder="Zonă, nr. camere, buget lunar, perioadă..."></textarea></div>
+        <button type="submit" class="btn btn-gd" style="justify-content:center;padding:1rem" data-t="f_send">Trimite →</button>
+      </form>
+      <div class="fok" data-t="f_ok">✦ Mulțumim! Te contactăm în maximum 2 ore.</div>
+    </div>
+  </div>
+</section>
+
 <div id="site-footer"></div>
 
 <script>

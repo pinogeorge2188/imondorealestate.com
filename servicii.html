@@ -28,11 +28,37 @@
   </div>
 </section>
 
-<section class="section">
-  <div class="container">
-    <!-- SCHELET — conținutul detaliat (proprietari/cumpărători/chiriași) vine în Sesiunea 7 -->
-    <div class="placeholder-note">
-      <strong>[DE COMPLETAT în Sesiunea 7]:</strong> conținutul detaliat al serviciilor (proprietari, cumpărători, chiriași), pași, formulare segmentate. Scheletul, header-ul, footer-ul și stilurile de brand sunt gata.
+<!-- FORMULAR SEGMENTAT — PROPRIETARI (vânzători + închiriere) -->
+<section class="lead-form-sec">
+  <div class="lead-form-grid">
+    <div class="lead-form-intro" data-r="l">
+      <span class="tag" data-t="lf_own_tag">Pentru proprietari</span>
+      <h2><span data-t="lf_own_h">Vinde sau închiriază</span> <em data-t="lf_own_h_em">cu IMONDO</em></h2>
+      <p data-t="lf_own_p">Spune-ne despre proprietatea ta. Primești o evaluare gratuită și o strategie clară, fără obligații.</p>
+      <ul class="lf-points">
+        <li data-t="lf_own_p1">Evaluare corectă la prețul real de piață</li>
+        <li data-t="lf_own_p2">Marketing premium și cumpărători pre-calificați</li>
+        <li data-t="lf_own_p3">Un singur consultant, de la A la Z</li>
+      </ul>
+    </div>
+    <div data-r="r">
+      <form class="cform" action="https://formspree.io/f/mwvzagkq" method="POST" data-lead="proprietari">
+        <input type="hidden" name="sursa" value="servicii — proprietari">
+        <div class="frow">
+          <div class="fg"><label data-t="f_fname">Prenume *</label><input type="text" name="prenume" required></div>
+          <div class="fg"><label data-t="f_lname">Nume *</label><input type="text" name="nume" required></div>
+        </div>
+        <div class="frow">
+          <div class="fg"><label data-t="f_email">Email *</label><input type="email" name="email" required></div>
+          <div class="fg"><label data-t="f_phone">Telefon</label><input type="tel" name="telefon"></div>
+        </div>
+        <div class="fg"><label data-t="lf_own_intent">Vreau să...</label>
+          <select name="intentie"><option data-t="lf_own_opt1">Vând o proprietate</option><option data-t="lf_own_opt2">Dau în chirie o proprietate</option></select>
+        </div>
+        <div class="fg"><label data-t="lf_what">Ce cauți / detalii</label><textarea name="mesaj" placeholder="Zonă, tip proprietate, suprafață..."></textarea></div>
+        <button type="submit" class="btn btn-gd" style="justify-content:center;padding:1rem" data-t="f_send">Trimite →</button>
+      </form>
+      <div class="fok" data-t="f_ok">✦ Mulțumim! Te contactăm în maximum 2 ore.</div>
     </div>
   </div>
 </section>

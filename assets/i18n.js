@@ -47,7 +47,13 @@ window.T_SHARED = {
     filt_all:"Toate",filt_any:"Orice",filt_reset:"Resetează",filt_budget_ph:"ex: 250000",
     list_sale:"De vânzare",list_rent:"De închiriat",count_label:"rezultate",
     filt_area:"Suprafață (mp)",filt_floor:"Etaj",filt_facilities:"Facilități",filt_min:"min",filt_max:"max",filt_rooms4:"4+",
-    empty_h:"Nicio proprietate găsită",empty_p:"Încearcă să ajustezi filtrele sau revino curând — adăugăm anunțuri constant.",empty_cta:"Resetează filtrele"
+    empty_h:"Nicio proprietate găsită",empty_p:"Încearcă să ajustezi filtrele sau revino curând — adăugăm anunțuri constant.",empty_cta:"Resetează filtrele",
+    mcta_call:"Sună",mcta_wa:"WhatsApp",mcta_eval:"Evaluare",
+    f_fname:"Prenume *",f_lname:"Nume *",f_email:"Email *",f_phone:"Telefon",f_msg:"Mesaj",f_send:"Trimite →",f_ok:"✦ Mulțumim! Te contactăm în maximum 2 ore.",
+    lf_own_tag:"Pentru proprietari",lf_own_h:"Vinde sau închiriază",lf_own_h_em:"cu IMONDO",lf_own_p:"Spune-ne despre proprietatea ta. Primești o evaluare gratuită și o strategie clară, fără obligații.",lf_own_p1:"Evaluare corectă la prețul real de piață",lf_own_p2:"Marketing premium și cumpărători pre-calificați",lf_own_p3:"Un singur consultant, de la A la Z",lf_own_intent:"Vreau să...",lf_own_opt1:"Vând o proprietate",lf_own_opt2:"Dau în chirie o proprietate",
+    lf_buy_tag:"Pentru cumpărători",lf_buy_h:"Cauți să",lf_buy_h_em:"cumperi?",lf_buy_p:"Spune-ne ce cauți și bugetul tău. Îți trimitem proprietăți potrivite, inclusiv oferte off-market.",lf_buy_p1:"Acces la proprietăți off-market",lf_buy_p2:"Consultanță onestă despre prețuri și zone",lf_buy_p3:"Negociere în favoarea ta",
+    lf_rent_tag:"Pentru chiriași",lf_rent_h:"Cauți o",lf_rent_h_em:"locuință de închiriat?",lf_rent_p:"Spune-ne ce cauți. Îți prezentăm doar opțiuni verificate, cu proprietari serioși și contracte clare.",lf_rent_p1:"Portofoliu verificat de proprietăți",lf_rent_p2:"Vizionări eficiente, fără timp pierdut",lf_rent_p3:"Asistență la semnarea contractului",
+    lf_what:"Ce cauți / detalii"
   },
   en:{
     tagline:"Premium real estate agency",
@@ -84,7 +90,13 @@ window.T_SHARED = {
     filt_all:"All",filt_any:"Any",filt_reset:"Reset",filt_budget_ph:"e.g. 250000",
     list_sale:"For sale",list_rent:"For rent",count_label:"results",
     filt_area:"Area (sqm)",filt_floor:"Floor",filt_facilities:"Facilities",filt_min:"min",filt_max:"max",filt_rooms4:"4+",
-    empty_h:"No properties found",empty_p:"Try adjusting the filters or check back soon — we add listings constantly.",empty_cta:"Reset filters"
+    empty_h:"No properties found",empty_p:"Try adjusting the filters or check back soon — we add listings constantly.",empty_cta:"Reset filters",
+    mcta_call:"Call",mcta_wa:"WhatsApp",mcta_eval:"Valuation",
+    f_fname:"First name *",f_lname:"Last name *",f_email:"Email *",f_phone:"Phone",f_msg:"Message",f_send:"Send →",f_ok:"✦ Thank you! We will contact you within 2 hours.",
+    lf_own_tag:"For owners",lf_own_h:"Sell or rent out",lf_own_h_em:"with IMONDO",lf_own_p:"Tell us about your property. You get a free valuation and a clear strategy, with no obligation.",lf_own_p1:"Fair valuation at the real market price",lf_own_p2:"Premium marketing and pre-qualified buyers",lf_own_p3:"A single consultant, from A to Z",lf_own_intent:"I want to...",lf_own_opt1:"Sell a property",lf_own_opt2:"Rent out a property",
+    lf_buy_tag:"For buyers",lf_buy_h:"Looking to",lf_buy_h_em:"buy?",lf_buy_p:"Tell us what you're looking for and your budget. We'll send you matching properties, including off-market offers.",lf_buy_p1:"Access to off-market properties",lf_buy_p2:"Honest advice on prices and areas",lf_buy_p3:"Negotiation in your favor",
+    lf_rent_tag:"For tenants",lf_rent_h:"Looking for a",lf_rent_h_em:"home to rent?",lf_rent_p:"Tell us what you're looking for. We present only verified options, with serious landlords and clear contracts.",lf_rent_p1:"Verified property portfolio",lf_rent_p2:"Efficient viewings, no wasted time",lf_rent_p3:"Contract signing assistance",
+    lf_what:"What you're looking for / details"
   },
   es:{
     tagline:"Agencia inmobiliaria premium",
@@ -121,7 +133,13 @@ window.T_SHARED = {
     filt_all:"Todas",filt_any:"Cualquiera",filt_reset:"Restablecer",filt_budget_ph:"ej: 250000",
     list_sale:"En venta",list_rent:"En alquiler",count_label:"resultados",
     filt_area:"Superficie (m²)",filt_floor:"Planta",filt_facilities:"Comodidades",filt_min:"mín",filt_max:"máx",filt_rooms4:"4+",
-    empty_h:"No se encontraron propiedades",empty_p:"Intenta ajustar los filtros o vuelve pronto — añadimos anuncios constantemente.",empty_cta:"Restablecer filtros"
+    empty_h:"No se encontraron propiedades",empty_p:"Intenta ajustar los filtros o vuelve pronto — añadimos anuncios constantemente.",empty_cta:"Restablecer filtros",
+    mcta_call:"Llamar",mcta_wa:"WhatsApp",mcta_eval:"Valoración",
+    f_fname:"Nombre *",f_lname:"Apellido *",f_email:"Email *",f_phone:"Teléfono",f_msg:"Mensaje",f_send:"Enviar →",f_ok:"✦ ¡Gracias! Te contactaremos en un máximo de 2 horas.",
+    lf_own_tag:"Para propietarios",lf_own_h:"Vende o alquila",lf_own_h_em:"con IMONDO",lf_own_p:"Cuéntanos sobre tu propiedad. Recibes una valoración gratuita y una estrategia clara, sin compromiso.",lf_own_p1:"Valoración justa al precio real de mercado",lf_own_p2:"Marketing premium y compradores precalificados",lf_own_p3:"Un solo consultor, de principio a fin",lf_own_intent:"Quiero...",lf_own_opt1:"Vender una propiedad",lf_own_opt2:"Alquilar una propiedad",
+    lf_buy_tag:"Para compradores",lf_buy_h:"¿Buscas",lf_buy_h_em:"comprar?",lf_buy_p:"Cuéntanos qué buscas y tu presupuesto. Te enviamos propiedades adecuadas, incluidas ofertas off-market.",lf_buy_p1:"Acceso a propiedades off-market",lf_buy_p2:"Asesoramiento honesto sobre precios y zonas",lf_buy_p3:"Negociación a tu favor",
+    lf_rent_tag:"Para inquilinos",lf_rent_h:"¿Buscas una",lf_rent_h_em:"vivienda en alquiler?",lf_rent_p:"Cuéntanos qué buscas. Presentamos solo opciones verificadas, con propietarios serios y contratos claros.",lf_rent_p1:"Cartera verificada de propiedades",lf_rent_p2:"Visitas eficientes, sin perder tiempo",lf_rent_p3:"Asistencia en la firma del contrato",
+    lf_what:"Qué buscas / detalles"
   },
   fr:{
     tagline:"Agence immobilière premium",
@@ -158,6 +176,12 @@ window.T_SHARED = {
     filt_all:"Tous",filt_any:"Indifférent",filt_reset:"Réinitialiser",filt_budget_ph:"ex: 250000",
     list_sale:"À vendre",list_rent:"À louer",count_label:"résultats",
     filt_area:"Surface (m²)",filt_floor:"Étage",filt_facilities:"Équipements",filt_min:"min",filt_max:"max",filt_rooms4:"4+",
-    empty_h:"Aucun bien trouvé",empty_p:"Essayez d'ajuster les filtres ou revenez bientôt — nous ajoutons des annonces en permanence.",empty_cta:"Réinitialiser les filtres"
+    empty_h:"Aucun bien trouvé",empty_p:"Essayez d'ajuster les filtres ou revenez bientôt — nous ajoutons des annonces en permanence.",empty_cta:"Réinitialiser les filtres",
+    mcta_call:"Appeler",mcta_wa:"WhatsApp",mcta_eval:"Estimation",
+    f_fname:"Prénom *",f_lname:"Nom *",f_email:"Email *",f_phone:"Téléphone",f_msg:"Message",f_send:"Envoyer →",f_ok:"✦ Merci! Nous vous contactons dans 2 heures maximum.",
+    lf_own_tag:"Pour les propriétaires",lf_own_h:"Vendez ou louez",lf_own_h_em:"avec IMONDO",lf_own_p:"Parlez-nous de votre bien. Vous recevez une estimation gratuite et une stratégie claire, sans engagement.",lf_own_p1:"Estimation juste au prix réel du marché",lf_own_p2:"Marketing premium et acheteurs pré-qualifiés",lf_own_p3:"Un seul consultant, de A à Z",lf_own_intent:"Je veux...",lf_own_opt1:"Vendre un bien",lf_own_opt2:"Mettre un bien en location",
+    lf_buy_tag:"Pour les acheteurs",lf_buy_h:"Vous cherchez à",lf_buy_h_em:"acheter ?",lf_buy_p:"Dites-nous ce que vous cherchez et votre budget. Nous vous envoyons des biens adaptés, y compris des offres off-market.",lf_buy_p1:"Accès aux biens off-market",lf_buy_p2:"Conseils honnêtes sur les prix et les quartiers",lf_buy_p3:"Négociation en votre faveur",
+    lf_rent_tag:"Pour les locataires",lf_rent_h:"Vous cherchez un",lf_rent_h_em:"logement à louer ?",lf_rent_p:"Dites-nous ce que vous cherchez. Nous présentons uniquement des options vérifiées, avec des propriétaires sérieux et des contrats clairs.",lf_rent_p1:"Portefeuille de biens vérifié",lf_rent_p2:"Visites efficaces, sans perte de temps",lf_rent_p3:"Assistance à la signature du contrat",
+    lf_what:"Ce que vous cherchez / détails"
   }
 };

@@ -114,13 +114,25 @@
       </div>
     </div>
   </footer>
-  <a href="${WA}" target="_blank" class="wa" title="WhatsApp IMONDO">💬</a>`;
+  <a href="${WA}" target="_blank" class="wa" title="WhatsApp IMONDO">💬</a>
+  <div class="mcta">
+    <a href="tel:${PHONE}" data-event="click_telefon"><span class="mcta-ico">📞</span><span data-t="mcta_call">Sună</span></a>
+    <a id="mctaWa" href="${WA}" target="_blank" rel="noopener" data-event="click_whatsapp"><span class="mcta-ico">💬</span><span data-t="mcta_wa">WhatsApp</span></a>
+    <a href="${B}contact.html?subiect=evaluare" class="mcta-gd" data-event="cta_evaluare"><span class="mcta-ico">✦</span><span data-t="mcta_eval">Evaluare</span></a>
+  </div>`;
 
   /* ── INJECTARE ── */
   function inject(id, html){ const el=document.getElementById(id); if(el) el.innerHTML=html; }
   inject('site-header', header);
   inject('site-breadcrumb', breadcrumb);
   inject('site-footer', footer);
+
+  /* ── WhatsApp precompletat contextual (per pagină) ── */
+  (function(){
+    const ctx = PAGE.waText || ('Bună ziua! Vă scriu de pe ' + document.title.replace(/\s*\|.*$/,'').trim() + ' (imondorealestate.com). Aș dori mai multe informații.');
+    const url = WA + '?text=' + encodeURIComponent(ctx);
+    document.querySelectorAll('a.wa, #mctaWa').forEach(a=>a.setAttribute('href', url));
+  })();
 
   /* ── LIMBĂ ── */
   let curLang = 'ro';
@@ -169,6 +181,28 @@
     const href=a.getAttribute('href')||'';
     const ev=a.dataset.event || (href.startsWith('tel:')?'click_telefon':/wa\.me|whatsapp/i.test(href)?'click_whatsapp':null);
     if(ev)imTrack(ev);
+  });
+
+  /* ── FORMULARE LEAD segmentate (Formspree) — handler delegat ── */
+  document.addEventListener('submit', async e=>{
+    const f = e.target;
+    if(!(f.matches && f.matches('form[data-lead]'))) return;
+    e.preventDefault();
+    const btn = f.querySelector('button[type=submit]');
+    const ok = (f.parentNode && f.parentNode.querySelector('.fok')) || f.querySelector('.fok');
+    const orig = btn ? btn.textContent : '';
+    if(btn){ btn.textContent='Se trimite...'; btn.disabled=true; }
+    f.style.opacity='.6'; f.style.pointerEvents='none';
+    try{
+      const res = await fetch(f.action, {method:'POST', body:new FormData(f), headers:{'Accept':'application/json'}});
+      if(!res.ok) throw 0;
+      f.style.display='none'; if(ok) ok.style.display='block';
+      imTrack('submit_formular_' + (f.dataset.lead||'lead'));
+    }catch(_){
+      if(btn){ btn.textContent='Eroare — reîncearcă'; btn.disabled=false; }
+      f.style.opacity='1'; f.style.pointerEvents='auto';
+      setTimeout(()=>{ if(btn) btn.textContent=orig; }, 2500);
+    }
   });
 
   /* aplică limba implicită (RO) pentru a sincroniza eventualele texte injectate */
