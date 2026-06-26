@@ -20,6 +20,8 @@ const FALLBACK_IMG = 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?
 const $ = id => document.getElementById(id);
 const L = () => (window.T_SHARED && window.T_SHARED[document.documentElement.lang||'ro']) || window.T_SHARED.ro;
 const isRentOf = p => (p.tip_tranzactie||p.tipTranzactie||'').toLowerCase().includes('inchir');
+/* Normalizare insensibilă la diacritice (site "Herăstrău" vs CRM "Herastrau") */
+const norm = s => String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[șşȘŞ]/g,'s').replace(/[țţȚŢ]/g,'t').toLowerCase().trim();
 
 function fmtPrice(p){
   const pret = p.pret || p.pret_nou || 0;
@@ -67,7 +69,7 @@ window.initZoneProps = async function(opts){
         if(st==='activ'||st==='active') all.push(p);
       });
     });
-    const list = all.filter(p => (p.zona||'').trim().toLowerCase() === zona.toLowerCase());
+    const list = all.filter(p => norm(p.zona) === norm(zona));
 
     if($('zoneLoading')) $('zoneLoading').style.display='none';
     if(list.length){

@@ -39,6 +39,8 @@ const ADAPTIVE = {
 const $ = id => document.getElementById(id);
 const L = () => (window.T_SHARED && window.T_SHARED[document.documentElement.lang||'ro']) || window.T_SHARED.ro;
 const isRentOf = p => (p.tip_tranzactie||p.tipTranzactie||'').toLowerCase().includes('inchir');
+/* Normalizare insensibilă la diacritice — site folosește "Herăstrău", CRM "Herastrau" */
+const norm = s => String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[șşȘŞ]/g,'s').replace(/[țţȚŢ]/g,'t').toLowerCase().trim();
 
 let PAGE_TYPE = 'vanzare';
 let pool = [];
@@ -78,7 +80,7 @@ function applyFilters(){
   const vis = ADAPTIVE[f.tip] || ADAPTIVE[''];
   let out = pool.slice();
   if(f.tip) out = out.filter(p => (p.tipologie||p.tipProprietate||'') === f.tip);
-  if(vis.includes('zona') && f.zone.size)   out = out.filter(p => f.zone.has(p.zona||''));
+  if(vis.includes('zona') && f.zone.size)   { const zs=[...f.zone].map(norm); out = out.filter(p => zs.includes(norm(p.zona))); }
   if(vis.includes('camere') && f.camere.size) out = out.filter(p => {
     const c = parseInt(p.camere||p.nrCamere||0,10);
     return [...f.camere].some(v => v==='4' ? c>=4 : c===parseInt(v,10));
@@ -124,7 +126,7 @@ function buildPanel(){
     </div>
     <div class="lp-groups">
       <div class="lf-group" data-group="zona"><div class="lf-title" data-t="filt_zone">Zonă</div>
-        <div class="lf-checks">${zones.length?zones.map(z=>checkRow('zone',z,z,f.zone.has(z))).join(''):'<span style="font-size:.78rem;color:var(--ink4)">—</span>'}</div></div>
+        <div class="lf-checks">${zones.length?zones.map(z=>checkRow('zone',z,z,[...f.zone].some(x=>norm(x)===norm(z)))).join(''):'<span style="font-size:.78rem;color:var(--ink4)">—</span>'}</div></div>
 
       <div class="lf-group" data-group="camere"><div class="lf-title" data-t="filt_rooms">Camere</div>
         <div class="lf-checks">${['1','2','3'].map(c=>checkRow('camere',c,c,f.camere.has(c))).join('')}${checkRow('camere','4',L().filt_rooms4,f.camere.has('4'))}</div></div>
@@ -154,7 +156,10 @@ function buildPanel(){
   /* checkbox-uri (zone, camere, facilități) */
   document.querySelectorAll('.lf-check input').forEach(c=>c.onchange=()=>{
     const set = c.dataset.f==='zone'?f.zone : c.dataset.f==='camere'?f.camere : f.fac;
-    c.checked ? set.add(c.value) : set.delete(c.value);
+    if(c.checked){ set.add(c.value); }
+    else { // elimină inclusiv variante cu diacritice (din URL) care normalizează la fel
+      [...set].forEach(x=> norm(x)===norm(c.value) && set.delete(x));
+    }
     syncUrl(); applyFilters();
   });
   /* range/text (suprafață, etaj, buget) */
