@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proiect rezidențial | IMONDO Real Estate București</title>
+<meta name="description" content="Detalii proiect rezidențial — IMONDO Real Estate, agenție imobiliară premium în București.">
+<!-- OG implicit; title/OG se actualizează dinamic pentru browser (crawler-ele nu execută JS) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="IMONDO Real Estate">
+<meta property="og:image" content="https://imondorealestate.com/og-imondo.png">
+<meta id="ogTitle" property="og:title" content="Proiect rezidențial — IMONDO Real Estate">
+<meta id="ogDesc" property="og:description" content="Ansamblu rezidențial premium în București.">
+<link id="canonical" rel="canonical" href="https://imondorealestate.com/proiect.html">
+<link rel="icon" type="image/png" sizes="64x64" href="favicon-64.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0D0D0D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/shared.css">
+<style>
+.pj-wrap{padding:40px 4% 90px}
+.pj-loading,.pj-error{text-align:center;padding:90px 4%}
+.pj-loading .spin{width:34px;height:34px;border:2px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1.2rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pj-error h2{font-size:2rem;margin-bottom:1rem}.pj-error h2 em{color:var(--gold);font-style:italic}
+.pj-error p{color:var(--ink3);max-width:440px;margin:0 auto 2rem}
+.pj-grid{display:grid;grid-template-columns:1fr 340px;gap:3.5rem;align-items:start}
+.pj-name{font-family:'Cormorant Garamond',serif;font-size:2.4rem;color:var(--ink);line-height:1.1;margin-bottom:.4rem}
+.pj-meta{font-size:.9rem;color:var(--ink4);margin-bottom:1.5rem}
+.pj-from{font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--gold);margin-bottom:1.8rem}
+.pj-desc{font-size:.92rem;color:var(--ink3);line-height:1.9;white-space:pre-line}
+.pj-aside{position:sticky;top:90px;border:1px solid var(--border);background:var(--w);padding:1.8rem}
+.pj-aside h4{font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:.3rem}
+.pj-aside .sub{font-size:.8rem;color:var(--ink4);margin-bottom:1.4rem}
+.pj-aside .btn{width:100%;justify-content:center;margin-bottom:.7rem}
+.pj-res{display:flex;flex-wrap:wrap;gap:.7rem}
+@media(max-width:900px){.pj-grid{grid-template-columns:1fr}.pj-aside{position:static}}
+</style>
+</head>
+<body>
+<div id="site-header"></div>
+<div id="site-breadcrumb"></div>
+
+<!-- LOADING -->
+<div class="pj-loading" id="projDetailLoading">
+  <div class="spin"></div>
+  <p style="font-size:.85rem;color:var(--ink4)">Se încarcă proiectul...</p>
+</div>
+
+<!-- ERROR -->
+<div class="pj-error" id="projError" style="display:none">
+  <span class="tag">Eroare</span>
+  <h2>Proiectul nu a fost <em>găsit</em></h2>
+  <p id="projErrorMsg">Ansamblul căutat nu este disponibil sau a fost retras.</p>
+  <a href="proiecte.html" class="btn btn-gd">Vezi proiectele →</a>
+  <a href="index.html" class="btn btn-ol">Acasă</a>
+</div>
+
+<!-- CONȚINUT -->
+<div class="pj-wrap" id="projDetail" style="display:none">
+  <div class="container">
+    <div class="pd-gallery" id="pjGallery"></div>
+    <div class="pj-grid">
+      <div class="pj-main">
+        <h1 class="pj-name" id="pjName"></h1>
+        <div class="pj-meta" id="pjMeta"></div>
+        <div class="pj-from" id="pjFrom"></div>
+        <div class="pd-specs" id="pjSpecs"></div>
+        <div class="pd-sec"><h3>Despre ansamblu</h3><div class="pj-desc" id="pjDesc"></div></div>
+        <div class="pd-sec" id="pjFacSec" style="display:none"><h3>Facilități ansamblu</h3><div class="pd-fac-list" id="pjFac"></div></div>
+        <div class="pd-sec" id="pjResSec" style="display:none"><h3>Resurse</h3><div class="pj-res" id="pjRes"></div></div>
+      </div>
+      <aside class="pj-aside">
+        <h4>Interesat?</h4>
+        <div class="sub">Solicită detalii, disponibilitate și prețuri actualizate pentru acest ansamblu.</div>
+        <a href="tel:+40752942828" class="btn btn-gd">📞 Sună acum</a>
+        <a id="pjWa" href="https://wa.me/40752942828" target="_blank" rel="noopener" class="btn btn-dk">💬 WhatsApp</a>
+        <a href="contact.html?subiect=evaluare" class="btn btn-ol">Trimite mesaj →</a>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<div id="site-footer"></div>
+
+<script>
+window.IMONDO_PAGE = { active:'projects', crumbs:[
+  {t:'nav_projects', label:'Proiecte', href:'proiecte.html'},
+  {t:'', label:'Detaliu', href:'#'}
+] };
+</script>
+<script src="assets/i18n.js"></script>
+<script src="assets/include.js"></script>
+<script src="assets/projects.js"></script>
+<script>initProjectDetail();</script>
+</body>
+</html>

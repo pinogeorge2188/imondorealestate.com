@@ -212,6 +212,42 @@ footer{background:var(--ink);padding:5rem 4% 0}
 .mcta a:active{background:var(--ink2)}
 @media(max-width:768px){.mcta{display:flex}body{padding-bottom:58px}.wa{bottom:5rem}}
 
+/* ── PROIECTE: grilă listă ── */
+.proj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.projcard{background:var(--w);border:1px solid var(--border);overflow:hidden;display:block;color:inherit;transition:transform .4s,box-shadow .4s}
+.projcard:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(20,18,16,.1)}
+.projcard-img{height:210px;overflow:hidden;position:relative}
+.projcard-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.projcard:hover .projcard-img img{transform:scale(1.05)}
+.projcard-stage{position:absolute;top:1rem;left:1rem;background:var(--gold);color:var(--w);font-size:.55rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:.3rem .7rem}
+.projcard-body{padding:1.4rem}
+.projcard-body h3{font-size:1.3rem;margin-bottom:.3rem}
+.projcard-meta{font-size:.74rem;color:var(--ink4);margin-bottom:.7rem}
+.projcard-desc{font-size:.82rem;color:var(--ink3);line-height:1.7;margin-bottom:1rem}
+.projcard-foot{display:flex;justify-content:space-between;align-items:center;padding-top:.9rem;border-top:1px solid var(--border)}
+.projcard-from{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--gold)}
+.projcard-cta{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink4)}
+
+/* ── PROIECT: pagină detaliu ── */
+.pj-gallery,.pd-gallery{position:relative;height:460px;overflow:hidden;background:var(--s3);margin-bottom:2.5rem}
+.pd-gallery img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0;transition:opacity .4s}
+.pd-gallery img.on{opacity:1}
+.pd-prev,.pd-next{position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;background:rgba(20,18,16,.55);border:none;color:#fff;font-size:1.2rem;cursor:pointer;z-index:5;transition:.2s}
+.pd-prev{left:1rem}.pd-next{right:1rem}.pd-prev:hover,.pd-next:hover{background:var(--gold)}
+.pd-dots{position:absolute;bottom:1.2rem;left:50%;transform:translateX(-50%);display:flex;gap:.45rem;z-index:5}
+.pd-dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.45);cursor:pointer}.pd-dot.on{background:var(--gold)}
+.pd-badge{position:absolute;top:1.2rem;left:1.2rem;z-index:5;font-size:.6rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:.4rem .9rem}
+.pd-specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:2.5rem}
+.pd-spec{background:var(--s0);padding:1.3rem 1rem;text-align:center}
+.pd-spec-val{font-family:'Cormorant Garamond',serif;color:var(--ink);display:block;line-height:1.2}
+.pd-spec-lab{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink4);margin-top:.4rem;display:block}
+.pd-sec{margin-bottom:2.5rem}
+.pd-sec h3{font-size:1.4rem;margin-bottom:1rem;padding-bottom:.6rem;border-bottom:1px solid var(--border)}
+.pd-fac-list{display:flex;flex-wrap:wrap;gap:.6rem}
+.pd-fac{padding:.4rem .9rem;background:var(--s1);border:1px solid var(--border);font-size:.8rem;color:var(--ink3)}
+@media(max-width:1024px){.proj-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:680px){.proj-grid{grid-template-columns:1fr}.pd-gallery{height:320px}}
+
 /* ── TEXT ZONĂ (SEO) ── */
 .zone-text{max-width:840px}
 .zone-text h2{font-size:clamp(1.6rem,3vw,2.3rem);line-height:1.2;margin-bottom:1.4rem}

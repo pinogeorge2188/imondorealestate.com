@@ -28,19 +28,17 @@
   <div class="page-hero-bg">Proiecte</div>
   <div class="container">
     <span class="tag" data-t="proj_eyebrow">Dezvoltări noi</span>
-    <h1><span data-t="proj_h">Proiecte rezidențiale</span> <em data-t="proj_h_em">— În curând</em></h1>
+    <h1><span data-t="proj_h">Proiecte</span> <em data-t="proj_h_em">rezidențiale</em></h1>
     <div class="gold-line"></div>
-    <p data-t="proj_sub">Pregătim o secțiune dedicată ansamblurilor rezidențiale noi din București și Ilfov. Revino curând sau lasă-ne datele tale.</p>
+    <p data-t="proj_sub">Ansambluri rezidențiale noi în București și Ilfov — selectate, cu dezvoltatori de încredere.</p>
   </div>
 </section>
 
 <section class="section">
-  <div class="coming-soon">
-    <span class="cs-badge" data-t="soon_badge">În curând</span>
-    <h2><span data-t="proj_h">Proiecte rezidențiale</span></h2>
-    <p data-t="proj_sub">Pregătim o secțiune dedicată ansamblurilor rezidențiale noi din București și Ilfov. Revino curând sau lasă-ne datele tale.</p>
-    <a href="contact.html" class="btn btn-gd" data-t="proj_cta">Anunță-mă când e gata</a>
-    <!-- NOTĂ DEV: modulul complet (colecția Firestore `proiecte` + CRM app.js + pagini dinamice proiect.html?id=) se implementează în Sesiunea 8. -->
+  <div class="container">
+    <div class="list-meta"><div id="projMeta"></div></div>
+    <div id="projLoading" class="list-loading"><div class="spin"></div><p style="font-size:.85rem;color:var(--ink4)">Se încarcă proiectele...</p></div>
+    <div id="projGrid"></div>
   </div>
 </section>
 
@@ -51,5 +49,7 @@ window.IMONDO_PAGE = { active:'projects', crumbs:[{t:'nav_projects', label:'Proi
 </script>
 <script src="assets/i18n.js"></script>
 <script src="assets/include.js"></script>
+<script src="assets/projects.js"></script>
+<script>initProjectsList();</script>
 </body>
 </html>
