@@ -32,9 +32,29 @@
 .founder-feat .ff-role{font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:1.2rem}
 .founder-feat .ff-quote{font-size:.92rem;color:var(--ink3);line-height:1.95;font-style:italic;margin-bottom:1rem}
 .founder-feat .ff-sign{font-size:.82rem;color:var(--gold);letter-spacing:.03em}
-.team-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;max-width:680px;margin:0 auto}
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:900px;margin:0 auto}
 .agcard{background:var(--w);border:1px solid var(--border);overflow:hidden;transition:transform .35s,box-shadow .35s}
 .agcard:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(20,18,16,.1)}
+.ag-img{height:240px;overflow:hidden}
+.ag-img img{width:100%;height:100%;object-fit:cover;object-position:top;filter:grayscale(15%);transition:filter .5s ease,transform .5s ease}
+.agcard:hover .ag-img img{filter:grayscale(0);transform:scale(1.04)}
+/* VALORI */
+.vals-sec{background:var(--s1)}
+.vals-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border:1px solid var(--border);max-width:1000px;margin:0 auto}
+.val-card{background:var(--s0);padding:2rem 1.8rem;transition:background .3s}
+.val-card:hover{background:var(--w)}
+.val-ico{font-size:1.4rem;margin-bottom:1rem}
+.val-card h4{font-family:'Cormorant Garamond',serif;font-size:1.35rem;margin-bottom:.5rem}
+.val-card p{font-size:.85rem;color:var(--ink3);line-height:1.8}
+/* CTA FINAL */
+.about-cta{background:var(--ink2);text-align:center;padding:90px 4%}
+.about-cta h2{color:var(--w);font-size:clamp(2rem,3.5vw,2.8rem);margin-bottom:1rem}
+.about-cta h2 em{color:var(--gold);font-style:italic}
+.about-cta p{color:#C0B898;max-width:560px;margin:0 auto 2rem;font-size:.92rem;line-height:1.85}
+.about-cta .cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.about-cta .btn-olw{background:transparent;color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.3);padding:.75rem 1.6rem}
+.about-cta .btn-olw:hover{border-color:var(--gold);color:var(--gold)}
+@media(max-width:768px){.vals-grid{grid-template-columns:1fr}.team-grid{grid-template-columns:1fr}}
 .ag-avatar{width:100%;height:240px;display:flex;align-items:center;justify-content:center;background:var(--ink);position:relative;overflow:hidden}
 .ag-avatar::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#1a1a1a 0%,#0d0d0d 100%)}
 .ag-initials{position:relative;z-index:1;font-family:'Cormorant Garamond',serif;font-size:4.5rem;font-weight:300;color:var(--gold);letter-spacing:.1em}
@@ -84,10 +104,40 @@
       </div>
     </div>
 
-    <!-- RESTUL ECHIPEI — poze reale Camelia & Stefan = [DE COMPLETAT] (acum inițiale) -->
+    <!-- ECHIPA — 3 carduri (poze reale Camelia & Stefan = [DE COMPLETAT], acum inițiale) -->
     <div class="team-grid">
-      <div class="agcard" data-r><div class="ag-avatar"><span class="ag-initials">CA</span><div class="ag-avatar-line"></div></div><div class="ag-body"><h3 class="ag-name">Camelia Anton</h3><div class="ag-role">Consultant Imobiliar</div><div class="ag-email">officeimondo@gmail.com</div><div class="ag-links"><a href="mailto:officeimondo@gmail.com">✉</a></div></div></div>
-      <div class="agcard" data-r><div class="ag-avatar"><span class="ag-initials">SS</span><div class="ag-avatar-line"></div></div><div class="ag-body"><h3 class="ag-name">Stefan Stoiciu</h3><div class="ag-role">Consultant Imobiliar</div><div class="ag-email">officeimondo@gmail.com</div><div class="ag-links"><a href="mailto:officeimondo@gmail.com">✉</a></div></div></div>
+      <div class="agcard" data-r><div class="ag-img"><img src="George.png.png" alt="George Țigăneșteanu" loading="lazy"></div><div class="ag-body"><h3 class="ag-name">George Țigăneșteanu</h3><div class="ag-role">Fondator &amp; Broker Owner</div></div></div>
+      <div class="agcard" data-r><div class="ag-avatar"><span class="ag-initials">CA</span><div class="ag-avatar-line"></div></div><div class="ag-body"><h3 class="ag-name">Camelia Anton</h3><div class="ag-role">Consultant Imobiliar</div></div></div>
+      <div class="agcard" data-r><div class="ag-avatar"><span class="ag-initials">SS</span><div class="ag-avatar-line"></div></div><div class="ag-body"><h3 class="ag-name">Stefan Stoiciu</h3><div class="ag-role">Consultant Imobiliar</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- VALORI -->
+<section class="section vals-sec">
+  <div class="container">
+    <div class="sec-head" data-r style="text-align:center;margin-bottom:3.5rem">
+      <span class="tag">Ce ne ghidează</span>
+      <h2 style="font-size:clamp(2rem,3.5vw,3rem)">Valorile care stau la baza <em style="color:var(--gold);font-style:italic">fiecărei colaborări</em></h2>
+      <div class="gold-line c"></div>
+    </div>
+    <div class="vals-grid">
+      <div class="val-card" data-r><span class="val-ico">🤝</span><h4>Onestitate</h4><p>Îți spunem adevărul despre prețuri și piață, chiar dacă nu e ce vrei să auzi. Preferăm o conversație sinceră unei vânzări forțate.</p></div>
+      <div class="val-card" data-r><span class="val-ico">🔍</span><h4>Transparență</h4><p>Fără surprize, fără costuri ascunse. Știi mereu unde te afli în proces și ce urmează.</p></div>
+      <div class="val-card" data-r><span class="val-ico">✦</span><h4>Dedicare</h4><p>Nu lucrăm pe volum. Dedicăm timp real fiecărui client și ne implicăm personal în fiecare tranzacție, de la prima discuție până la predarea cheilor.</p></div>
+      <div class="val-card" data-r><span class="val-ico">📍</span><h4>Expertiză</h4><p>Cunoaștem piața din București cartier cu cartier, stradă cu stradă. Iar experiența în investiții ne permite să te ghidăm dincolo de o simplă achiziție.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="about-cta">
+  <div class="container">
+    <h2 data-r>Hai să vorbim despre <em>proprietatea ta</em></h2>
+    <p data-r>Fie că vrei să vinzi, să cumperi sau să investești, suntem aici să te ghidăm cu onestitate și profesionalism.</p>
+    <div class="cta-btns" data-r>
+      <a href="servicii.html" class="btn btn-gd" data-event="cta_evaluare">Solicită o evaluare gratuită →</a>
+      <a href="https://wa.me/40752942828" target="_blank" rel="noopener" class="btn btn-olw" data-event="click_whatsapp">Discută pe WhatsApp</a>
     </div>
   </div>
 </section>
