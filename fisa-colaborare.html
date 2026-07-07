@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Fișă proprietate — Colaborare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C9A84C;--dark:#1a1712;--cream:#F9F5EE;--ink:#2a2620;--ink3:#6b6458;--ink4:#9a927f;--border:#e7e0d3;--w:#fff}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Poppins',sans-serif;background:var(--cream);color:var(--ink);font-weight:300;line-height:1.7}
+h1,h2,h3{font-family:'Playfair Display',serif;font-weight:600;line-height:1.15}
+img{display:block;max-width:100%}
+/* header neutru (fără brand) */
+.topbar{background:var(--dark);padding:16px 5%;text-align:center}
+.topbar .t{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--gold);letter-spacing:.06em}
+.topbar .s{font-size:.6rem;color:rgba(255,255,255,.4);letter-spacing:.28em;text-transform:uppercase;margin-top:3px}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 5% 60px}
+.state{text-align:center;padding:80px 5%}
+.spin{width:34px;height:34px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.state h2{font-size:1.6rem;margin-bottom:.6rem}.state h2 em{color:var(--gold);font-style:italic}
+.state p{color:var(--ink3);max-width:420px;margin:0 auto}
+/* galerie */
+.gal-main{position:relative;border-radius:14px;overflow:hidden;background:#eee;margin-bottom:10px}
+.gal-main img{width:100%;height:clamp(240px,52vw,520px);object-fit:cover}
+.gal-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border:none;background:rgba(26,23,18,.55);color:#fff;font-size:1.3rem;cursor:pointer;border-radius:50%}
+.gal-prev{left:12px}.gal-next{right:12px}.gal-nav:hover{background:var(--gold);color:var(--dark)}
+.gal-thumbs{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.gal-thumbs img{width:92px;height:66px;object-fit:cover;border-radius:8px;cursor:pointer;opacity:.55;flex-shrink:0;border:2px solid transparent;transition:opacity .2s}
+.gal-thumbs img.on,.gal-thumbs img:hover{opacity:1;border-color:var(--gold)}
+/* head */
+.phead{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin:26px 0 8px}
+.phead h1{font-size:clamp(1.6rem,4vw,2.4rem);color:var(--dark)}
+.ploc{color:var(--ink4);font-size:.95rem;margin-top:4px}
+.pprice{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,5vw,2.6rem);color:var(--gold);font-weight:700;white-space:nowrap}
+.pprice small{font-family:'Poppins',sans-serif;font-size:1rem;color:var(--ink4);font-weight:300}
+/* sectiuni */
+.sec{margin-top:34px}
+.sec h2{font-size:1.5rem;color:var(--dark);margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--gold);display:inline-block}
+.specs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.spec{background:var(--w);display:flex;justify-content:space-between;gap:10px;padding:13px 18px}
+.spec-l{color:var(--ink4);font-size:.85rem}
+.spec-v{font-weight:500;color:var(--ink);font-size:.9rem;text-align:right}
+.desc p{font-size:.95rem;color:var(--ink3);line-height:1.9;margin-bottom:1rem}
+.facs{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:var(--w);border:1px solid var(--gold);color:var(--ink);font-size:.82rem;padding:6px 14px;border-radius:22px}
+.foot{text-align:center;color:var(--ink4);font-size:.72rem;margin-top:44px;padding-top:16px;border-top:1px solid var(--border)}
+@media(max-width:640px){.specs{grid-template-columns:1fr}.phead{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="t">Fișă proprietate</div>
+  <div class="s">Prezentare ofertă</div>
+</header>
+
+<div class="state" id="fLoading"><div class="spin"></div><p style="font-size:.85rem;color:var(--ink4)">Se încarcă proprietatea...</p></div>
+
+<div class="state" id="fError" style="display:none">
+  <h2>Proprietatea nu a fost <em>găsită</em></h2>
+  <p id="fErrorMsg">Fișa căutată nu este disponibilă.</p>
+</div>
+
+<main class="wrap" id="fContent" style="display:none">
+  <div id="fGallery"></div>
+  <div class="phead">
+    <div><h1 id="fName"></h1><div class="ploc" id="fLoc"></div></div>
+    <div class="pprice" id="fPrice"></div>
+  </div>
+
+  <section class="sec"><h2>Caracteristici</h2><div class="specs" id="fSpecs"></div></section>
+  <section class="sec" id="fDescSec"><h2>Descriere</h2><div class="desc" id="fDesc"></div></section>
+  <section class="sec" id="fFacSec"><h2>Dotări &amp; facilități</h2><div class="facs" id="fFac"></div></section>
+
+  <div class="foot">Document de prezentare · <span id="fDate"></span></div>
+</main>
+
+<script src="assets/fise.js"></script>
+<script>document.getElementById('fDate').textContent=new Date().toLocaleDateString('ro-RO');initFisa();</script>
+</body>
+</html>
