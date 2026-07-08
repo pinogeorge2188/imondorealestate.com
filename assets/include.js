@@ -19,6 +19,21 @@
   const EMAIL = "officeimondo@gmail.com";
   const B = PAGE.base || ''; // prefix pentru pagini în subfolder (ex: zone/ → '../')
 
+  /* ── Google Analytics 4 — o singură dată, pe toate paginile care încarcă include.js.
+     index.html e self-contained și are GA direct în <head>, deci NU trece pe aici. ── */
+  (function(){
+    const GA_ID = 'G-49RFGB91ZH';
+    if(window.__imondoGA) return; window.__imondoGA = true;
+    if(document.querySelector('script[src*="googletagmanager.com/gtag/js"]')) return; // deja prezent → nu dubla
+    const s = document.createElement('script');
+    s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ dataLayer.push(arguments); };
+    gtag('js', new Date());
+    gtag('config', GA_ID);
+  })();
+
   /* ── HEADER ── */
   const a = k => PAGE.active===k ? ' class="active"' : '';
   const header = `
