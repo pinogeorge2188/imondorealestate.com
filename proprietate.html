@@ -110,6 +110,14 @@
         <div class="pd-title" id="pdTitle"></div>
         <div class="pd-loc" id="pdLoc"></div>
         <div class="pd-specs" id="pdSpecs"></div>
+        <div class="pd-sec" id="pdUtilSec" style="display:none">
+          <h3>Utilități</h3>
+          <div class="pd-fac-list" id="pdUtil"></div>
+        </div>
+        <div class="pd-sec" id="pdFinisajSec" style="display:none">
+          <h3>Finisaje</h3>
+          <div class="pd-specs" id="pdFinisaj"></div>
+        </div>
         <div class="pd-sec" id="pdDescSec">
           <h3>Descriere</h3>
           <div class="pd-desc" id="pdDesc"></div>
@@ -250,21 +258,71 @@ function render(p){
   $('pdTitle').textContent = titlu;
   $('pdLoc').textContent = '📍 ' + [p.adresa, zona].filter(Boolean).join(', ');
 
-  /* specs */
+  /* specs — caracteristici complete (afișare adaptivă) */
+  const _has = v => v!==undefined && v!==null && String(v).trim()!=='';
   const specs = [
+    {v:p.tipologie||p.tipProprietate, l:'Tip'},
     {v:p.camere||p.nrCamere, l:'Camere'},
+    {v:(p.bai||p.numar_bai), l:'Băi'},
+    {v:p.bucatarii, l:'Bucătării'},
+    {v:p.compartimentare, l:'Compartimentare'},
+    {v:p.confort, l:'Confort'},
     {v:(p.suprafata?p.suprafata+' mp':null), l:'Suprafață'},
-    {v:p.etaj, l:'Etaj'},
+    {v:(p.suprafata_utila?p.suprafata_utila+' mp':null), l:'Supr. utilă'},
+    {v:(p.suprafata_construita?p.suprafata_construita+' mp':null), l:'Supr. construită'},
+    {v:(p.suprafata_utila_totala?p.suprafata_utila_totala+' mp':null), l:'Utilă totală'},
+    {v:(p.suprafata_balcoane?p.suprafata_balcoane+' mp':null), l:'Balcoane'},
+    {v:(p.suprafata_teren?p.suprafata_teren+' mp':null), l:'Teren'},
+    {v:(p.deschidere_teren?p.deschidere_teren+' m':null), l:'Deschidere'},
+    {v:p.clasificare_teren, l:'Clasificare'},
+    {v:(_has(p.etaj)?((''+p.etaj)+(_has(p.total_etaje)?(' / '+p.total_etaje):(p.etaje_total?(' / '+p.etaje_total):''))):null), l:'Etaj'},
     {v:p.an_constructie, l:'An construcție'},
-    {v:p.tipologie||p.tipProprietate, l:'Tip'}
-  ].filter(s=>s.v!==undefined && s.v!==null && s.v!=='');
+    {v:p.an_renovare, l:'An renovare'},
+    {v:p.tip_imobil, l:'Tip imobil'},
+    {v:p.structura_cladire, l:'Structură'},
+    {v:p.regim_inaltime, l:'Regim înălțime'},
+    {v:(p.suprafata_curte?p.suprafata_curte+' mp':null), l:'Curte'},
+    {v:p.vad, l:'Vad'},
+    {v:p.clasa_cladire, l:'Clasă clădire'},
+    {v:(p.front_stradal?p.front_stradal+' m':null), l:'Front stradal'},
+    {v:p.destinatie, l:'Destinație'}
+  ].filter(s=>_has(s.v));
   $('pdSpecs').innerHTML = specs.map(s=>`<div class="pd-spec"><span class="pd-spec-val">${s.v}</span><span class="pd-spec-lab">${s.l}</span></div>`).join('');
+
+  /* utilități */
+  const util = [];
+  if(p.utilitate_curent) util.push('Curent');
+  if(p.utilitate_apa) util.push('Apă');
+  if(p.utilitate_canalizare) util.push('Canalizare');
+  if(p.utilitate_gaz) util.push('Gaz');
+  if(p.utilitate_fibra) util.push('Fibră');
+  (p.teren_utilitati||[]).forEach(u=>{ if(u) util.push(u); });
+  if(p.climatizare) util.push('Climatizare');
+  if(_has(p.sistem_incalzire)) util.push('Încălzire: '+p.sistem_incalzire);
+  if(util.length){ $('pdUtilSec').style.display=''; $('pdUtil').innerHTML = util.map(u=>`<span class="pd-fac">✓ ${u}</span>`).join(''); }
+
+  /* finisaje */
+  const finis = [
+    {v:p.stare_finisaj, l:'Stare finisaj'},
+    {v:p.finisaj_pereti, l:'Pereți'},
+    {v:p.finisaj_podele, l:'Podele'},
+    {v:p.tip_ferestre, l:'Ferestre'},
+    {v:p.tip_usi, l:'Uși'}
+  ].filter(s=>_has(s.v));
+  if(finis.length){ $('pdFinisajSec').style.display=''; $('pdFinisaj').innerHTML = finis.map(s=>`<div class="pd-spec"><span class="pd-spec-val">${s.v}</span><span class="pd-spec-lab">${s.l}</span></div>`).join(''); }
 
   /* descriere COMPLETĂ (fără limită) */
   $('pdDesc').textContent = p.descriere || p.note || ('Proprietate ' + (p.tipologie||'') + ' în ' + zona + '. Contactați-ne pentru detalii complete și vizionare.');
 
-  /* facilități */
-  const fac = (p.facilitati||[]).filter(Boolean);
+  /* dotări & facilități (câmpuri noi + facilitati existente) */
+  const fac = [];
+  if(_has(p.mobilat)) fac.push('Mobilat: '+p.mobilat);
+  if(_has(p.parcare)) fac.push('Parcare: '+p.parcare);
+  if(p.utilat) fac.push('Utilat');
+  if(p.lift) fac.push('Lift');
+  if(p.contorizare_individuala) fac.push('Contorizare individuală');
+  (p.spatii_utile||[]).forEach(s=>{ if(s) fac.push(s); });
+  (p.facilitati||[]).forEach(f=>{ if(f) fac.push(f); });
   if(fac.length){ $('pdFacSec').style.display=''; $('pdFac').innerHTML = fac.map(f=>`<span class="pd-fac">✓ ${f}</span>`).join(''); }
 
   /* hartă (link Google Maps) */

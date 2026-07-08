@@ -19,6 +19,18 @@ const FALLBACK_IMG = 'https://images.unsplash.com/photo-1600585154340-be6161a56a
 const $ = id => document.getElementById(id);
 const esc = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 function hide(id){ var e=$(id); if(e) e.style.display='none'; }
+function has(v){ return v!=null && String(v).trim()!==''; }
+function showSec(secId){ if(secId){ var s=$(secId); if(s) s.style.display=''; } }
+function fillGrid(id, secId, rows){
+  rows=rows.filter(Boolean); var el=$(id); if(!el) return;
+  if(!rows.length){ if(secId) hide(secId); el.innerHTML=''; return; }
+  el.innerHTML = rows.map(function(r){ return '<div class="spec"><span class="spec-l">'+esc(r.l)+'</span><span class="spec-v">'+esc(r.v)+'</span></div>'; }).join(''); showSec(secId);
+}
+function fillChips(id, secId, arr){
+  arr=arr.filter(Boolean); var el=$(id); if(!el) return;
+  if(!arr.length){ if(secId) hide(secId); el.innerHTML=''; return; }
+  el.innerHTML = arr.map(function(f){ return '<span class="chip">'+esc(f)+'</span>'; }).join(''); showSec(secId);
+}
 
 async function loadPropertyById(id){
   const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js');
@@ -52,10 +64,16 @@ function showErr(msg){
   var el=$('fError'); if(el){ var m=$('fErrorMsg'); if(m&&msg) m.textContent=msg; el.style.display='block'; }
 }
 
+/* pagina de colaborare e neutră (fără brand) → scoate orice mențiune IMONDO din textele proprietății */
+function neutralize(s){ return String(s==null?'':s).replace(/IMONDO\s+Real\s+Estate/gi,'Agenția').replace(/\bIMONDO\b/gi,'Agenția').replace(/ {2,}/g,' ').trim(); }
+
 function render(p, agent){
+  /* branded = pagina client (are containerul de comision); altfel = colaborare (neutru) */
+  var neutral = !document.getElementById('fCommission');
   var nume = p.denumire || p.titlu || (p.tipologie || 'Proprietate');
+  if(neutral) nume = neutralize(nume);
   var isRent = /inchir/i.test(p.tip_tranzactie||'');
-  document.title = nume + (document.title.indexOf('Colaborare')>=0 ? ' — Fișă proprietate' : ' — IMONDO Real Estate');
+  document.title = nume + (neutral ? ' — Fișă proprietate' : ' — IMONDO Real Estate');
 
   /* galerie */
   gImgs = (p.poze||[]).filter(Boolean); if(!gImgs.length) gImgs=[FALLBACK_IMG]; gIdx=0; buildGallery();
@@ -74,29 +92,73 @@ function render(p, agent){
     } else { hide('fCommission'); }
   }
 
-  /* caracteristici — doar câmpurile existente */
-  var specs = [
-    p.tipologie ? {l:'Tip proprietate', v:p.tipologie} : null,
-    p.tip_tranzactie ? {l:'Tranzacție', v:p.tip_tranzactie} : null,
-    p.camere ? {l:'Camere', v:p.camere} : null,
-    (p.bai||p.numar_bai) ? {l:'Băi', v:(p.bai||p.numar_bai)} : null,
-    p.suprafata ? {l:'Suprafață', v:p.suprafata+' mp'} : null,
-    p.etaj ? {l:'Etaj', v:(''+p.etaj)+(p.etaje_total?(' / '+p.etaje_total):'')} : null,
-    p.an_constructie ? {l:'An construcție', v:p.an_constructie} : null,
-    p.compartimentare ? {l:'Compartimentare', v:p.compartimentare} : null,
-    p.finisaje ? {l:'Finisaje', v:p.finisaje} : null
-  ].filter(Boolean);
-  $('fSpecs').innerHTML = specs.map(function(s){ return '<div class="spec"><span class="spec-l">'+esc(s.l)+'</span><span class="spec-v">'+esc(s.v)+'</span></div>'; }).join('');
+  /* Caracteristici — toate câmpurile completate (afișare adaptivă: doar ce există) */
+  fillGrid('fSpecs', null, [
+    has(p.tipologie) ? {l:'Tip proprietate', v:p.tipologie} : null,
+    has(p.tip_tranzactie) ? {l:'Tranzacție', v:p.tip_tranzactie} : null,
+    has(p.camere) ? {l:'Camere', v:p.camere} : null,
+    (has(p.bai)||has(p.numar_bai)) ? {l:'Băi', v:(p.bai||p.numar_bai)} : null,
+    has(p.bucatarii) ? {l:'Bucătării', v:p.bucatarii} : null,
+    has(p.compartimentare) ? {l:'Compartimentare', v:p.compartimentare} : null,
+    has(p.confort) ? {l:'Confort', v:p.confort} : null,
+    has(p.suprafata) ? {l:'Suprafață', v:p.suprafata+' mp'} : null,
+    has(p.suprafata_utila) ? {l:'Suprafață utilă', v:p.suprafata_utila+' mp'} : null,
+    has(p.suprafata_construita) ? {l:'Suprafață construită', v:p.suprafata_construita+' mp'} : null,
+    has(p.suprafata_utila_totala) ? {l:'Supr. utilă totală', v:p.suprafata_utila_totala+' mp'} : null,
+    has(p.suprafata_balcoane) ? {l:'Balcoane/terase', v:p.suprafata_balcoane+' mp'} : null,
+    has(p.suprafata_teren) ? {l:'Suprafață teren', v:p.suprafata_teren+' mp'} : null,
+    has(p.deschidere_teren) ? {l:'Deschidere teren', v:p.deschidere_teren+' m'} : null,
+    has(p.clasificare_teren) ? {l:'Clasificare', v:p.clasificare_teren} : null,
+    has(p.etaj) ? {l:'Etaj', v:(''+p.etaj)+(has(p.total_etaje)?(' / '+p.total_etaje):(p.etaje_total?(' / '+p.etaje_total):''))} : null,
+    has(p.an_constructie) ? {l:'An construcție', v:p.an_constructie} : null,
+    has(p.an_renovare) ? {l:'An renovare', v:p.an_renovare} : null,
+    has(p.tip_imobil) ? {l:'Tip imobil', v:p.tip_imobil} : null,
+    has(p.structura_cladire) ? {l:'Structură', v:p.structura_cladire} : null,
+    has(p.regim_inaltime) ? {l:'Regim înălțime', v:p.regim_inaltime} : null,
+    has(p.suprafata_curte) ? {l:'Curte', v:p.suprafata_curte+' mp'} : null,
+    has(p.vad) ? {l:'Vad', v:p.vad} : null,
+    has(p.clasa_cladire) ? {l:'Clasă clădire', v:p.clasa_cladire} : null,
+    has(p.front_stradal) ? {l:'Front stradal', v:p.front_stradal+' m'} : null,
+    has(p.destinatie) ? {l:'Destinație', v:p.destinatie} : null
+  ]);
 
-  /* descriere — pe paragrafe */
+  /* Utilități — chips */
+  var util=[];
+  if(p.utilitate_curent) util.push('Curent');
+  if(p.utilitate_apa) util.push('Apă');
+  if(p.utilitate_canalizare) util.push('Canalizare');
+  if(p.utilitate_gaz) util.push('Gaz');
+  if(p.utilitate_fibra) util.push('Fibră');
+  (p.teren_utilitati||[]).forEach(function(u){ if(u) util.push(u); });
+  if(p.climatizare) util.push('Climatizare');
+  if(has(p.sistem_incalzire)) util.push('Încălzire: '+p.sistem_incalzire);
+  fillChips('fUtil', 'fUtilSec', util);
+
+  /* Finisaje */
+  fillGrid('fFinisaj', 'fFinisajSec', [
+    has(p.stare_finisaj) ? {l:'Stare finisaj', v:p.stare_finisaj} : null,
+    has(p.finisaj_pereti) ? {l:'Pereți', v:p.finisaj_pereti} : null,
+    has(p.finisaj_podele) ? {l:'Podele', v:p.finisaj_podele} : null,
+    has(p.tip_ferestre) ? {l:'Ferestre', v:p.tip_ferestre} : null,
+    has(p.tip_usi) ? {l:'Uși', v:p.tip_usi} : null
+  ]);
+
+  /* descriere — pe paragrafe (neutralizată pe colaborare) */
   if(p.descriere && String(p.descriere).trim()){
-    $('fDesc').innerHTML = String(p.descriere).split(/\n\s*\n/).map(function(par){ return '<p>'+esc(par).replace(/\n/g,'<br>')+'</p>'; }).join('');
+    var descTxt = neutral ? neutralize(p.descriere) : String(p.descriere);
+    $('fDesc').innerHTML = descTxt.split(/\n\s*\n/).map(function(par){ return '<p>'+esc(par).replace(/\n/g,'<br>')+'</p>'; }).join('');
   } else { hide('fDescSec'); }
 
-  /* facilități */
-  var fac=(p.facilitati||[]).filter(Boolean);
-  if(fac.length){ $('fFac').innerHTML = fac.map(function(f){ return '<span class="chip">'+esc(f)+'</span>'; }).join(''); }
-  else { hide('fFacSec'); }
+  /* Dotări & facilități — chips (câmpuri noi + facilitati existente) */
+  var dot=[];
+  if(has(p.mobilat)) dot.push('Mobilat: '+p.mobilat);
+  if(has(p.parcare)) dot.push('Parcare: '+p.parcare);
+  if(p.utilat) dot.push('Utilat');
+  if(p.lift) dot.push('Lift');
+  if(p.contorizare_individuala) dot.push('Contorizare individuală');
+  (p.spatii_utile||[]).forEach(function(s){ if(s) dot.push(s); });
+  (p.facilitati||[]).forEach(function(f){ if(f) dot.push(f); });
+  fillChips('fFac', 'fFacSec', dot);
 
   /* agent (CTA) — doar pe fisa-client */
   if($('fAgentName')) $('fAgentName').textContent = agent || 'Consultant IMONDO';
