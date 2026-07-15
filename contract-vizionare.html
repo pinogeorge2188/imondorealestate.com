@@ -149,7 +149,7 @@ img{display:block;max-width:100%}
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4/dist/signature_pad.umd.min.js"></script>
 <script type="module">
 import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { getFirestore, doc, setDoc, serverTimestamp, Timestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+import { getFirestore, doc, getDoc, updateDoc, serverTimestamp, Timestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
 const FIREBASE_CONFIG = window.IMONDO_FIREBASE_CONFIG || {
   apiKey: "AIzaSyCisA7tcMYHAv46aqcne3DpKL1_YIKiApE",
@@ -167,17 +167,6 @@ const esc = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
 const TIPURI = ['Apartament','Casă/Vilă','Teren','Alt tip'];
 
 function showErr(msg){ $('cLoading').style.display='none'; $('cContent').style.display='none'; if(msg)$('cErrorMsg').textContent=msg; $('cError').style.display='block'; }
-
-/* ── parse link: ?id=docId  +  #<base64 payload> ── */
-function parseLink(){
-  const id = new URLSearchParams(location.search).get('id');
-  let payload=null;
-  try{
-    const frag = location.hash.replace(/^#/,'');
-    if(frag) payload = JSON.parse(decodeURIComponent(escape(atob(frag))));
-  }catch(e){ console.warn('payload parse', e); }
-  return { id, payload };
-}
 
 /* ── state ── */
 let DOC_ID=null, P=null, MODE='full';
@@ -416,29 +405,23 @@ function revalidate(){
   $('cStatus').innerHTML = ok ? 'Toate semnăturile obligatorii sunt completate. <b>Poți semna.</b>' : 'Completează câmpurile și semnăturile obligatorii';
 }
 
-/* ── submit → CREATE doc ── */
+/* ── submit → UPDATE doc (in_asteptare → semnat) ── */
 async function submit(){
   $('cSubmit').disabled=true; $('cStatus').textContent='Se salvează...';
   try{
     var now=new Date();
     var exp=new Date(now.getTime()); exp.setMonth(exp.getMonth()+12);
-    var data = {
-      numar_contract: P.numar_contract||'',
+    var patch = {
+      status: 'semnat',
       data_semnare: serverTimestamp(),
       data_expirare: Timestamp.fromDate(exp),
-      agent_uid: P.agent_uid||'',
-      agent_nume: P.agent_nume||'',
-      status: 'semnat',
-      contract_referinta_id: P.contract_referinta_id||null,
-      comision: P.comision||'2',
       text_contract_snapshot: MODE==='full' ? legalPlain() : null,
       clienti: MODE==='full' ? clienti : [],
       insotitori: insotitori.filter(function(p){ return (p.nume&&p.nume.trim()); }),
-      proprietati: proprietati,
-      creat_la: serverTimestamp()
+      proprietati: proprietati
     };
-    if(MODE!=='full' && P.ref){ data.numar_contract_referinta=P.ref.numar_contract_referinta||''; data.data_semnare_referinta=P.ref.data_semnare_referinta||''; data.data_expirare_referinta=P.ref.data_expirare_referinta||''; }
-    await setDoc(doc(db,'contracte_vizionare_vanzare',DOC_ID), data);
+    /* NU modificăm agent_uid / numar_contract / comision / contract_referinta_id — rămân blocate de regula Firestore */
+    await updateDoc(doc(db,'contracte_vizionare_vanzare',DOC_ID), patch);
     $('cContent').style.display='none';
     $('cDoneNr').textContent = P.numar_contract ? ('Nr. contract: '+P.numar_contract) : '';
     $('cDone').style.display='block';
@@ -446,7 +429,7 @@ async function submit(){
   }catch(err){
     console.warn('submit', err);
     if(String(err.code||'').indexOf('permission')>=0 || String(err.message||'').indexOf('permission')>=0){
-      // doc exista deja (update interzis) → deja semnat
+      // regula respinge update pe doc deja semnat → deja semnat
       $('cContent').style.display='none'; $('cAlready').style.display='block'; window.scrollTo(0,0);
     } else {
       $('cSubmit').disabled=false; $('cStatus').textContent='Eroare la salvare. Reîncearcă.';
@@ -455,22 +438,37 @@ async function submit(){
   }
 }
 
-/* ── init ── */
-(function init(){
-  var L=parseLink();
-  if(!L.id || !L.payload){ showErr('Link de contract incomplet. Solicită consultantului IMONDO un link nou.'); return; }
-  DOC_ID=L.id; P=L.payload;
+/* ── init: citește documentul din Firestore după ?id= ── */
+async function init(){
+  var id = new URLSearchParams(location.search).get('id');
+  if(!id){ showErr('Link de contract incomplet. Solicită consultantului IMONDO un link nou.'); return; }
+  DOC_ID = id;
+  var snap;
+  try{
+    snap = await getDoc(doc(db,'contracte_vizionare_vanzare', id));
+  }catch(err){
+    console.warn('citire contract:', err);
+    if(String(err.code||'').indexOf('permission')>=0){
+      // read permis doar cât e "in_asteptare"; refuz => deja semnat sau indisponibil
+      $('cLoading').style.display='none'; $('cAlready').style.display='block'; return;
+    }
+    showErr('Nu am putut încărca contractul. Verifică conexiunea și reîncearcă.'); return;
+  }
+  if(!snap.exists()){ showErr('Contractul căutat nu există sau a fost șters.'); return; }
+  P = snap.data();
+  if(P.status==='semnat'){ $('cLoading').style.display='none'; $('cAlready').style.display='block'; return; }
   MODE = P.contract_referinta_id ? 'ref' : 'full';
-  // seed arrays din payload
   clienti = (P.clienti&&P.clienti.length?P.clienti:[blankClient()]).map(function(c){ return Object.assign(blankClient(), c); });
   insotitori = (P.insotitori||[]).map(function(c){ return Object.assign(blankIns(), c); });
   proprietati = (P.proprietati&&P.proprietati.length?P.proprietati:[blankProp()]).map(function(c){ return Object.assign(blankProp(), c); });
+  if(MODE==='ref' && !P.ref){ P.ref = { numar_contract_referinta:P.numar_contract_referinta||'', data_semnare_referinta:P.data_semnare_referinta||'', data_expirare_referinta:P.data_expirare_referinta||'' }; }
   $('cNr').textContent = P.numar_contract||'—';
   $('cAgent').textContent = P.agent_nume||'IMONDO';
   $('cLoading').style.display='none'; $('cContent').style.display='block';
   renderBody();
   $('cSubmit').onclick = submit;
-})();
+}
+init();
 </script>
 </body>
 </html>
