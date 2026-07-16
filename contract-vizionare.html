@@ -67,6 +67,8 @@ img{display:block;max-width:100%}
 .sig-clear{font-size:.72rem;color:var(--red);background:none;border:none;cursor:pointer;text-decoration:underline}
 .sig-hint{position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);text-align:center;color:var(--ink4);font-size:.8rem;pointer-events:none}
 .sig-static{border:1px solid var(--border);border-radius:8px;background:#fff;max-height:150px}
+.addr-note{font-size:.82rem;color:var(--ink4);background:#f5f2ea;border:1px dashed var(--border);border-radius:8px;padding:9px 13px;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.addr-reveal{font-size:.9rem;color:#2c4f0d;background:#EAF3DE;border:1px solid var(--ok);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-weight:400}
 /* submit bar */
 .subbar{position:fixed;bottom:0;left:0;right:0;background:var(--black);padding:12px 5%;display:flex;align-items:center;justify-content:space-between;gap:14px;z-index:40;box-shadow:0 -4px 20px rgba(0,0,0,.15)}
 .subbar .st{color:rgba(255,255,255,.8);font-size:.8rem}.subbar .st b{color:var(--gold)}
@@ -134,7 +136,8 @@ img{display:block;max-width:100%}
     <p>Îți mulțumim. Contractul de vizionare a fost semnat și înregistrat. O copie rămâne la consultantul IMONDO responsabil.</p>
     <p class="muted" id="cDoneNr"></p>
   </div>
-  <div class="muted">Din motive de confidențialitate (date personale), documentul semnat nu mai poate fi redeschis din acest link.</div>
+  <div id="cDoneSummary"></div>
+  <div class="muted" style="margin-top:16px">Din motive de confidențialitate (date personale), documentul semnat nu mai poate fi redeschis din acest link.</div>
 </main>
 
 <!-- deja semnat -->
@@ -266,10 +269,11 @@ function legalHtml(){
     + '<p class="art">9.5. Prezentul contract a fost semnat în două exemplare, câte unul pentru fiecare parte.</p>'
     + '</div>';
 }
-/* versiune text simplu a contractului pentru snapshot */
+/* versiune text simplu a contractului pentru snapshot — cu paragraf separat per articol */
 function legalPlain(){
-  var tmp=document.createElement('div'); tmp.innerHTML=legalHtml();
-  return tmp.textContent.replace(/\n{3,}/g,'\n\n').trim();
+  var s = legalHtml().replace(/<\/(h4|p)>/gi,'\n\n').replace(/<br\s*\/?>/gi,'\n').replace(/<[^>]+>/g,'');
+  var ta=document.createElement('textarea'); ta.innerHTML=s; s=ta.value;
+  return s.replace(/[ \t]+\n/g,'\n').replace(/\n{3,}/g,'\n\n').trim();
 }
 
 /* ════ ÎNSOȚITORI ════ */
@@ -292,13 +296,10 @@ function propHtml(){
       + (proprietati.length>1?'<button class="rm" data-rmp="'+i+'">×</button>':'')
       + '<div class="row"><div class="fld"><label>Tip proprietate</label><select data-pf="tip" data-pi="'+i+'"><option value="">— alege —</option>'+opts+'</select></div>'
       + '<div class="fld"><label>Localitate</label><input data-pf="localitate" data-pi="'+i+'" value="'+esc(p.localitate)+'"></div>'
-      + '<div class="fld"><label>Județ / Sector</label><input data-pf="judet_sector" data-pi="'+i+'" value="'+esc(p.judet_sector)+'"></div>'
-      + '<div class="fld full"><label>Stradă</label><input data-pf="strada" data-pi="'+i+'" value="'+esc(p.strada)+'"></div></div>'
-      + '<div class="row three"><div class="fld"><label>Nr.</label><input data-pf="numar" data-pi="'+i+'" value="'+esc(p.numar)+'"></div>'
-      + '<div class="fld"><label>Bloc</label><input data-pf="bloc" data-pi="'+i+'" value="'+esc(p.bloc)+'"></div>'
-      + '<div class="fld"><label>Scara</label><input data-pf="scara" data-pi="'+i+'" value="'+esc(p.scara)+'"></div>'
-      + '<div class="fld"><label>Etaj</label><input data-pf="etaj" data-pi="'+i+'" value="'+esc(p.etaj)+'"></div>'
-      + '<div class="fld"><label>Apartament</label><input data-pf="apartament" data-pi="'+i+'" value="'+esc(p.apartament)+'"></div></div>'
+      + '<div class="fld"><label>Județ / Sector</label><input data-pf="judet_sector" data-pi="'+i+'" value="'+esc(p.judet_sector)+'"></div></div>'
+      /* adresa exactă (stradă/nr/bloc/scară/etaj/ap) e ascunsă până la semnătura acestei proprietăți */
+      + '<div class="addr-note" id="addrNote_'+i+'">📍 Adresa exactă va fi confirmată după semnătură</div>'
+      + '<div class="addr-reveal" id="addrReveal_'+i+'" style="display:none"></div>'
       + '<div class="row"><div class="fld"><label>Istoric / an construcție *</label><input data-pf="istoric_an_constructie" data-pi="'+i+'" value="'+esc(p.istoric_an_constructie)+'"></div>'
       + '<div class="fld"><label>Situație juridică *</label><input data-pf="situatie_juridica" data-pi="'+i+'" value="'+esc(p.situatie_juridica)+'"></div></div>'
       + '<div class="row three"><div class="fld"><label>Preț solicitat</label><input data-pf="pret_solicitat" data-pi="'+i+'" value="'+esc(p.pret_solicitat)+'"></div>'
@@ -308,6 +309,33 @@ function propHtml(){
       + sigMarkup('prop_'+i, 'Semnătură client — proprietate '+(i+1))
       + '</div>';
   }).join('');
+}
+
+/* ── adresa exactă: ascunsă pre-semnătură, dezvăluită per proprietate la semnare ── */
+function propAddrText(p){
+  var street = [p.strada, p.numar].filter(Boolean).join(' ');
+  var extra = [ p.bloc&&('bl. '+p.bloc), p.scara&&('sc. '+p.scara), p.etaj&&('et. '+p.etaj), p.apartament&&('ap. '+p.apartament) ].filter(Boolean).join(', ');
+  var parts = [street, extra, p.localitate].filter(Boolean);
+  return 'Ați confirmat vizionarea proprietății situate în ' + parts.join(', ') + '.';
+}
+function revealAddr(i){
+  var note=$('addrNote_'+i), rev=$('addrReveal_'+i);
+  if(note) note.style.display='none';
+  if(rev){ rev.innerHTML = '✓ ' + esc(propAddrText(proprietati[i])); rev.style.display=''; }
+}
+function hideAddr(i){
+  var note=$('addrNote_'+i), rev=$('addrReveal_'+i);
+  if(note) note.style.display='';
+  if(rev){ rev.style.display='none'; rev.innerHTML=''; }
+}
+/* rezumat final (după semnare / la revizitare doc semnat): toate adresele complete */
+function renderFinalSummary(d){
+  var props = d.proprietati||[];
+  var html = props.map(function(p){ return '<div class="addr-reveal" style="margin-bottom:8px">✓ '+esc(propAddrText(p))+'</div>'; }).join('');
+  var el=$('cDoneSummary'); if(el) el.innerHTML = props.length ? ('<h4 style="margin:20px 0 10px;font-size:1.05rem;color:var(--black)">Proprietăți vizionate confirmate</h4>'+html) : '';
+  $('cContent').style.display='none'; $('cLoading').style.display='none';
+  if($('cDoneNr')) $('cDoneNr').textContent = d.numar_contract ? ('Nr. contract: '+d.numar_contract) : '';
+  $('cDone').style.display='block'; window.scrollTo(0,0);
 }
 
 /* ── render întreg body ── */
@@ -349,13 +377,13 @@ function initAllPads(){
     var store;
     if(key.indexOf('cli_')===0){ var ci=+key.slice(4); store=function(d){ clienti[ci].semnatura_contract_base64=d; }; }
     else if(key.indexOf('ins_')===0){ var ii=+key.slice(4); store=function(d){ insotitori[ii].semnatura_base64=d; }; }
-    else if(key.indexOf('prop_')===0){ var pi=+key.slice(5); store=function(d){ proprietati[pi].semnatura_client_proprietate_base64=d; }; }
+    else if(key.indexOf('prop_')===0){ var pi=+key.slice(5); store=function(d){ proprietati[pi].semnatura_client_proprietate_base64=d; revealAddr(pi); }; }
     makePad(el, key, store);
     // restore existing signature image if present
     var existing = key.indexOf('cli_')===0?clienti[+key.slice(4)].semnatura_contract_base64
       : key.indexOf('ins_')===0?insotitori[+key.slice(4)].semnatura_base64
       : proprietati[+key.slice(5)].semnatura_client_proprietate_base64;
-    if(existing){ var img=new Image(); img.onload=function(){ pads[key].pad.fromDataURL(existing); el.classList.add('done'); var h=el.querySelector('.sig-hint'); if(h)h.style.display='none'; }; img.src=existing; }
+    if(existing){ var img=new Image(); img.onload=function(){ pads[key].pad.fromDataURL(existing); el.classList.add('done'); var h=el.querySelector('.sig-hint'); if(h)h.style.display='none'; }; img.src=existing; if(key.indexOf('prop_')===0) revealAddr(+key.slice(5)); }
   });
 }
 
@@ -376,7 +404,7 @@ function bindInputs(){
     else if(t.dataset.rmc!=null){ clienti.splice(+t.dataset.rmc,1); clearPadsFor('cli_'); renderBody(); }
     else if(t.dataset.rmi!=null){ insotitori.splice(+t.dataset.rmi,1); clearPadsFor('ins_'); renderBody(); }
     else if(t.dataset.rmp!=null){ proprietati.splice(+t.dataset.rmp,1); clearPadsFor('prop_'); renderBody(); }
-    else if(t.dataset.clear!=null){ var k=t.dataset.clear; if(pads[k]){ pads[k].pad.clear(); pads[k].container.classList.remove('done'); var h=pads[k].container.querySelector('.sig-hint'); if(h)h.style.display=''; storeClear(k); revalidate(); } }
+    else if(t.dataset.clear!=null){ var k=t.dataset.clear; if(pads[k]){ pads[k].pad.clear(); pads[k].container.classList.remove('done'); var h=pads[k].container.querySelector('.sig-hint'); if(h)h.style.display=''; storeClear(k); if(k.indexOf('prop_')===0) hideAddr(+k.slice(5)); revalidate(); } }
   };
 }
 function clearPadsFor(prefix){ Object.keys(pads).forEach(function(k){ if(k.indexOf(prefix)===0) delete pads[k]; }); }
@@ -422,10 +450,7 @@ async function submit(){
     };
     /* NU modificăm agent_uid / numar_contract / comision / contract_referinta_id — rămân blocate de regula Firestore */
     await updateDoc(doc(db,'contracte_vizionare_vanzare',DOC_ID), patch);
-    $('cContent').style.display='none';
-    $('cDoneNr').textContent = P.numar_contract ? ('Nr. contract: '+P.numar_contract) : '';
-    $('cDone').style.display='block';
-    window.scrollTo(0,0);
+    renderFinalSummary({ proprietati: proprietati, numar_contract: P.numar_contract });
   }catch(err){
     console.warn('submit', err);
     if(String(err.code||'').indexOf('permission')>=0 || String(err.message||'').indexOf('permission')>=0){
@@ -456,7 +481,7 @@ async function init(){
   }
   if(!snap.exists()){ showErr('Contractul căutat nu există sau a fost șters.'); return; }
   P = snap.data();
-  if(P.status==='semnat'){ $('cLoading').style.display='none'; $('cAlready').style.display='block'; return; }
+  if(P.status==='semnat'){ renderFinalSummary(P); return; }
   MODE = P.contract_referinta_id ? 'ref' : 'full';
   clienti = (P.clienti&&P.clienti.length?P.clienti:[blankClient()]).map(function(c){ return Object.assign(blankClient(), c); });
   insotitori = (P.insotitori||[]).map(function(c){ return Object.assign(blankIns(), c); });
