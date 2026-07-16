@@ -488,19 +488,27 @@ async function sha256hex(str){
   try{ var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str||'')); return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join(''); }
   catch(e){ return ''; }
 }
-/* QR code → dataURL — așteaptă randarea COMPLETĂ (canvas/img cu conținut), nu setTimeout arbitrar */
+/* QR code → dataURL de ÎNALTĂ REZOLUȚIE (500px) cu margine albă (quiet zone) 60px baked-in,
+   nivel de corecție H. NU redimensionare CSS — pixelii reali sunt generați aici. */
 function qrDataURL(text){
   return new Promise(function(res){
     try{
+      var SIZE=500, MARGIN=60;
       var d=document.createElement('div'); d.style.cssText='position:absolute;left:-9999px;top:0'; document.body.appendChild(d);
-      new QRCode(d, { text:text, width:140, height:140, correctLevel:QRCode.CorrectLevel.M });
+      new QRCode(d, { text:text, width:SIZE, height:SIZE, correctLevel:QRCode.CorrectLevel.H });
       var n=0; var iv=setInterval(function(){
         n++;
-        var cv=d.querySelector('canvas'), img=d.querySelector('img'); var url='';
-        if(cv){ try{ url=cv.toDataURL('image/png'); }catch(e){} }
-        else if(img && img.naturalWidth>0){ url=img.src; }
-        if((url && url.length>200) || n>60){ clearInterval(iv); d.remove(); res(url||''); }
-      }, 30);
+        var cv=d.querySelector('canvas'), img=d.querySelector('img');
+        var src = cv || (img && img.naturalWidth>0 ? img : null);
+        if(src || n>90){
+          clearInterval(iv);
+          if(!src){ d.remove(); res(''); return; }
+          var out=document.createElement('canvas'); out.width=SIZE+2*MARGIN; out.height=SIZE+2*MARGIN;
+          var ctx=out.getContext('2d'); ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,out.width,out.height);
+          try{ ctx.drawImage(src, MARGIN, MARGIN, SIZE, SIZE); }catch(e){ d.remove(); res(''); return; }
+          d.remove(); res(out.toDataURL('image/png'));
+        }
+      }, 40);
     }catch(e){ res(''); }
   });
 }
@@ -520,7 +528,7 @@ function archivaHtml(c, qrUrl){
   var ins=(c.insotitori||[]).length?'<div style="margin-top:12px"><div style="font-family:Playfair Display,serif;font-size:14px;color:'+GOLD+';font-weight:600;margin-bottom:6px">Persoane însoțitoare</div>'+(c.insotitori||[]).map(function(p){return '<div style="margin-bottom:8px"><div style="font-size:12px">'+esc(p.nume||'—')+' &nbsp;·&nbsp; CNP: '+esc(p.cnp||'—')+'</div><div style="font-size:10px;color:#999;margin-top:3px">Semnătură:</div>'+sig(p.semnatura_base64)+'</div>';}).join('')+'</div>':'';
   var prop='<div style="margin-top:12px"><div style="font-family:Playfair Display,serif;font-size:14px;color:'+GOLD+';font-weight:600;margin-bottom:6px">Proprietăți vizionate (Anexa A1)</div>'+(c.proprietati||[]).map(function(p,i){var adr=[p.strada,p.numar&&('nr. '+p.numar),p.bloc&&('bl. '+p.bloc),p.scara&&('sc. '+p.scara),p.etaj&&('et. '+p.etaj),p.apartament&&('ap. '+p.apartament)].filter(Boolean).join(', ');var pr=[p.istoric_an_constructie&&('Istoric/an: '+p.istoric_an_constructie),p.situatie_juridica&&('Situație juridică: '+p.situatie_juridica),p.pret_solicitat&&('Preț solicitat: '+p.pret_solicitat),p.pret_mediu_piata&&('Preț mediu: '+p.pret_mediu_piata),p.alte_costuri_estimative&&('Alte costuri: '+p.alte_costuri_estimative)].filter(Boolean).join(' · ');return '<div style="margin-bottom:10px;padding-bottom:9px;border-bottom:1px solid #eee"><div style="font-weight:600;font-size:12px">'+(i+1)+'. '+esc(p.tip||'—')+' — '+esc([p.localitate,p.judet_sector].filter(Boolean).join(', '))+'</div>'+(adr?'<div style="font-size:11px;color:'+SUB+'">'+esc(adr)+'</div>':'')+(pr?'<div style="font-size:11px;color:'+SUB+'">'+esc(pr)+'</div>':'')+'<div style="font-size:10px;color:#999;margin-top:3px">Semnătură client:</div>'+sig(p.semnatura_client_proprietate_base64)+'</div>';}).join('')+'</div>';
   var text=c.text_contract_snapshot?('<div style="margin-top:16px;page-break-before:always"><div style="font-family:Playfair Display,serif;font-size:14px;color:'+GOLD+';font-weight:600;margin-bottom:8px">Text contract (la data semnării)</div>'+String(c.text_contract_snapshot).split(/\n\s*\n/).map(function(par){return '<p style="font-size:11px;line-height:1.5;margin:0 0 7px;color:#333">'+esc(par)+'</p>';}).join('')+'</div>'):'';
-  var qr = qrUrl?('<div style="text-align:center;margin-left:12px"><img src="'+qrUrl+'" width="96" height="96" style="width:96px;height:96px;display:block"/><div style="font-size:8px;color:#fff;opacity:.7">Verificare</div></div>'):'';
+  var qr = qrUrl?('<div style="text-align:center;margin-left:12px"><img src="'+qrUrl+'" width="150" height="150" style="width:150px;height:150px;display:block"/><div style="font-size:9px;color:#fff;opacity:.75;margin-top:3px">Verificare autenticitate</div></div>'):'';
   var dov = '<div style="margin-top:14px;font-size:9px;color:#999;padding:6px 10px;background:#f7f4ee;border-radius:4px">Dovezi tehnice: IP '+esc(c.ip_address||'—')+' · '+esc(c.platforma||'—')+' · hash text '+esc((c.hash_text_contract||'').slice(0,16))+'…</div>';
   return '<div style="width:760px;font-family:Poppins,Arial,sans-serif;color:#1a1a1a;background:#fff;padding:4px">'
     + '<div style="display:flex;justify-content:space-between;align-items:center;background:#0D0D0D;color:'+GOLD+';padding:10px 14px;border-radius:6px"><div style="font-family:Playfair Display,serif;font-weight:700;font-size:15px">IMONDO REAL ESTATE — Contract Vizionare</div>'+qr+'</div>'
