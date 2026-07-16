@@ -488,15 +488,29 @@ async function sha256hex(str){
   try{ var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str||'')); return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join(''); }
   catch(e){ return ''; }
 }
-/* QR code → dataURL (via qrcode.js pe un container temporar) */
+/* QR code → dataURL — așteaptă randarea COMPLETĂ (canvas/img cu conținut), nu setTimeout arbitrar */
 function qrDataURL(text){
   return new Promise(function(res){
     try{
-      var d=document.createElement('div'); d.style.cssText='position:fixed;left:-99999px;top:0'; document.body.appendChild(d);
-      new QRCode(d, { text:text, width:120, height:120, correctLevel:QRCode.CorrectLevel.M });
-      setTimeout(function(){ var img=d.querySelector('img'), cv=d.querySelector('canvas'); var url = img?img.src : (cv?cv.toDataURL('image/png'):''); d.remove(); res(url); }, 120);
+      var d=document.createElement('div'); d.style.cssText='position:absolute;left:-9999px;top:0'; document.body.appendChild(d);
+      new QRCode(d, { text:text, width:140, height:140, correctLevel:QRCode.CorrectLevel.M });
+      var n=0; var iv=setInterval(function(){
+        n++;
+        var cv=d.querySelector('canvas'), img=d.querySelector('img'); var url='';
+        if(cv){ try{ url=cv.toDataURL('image/png'); }catch(e){} }
+        else if(img && img.naturalWidth>0){ url=img.src; }
+        if((url && url.length>200) || n>60){ clearInterval(iv); d.remove(); res(url||''); }
+      }, 30);
     }catch(e){ res(''); }
   });
+}
+/* așteaptă ca toate imaginile dintr-un element să fie încărcate (base64 sau URL) înainte de captură */
+function waitImgs(el){
+  var imgs=[].slice.call(el.querySelectorAll('img'));
+  return Promise.all(imgs.map(function(im){
+    if(im.complete && im.naturalWidth>0) return Promise.resolve();
+    return new Promise(function(r){ im.onload=r; im.onerror=r; setTimeout(r, 2000); });
+  }));
 }
 /* HTML-ul PDF-ului (diacritice corecte — randare browser, nu jsPDF.text) */
 function archivaHtml(c, qrUrl){
@@ -506,23 +520,34 @@ function archivaHtml(c, qrUrl){
   var ins=(c.insotitori||[]).length?'<div style="margin-top:12px"><div style="font-family:Playfair Display,serif;font-size:14px;color:'+GOLD+';font-weight:600;margin-bottom:6px">Persoane însoțitoare</div>'+(c.insotitori||[]).map(function(p){return '<div style="margin-bottom:8px"><div style="font-size:12px">'+esc(p.nume||'—')+' &nbsp;·&nbsp; CNP: '+esc(p.cnp||'—')+'</div><div style="font-size:10px;color:#999;margin-top:3px">Semnătură:</div>'+sig(p.semnatura_base64)+'</div>';}).join('')+'</div>':'';
   var prop='<div style="margin-top:12px"><div style="font-family:Playfair Display,serif;font-size:14px;color:'+GOLD+';font-weight:600;margin-bottom:6px">Proprietăți vizionate (Anexa A1)</div>'+(c.proprietati||[]).map(function(p,i){var adr=[p.strada,p.numar&&('nr. '+p.numar),p.bloc&&('bl. '+p.bloc),p.scara&&('sc. '+p.scara),p.etaj&&('et. '+p.etaj),p.apartament&&('ap. '+p.apartament)].filter(Boolean).join(', ');var pr=[p.istoric_an_constructie&&('Istoric/an: '+p.istoric_an_constructie),p.situatie_juridica&&('Situație juridică: '+p.situatie_juridica),p.pret_solicitat&&('Preț solicitat: '+p.pret_solicitat),p.pret_mediu_piata&&('Preț mediu: '+p.pret_mediu_piata),p.alte_costuri_estimative&&('Alte costuri: '+p.alte_costuri_estimative)].filter(Boolean).join(' · ');return '<div style="margin-bottom:10px;padding-bottom:9px;border-bottom:1px solid #eee"><div style="font-weight:600;font-size:12px">'+(i+1)+'. '+esc(p.tip||'—')+' — '+esc([p.localitate,p.judet_sector].filter(Boolean).join(', '))+'</div>'+(adr?'<div style="font-size:11px;color:'+SUB+'">'+esc(adr)+'</div>':'')+(pr?'<div style="font-size:11px;color:'+SUB+'">'+esc(pr)+'</div>':'')+'<div style="font-size:10px;color:#999;margin-top:3px">Semnătură client:</div>'+sig(p.semnatura_client_proprietate_base64)+'</div>';}).join('')+'</div>';
   var text=c.text_contract_snapshot?('<div style="margin-top:16px;page-break-before:always"><div style="font-family:Playfair Display,serif;font-size:14px;color:'+GOLD+';font-weight:600;margin-bottom:8px">Text contract (la data semnării)</div>'+String(c.text_contract_snapshot).split(/\n\s*\n/).map(function(par){return '<p style="font-size:11px;line-height:1.5;margin:0 0 7px;color:#333">'+esc(par)+'</p>';}).join('')+'</div>'):'';
-  var qr = qrUrl?('<div style="text-align:center;margin-left:12px"><img src="'+qrUrl+'" style="width:96px;height:96px"/><div style="font-size:8px;color:#999">Verificare autenticitate</div></div>'):'';
+  var qr = qrUrl?('<div style="text-align:center;margin-left:12px"><img src="'+qrUrl+'" width="96" height="96" style="width:96px;height:96px;display:block"/><div style="font-size:8px;color:#fff;opacity:.7">Verificare</div></div>'):'';
   var dov = '<div style="margin-top:14px;font-size:9px;color:#999;padding:6px 10px;background:#f7f4ee;border-radius:4px">Dovezi tehnice: IP '+esc(c.ip_address||'—')+' · '+esc(c.platforma||'—')+' · hash text '+esc((c.hash_text_contract||'').slice(0,16))+'…</div>';
-  return '<div style="width:190mm;font-family:Poppins,Arial,sans-serif;color:#1a1a1a;background:#fff">'
+  return '<div style="width:760px;font-family:Poppins,Arial,sans-serif;color:#1a1a1a;background:#fff;padding:4px">'
     + '<div style="display:flex;justify-content:space-between;align-items:center;background:#0D0D0D;color:'+GOLD+';padding:10px 14px;border-radius:6px"><div style="font-family:Playfair Display,serif;font-weight:700;font-size:15px">IMONDO REAL ESTATE — Contract Vizionare</div>'+qr+'</div>'
     + '<div style="font-family:Playfair Display,serif;font-size:17px;font-weight:600;margin:12px 0 2px">Contract Prestări Servicii — Vizionare / Intermediere Cumpărător</div>'
     + '<div style="font-size:11px;color:'+SUB+';line-height:1.6">Nr: <b>'+esc(c.numar_contract||'—')+'</b> · Consultant: <b>'+esc(c.agent_nume||'—')+'</b> · Comision: <b>'+esc(c.comision||'—')+'% + TVA</b></div>'
     + '<div style="font-size:10px;color:#888;margin-top:6px;padding:6px 10px;background:#f7f4ee;border-radius:4px">BROKER: IMONDO REAL ESTATE S.R.L. · CUI 44477606 · J40/10801 · Cont RO19 INGB 0000 9999 1457 8893 · ING</div>'
     + cli + ins + prop + text + dov + '</div>';
 }
+/* randează un element HTML într-un blob PDF (diacritice corecte).
+   Pattern dovedit: wrapper care clipează (NU display:none) + element interior la dimensiune
+   completă pe care îl targhetăm; așteptăm TOATE imaginile (QR + semnături) încărcate. */
+async function elementToPdfBlob(html){
+  var wrap=document.createElement('div');
+  wrap.style.cssText='position:fixed;left:0;top:0;width:800px;height:1px;overflow:hidden;z-index:-1;pointer-events:none;background:#fff';
+  var inner=document.createElement('div'); inner.id='pdf-arhiva-content'; inner.innerHTML=html;
+  wrap.appendChild(inner); document.body.appendChild(wrap);
+  await waitImgs(inner);
+  await new Promise(function(r){ setTimeout(r, 60); }); // lasă layout-ul să se stabilizeze
+  var blob = await html2pdf().set({ margin:8, image:{type:'jpeg',quality:0.98}, html2canvas:{scale:2,useCORS:true,backgroundColor:'#ffffff'}, jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}, pagebreak:{mode:['css','legacy']} }).from(inner).outputPdf('blob');
+  wrap.remove();
+  return blob;
+}
 /* generează PDF + upload Cloudinary → secure_url (best-effort) */
 async function genereazaSiUploadPdf(fullDoc, qrUrl){
   try{
-    var wrap=document.createElement('div'); wrap.style.cssText='position:fixed;left:0;top:0;width:190mm;height:1px;overflow:hidden;z-index:-1;pointer-events:none';
-    var inner=document.createElement('div'); inner.id='pdf-arhiva-content'; inner.innerHTML=archivaHtml(fullDoc, qrUrl);
-    wrap.appendChild(inner); document.body.appendChild(wrap);
-    var blob = await html2pdf().set({ margin:10, image:{type:'jpeg',quality:0.98}, html2canvas:{scale:2,useCORS:true}, jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}, pagebreak:{mode:['css','legacy']} }).from(inner).outputPdf('blob');
-    wrap.remove();
+    var blob = await elementToPdfBlob(archivaHtml(fullDoc, qrUrl));
+    window.__lastPdfKb = Math.round(blob.size/1024); // pt. verificare
     var fd=new FormData(); fd.append('file', blob, 'Contract_'+(fullDoc.numar_contract||'IMONDO')+'.pdf'); fd.append('upload_preset', CLOUD_PRESET);
     var res = await fetch('https://api.cloudinary.com/v1_1/'+CLOUD_NAME+'/auto/upload', { method:'POST', body:fd });
     var j = await res.json();
