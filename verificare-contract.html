@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Verificare contract — IMONDO Real Estate</title>
+<link rel="icon" type="image/png" sizes="64x64" href="favicon-64.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C9A84C;--black:#0D0D0D;--cream:#F9F5EE;--ink:#2a2620;--ink4:#9a927f;--border:#e7e0d3;--ok:#3B6D11;--red:#B23A2E}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Poppins',sans-serif;background:var(--cream);color:var(--ink);font-weight:300;min-height:100vh;display:flex;flex-direction:column}
+h1,h2{font-family:'Playfair Display',serif;font-weight:600}
+.brand{background:var(--black);padding:14px 5%;text-align:center}
+.brand .logo{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;color:var(--gold);letter-spacing:.14em}
+.brand .logo span{color:#fff;font-weight:400;font-size:.55rem;letter-spacing:.3em;text-transform:uppercase;display:block;margin-top:-2px}
+.wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:30px 5%}
+.card{background:#fff;border:1px solid var(--border);border-radius:14px;max-width:440px;width:100%;padding:32px 28px;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.05)}
+.spin{width:32px;height:32px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ic{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 14px}
+.ic.ok{background:var(--ok);color:#fff}.ic.bad{background:var(--red);color:#fff}.ic.warn{background:var(--gold);color:var(--black)}
+.card h1{font-size:1.5rem;margin-bottom:4px}
+.card .sub{color:var(--ink4);font-size:.85rem;margin-bottom:20px}
+.rows{text-align:left;border-top:1px solid var(--border);padding-top:16px;margin-top:8px}
+.r{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #f0ebe0;font-size:.92rem}
+.r .l{color:var(--ink4)}.r .v{font-weight:500;text-align:right}
+.badge{display:inline-block;font-size:.72rem;font-weight:600;letter-spacing:.08em;padding:5px 14px;border-radius:20px;text-transform:uppercase}
+.badge.ok{background:#EAF3DE;color:var(--ok)}.badge.exp{background:#f7e9e7;color:var(--red)}
+.foot{font-size:.72rem;color:var(--ink4);margin-top:18px;line-height:1.5}
+</style>
+</head>
+<body>
+<header class="brand"><div class="logo">IMONDO<span>Real Estate</span></div></header>
+<div class="wrap">
+  <div class="card" id="card">
+    <div class="ic warn" style="background:var(--border)"><div class="spin"></div></div>
+    <div class="sub">Se verifică documentul...</div>
+  </div>
+</div>
+<script type="module">
+import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+const FIREBASE_CONFIG = window.IMONDO_FIREBASE_CONFIG || { apiKey:"AIzaSyCisA7tcMYHAv46aqcne3DpKL1_YIKiApE", authDomain:"imondo-crm.firebaseapp.com", projectId:"imondo-crm", storageBucket:"imondo-crm.firebasestorage.app", messagingSenderId:"777057248353", appId:"1:777057248353:web:3a4fee4d6618451eb3f620" };
+const app = getApps().find(a=>a.name==='imondo-verif') || initializeApp(FIREBASE_CONFIG,'imondo-verif');
+const db = getFirestore(app);
+const card = document.getElementById('card');
+const esc = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function fmt(ts){ if(!ts) return '—'; const d = ts.toDate ? ts.toDate() : (ts.seconds ? new Date(ts.seconds*1000) : new Date(ts)); return isNaN(d)?'—':d.toLocaleDateString('ro-RO'); }
+function bad(msg){ card.innerHTML = '<div class="ic bad">✕</div><h1>Document negăsit</h1><div class="sub">'+esc(msg)+'</div>'; }
+(async()=>{
+  const id = new URLSearchParams(location.search).get('id');
+  if(!id){ bad('Link de verificare incomplet.'); return; }
+  let snap;
+  try{ snap = await getDoc(doc(db,'verificari_contracte', id)); }
+  catch(e){ bad('Nu am putut verifica documentul.'); return; }
+  if(!snap.exists()){ bad('Nu există un contract cu acest identificator.'); return; }
+  const d = snap.data();
+  const exp = d.data_expirare && (d.data_expirare.toDate ? d.data_expirare.toDate() : new Date(d.data_expirare.seconds*1000));
+  const valabil = d.valabil && exp && exp.getTime() > Date.now();
+  card.innerHTML =
+    '<div class="ic ok">✓</div>'
+    + '<h1>Document autentic</h1>'
+    + '<div class="sub">Acest contract este înregistrat la IMONDO Real Estate.</div>'
+    + '<div class="rows">'
+    + '<div class="r"><span class="l">Număr contract</span><span class="v">'+esc(d.numar_contract||'—')+'</span></div>'
+    + '<div class="r"><span class="l">Data semnării</span><span class="v">'+fmt(d.data_semnare)+'</span></div>'
+    + '<div class="r"><span class="l">Valabil până la</span><span class="v">'+fmt(d.data_expirare)+'</span></div>'
+    + '<div class="r"><span class="l">Stare</span><span class="v"><span class="badge '+(valabil?'ok':'exp')+'">'+(valabil?'Valabil':'Expirat')+'</span></span></div>'
+    + '</div>'
+    + '<div class="foot">Verificare de autenticitate pentru terți (notar, instanță). Nu conține date personale (CNP, adrese). Pentru documentul integral, contactează părțile contractante.</div>';
+})();
+</script>
+</body>
+</html>

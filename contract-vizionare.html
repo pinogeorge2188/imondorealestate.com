@@ -69,6 +69,12 @@ img{display:block;max-width:100%}
 .sig-static{border:1px solid var(--border);border-radius:8px;background:#fff;max-height:150px}
 .addr-note{font-size:.82rem;color:var(--ink4);background:#f5f2ea;border:1px dashed var(--border);border-radius:8px;padding:9px 13px;margin-bottom:12px;display:flex;align-items:center;gap:6px}
 .addr-reveal{font-size:.9rem;color:#2c4f0d;background:#EAF3DE;border:1px solid var(--ok);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-weight:400}
+.hint-cnp{font-size:.68rem;color:var(--ink4);margin-top:3px;line-height:1.3}
+.agree{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border:1px solid var(--border);border-radius:8px;margin-bottom:10px;cursor:pointer;font-size:.9rem;background:#fffdf9}
+.agree input{margin-top:2px;width:18px;height:18px;flex-shrink:0;accent-color:var(--gold);cursor:pointer}
+.agree span{color:var(--ink)}
+.btn-wa{background:#25D366;color:#fff}
+.btn-ol2{background:transparent;color:var(--ink);border:1px solid var(--border)}
 /* submit bar */
 .subbar{position:fixed;bottom:0;left:0;right:0;background:var(--black);padding:12px 5%;display:flex;align-items:center;justify-content:space-between;gap:14px;z-index:40;box-shadow:0 -4px 20px rgba(0,0,0,.15)}
 .subbar .st{color:rgba(255,255,255,.8);font-size:.8rem}.subbar .st b{color:var(--gold)}
@@ -135,6 +141,7 @@ img{display:block;max-width:100%}
     <h2>Contract <span style="color:var(--gold)">semnat</span></h2>
     <p>Îți mulțumim. Contractul de vizionare a fost semnat și înregistrat. O copie rămâne la consultantul IMONDO responsabil.</p>
     <p class="muted" id="cDoneNr"></p>
+    <div id="cDoneActions" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px"></div>
   </div>
   <div id="cDoneSummary"></div>
   <div class="muted" style="margin-top:16px">Din motive de confidențialitate (date personale), documentul semnat nu mai poate fi redeschis din acest link.</div>
@@ -150,9 +157,11 @@ img{display:block;max-width:100%}
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4/dist/signature_pad.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script type="module">
 import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { getFirestore, doc, getDoc, updateDoc, serverTimestamp, Timestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+import { getFirestore, doc, getDoc, updateDoc, setDoc, serverTimestamp, Timestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
 const FIREBASE_CONFIG = window.IMONDO_FIREBASE_CONFIG || {
   apiKey: "AIzaSyCisA7tcMYHAv46aqcne3DpKL1_YIKiApE",
@@ -206,7 +215,7 @@ function clientFormHtml(){
     return '<div class="person" data-ci="'+i+'"><div class="ptitle">Client '+String.fromCharCode(97+i)+(i===0?' (principal)':' (coproprietar / soț-soție)')+'</div>'
       + (i>0?'<button class="rm" data-rmc="'+i+'">×</button>':'')
       + '<div class="row"><div class="fld"><label>Nume complet</label><input data-cf="nume" data-ci="'+i+'" value="'+esc(c.nume)+'" placeholder="Nume și prenume"></div>'
-      + '<div class="fld"><label>CNP</label><input data-cf="cnp" data-ci="'+i+'" value="'+esc(c.cnp)+'" placeholder="CNP" inputmode="numeric"></div>'
+      + '<div class="fld"><label>CNP</label><input data-cf="cnp" data-ci="'+i+'" value="'+esc(c.cnp)+'" placeholder="CNP" inputmode="numeric"><span class="hint-cnp">Necesar pentru identificarea părților în contract, conform legii. Nu este folosit în alte scopuri.</span></div>'
       + '<div class="fld full"><label>Adresă (domiciliu)</label><input data-cf="adresa" data-ci="'+i+'" value="'+esc(c.adresa)+'" placeholder="Adresa completă"></div></div>'
       + '</div>';
   }).join('');
@@ -218,6 +227,7 @@ function legalHtml(){
   return '<div class="legal">'
     + '<h4>1. PĂRȚILE CONTRACTANTE</h4>'
     + '<p>Prezentul contract se încheie între BROKER (IMONDO REAL ESTATE S.R.L., datele de mai sus) și CLIENT (datele completate mai sus: Nume, Adresă, CNP — soț-soție, coproprietari sau date persoană juridică).</p>'
+    + '<p class="art">1.1. Brokerul confirmă că identitatea clientului a fost verificată pe baza actului de identitate prezentat.</p>'
 
     + '<h4>2. OBIECTUL CONTRACTULUI</h4>'
     + '<p class="art">2.1. Obiectul contractului îl reprezintă prestarea de servicii de consultanță și intermediere imobiliară de către BROKER, ce constau în prezentarea și vizionarea de proprietăți imobiliare, în vederea încheierii de către CLIENT a unei tranzacții imobiliare. În cazul în care va avea loc încheierea unei tranzacții, conform prevederilor prezentului contract, clientul va achita BROKERULUI prețul contractului stabilit în conformitate cu capitolul 4.</p>'
@@ -249,6 +259,7 @@ function legalHtml(){
     + '<p class="art">6.2. CLIENTUL se obligă să păstreze confidențialitatea datelor și informațiilor furnizate sau prezentate de BROKER, în timpul vizionărilor sau prezentării ofertelor, și se obligă să nu transmită conținutul sau informațiile dobândite altor persoane, în caz contrar BROKERUL își rezervă dreptul de a solicita daune-interese pentru recuperarea prejudiciului cauzat.</p>'
     + '<p class="art">6.3. CLIENTUL se obligă ca în momentul premergător începerii vizionării să semneze Anexa A1 ce conține informații referitoare la proprietatea ce urmează a fi vizionată și este conștient că orice fel de comunicare privitoare la detaliile tranzacției se poartă numai prin intermediul BROKERULUI, în caz contrar BROKERUL își rezervă dreptul să solicite daune-interese pentru recuperarea prejudiciului cauzat.</p>'
     + '<p class="art">6.4. CLIENTUL se obligă să achite comisionul datorat în conformitate cu capitolul 4.</p>'
+    + '<p class="art">6.5. Clientul declară că persoanele însoțitoare participă la vizionare împreună cu acesta și iau cunoștință de prevederile prezentului contract.</p>'
 
     + '<h4>7. PRELUCRAREA DATELOR CU CARACTER PERSONAL — LEGEA GDPR: REGULAMENTUL UE 679/2016 actualizat 2020</h4>'
     + '<p class="art">7.1. Părțile se obligă să utilizeze datele cu caracter personal puse la dispoziție de cealaltă Parte în temeiul Contractului numai pentru scopul pentru care a fost încheiat Contractul și să respecte regulile, prevederile și reglementările aplicabile privind protecția datelor astfel cum sunt stipulate în Regulamentul (UE) nr. 679/2016 actualizat 2020.</p>'
@@ -333,6 +344,18 @@ function renderFinalSummary(d){
   var props = d.proprietati||[];
   var html = props.map(function(p){ return '<div class="addr-reveal" style="margin-bottom:8px">✓ '+esc(propAddrText(p))+'</div>'; }).join('');
   var el=$('cDoneSummary'); if(el) el.innerHTML = props.length ? ('<h4 style="margin:20px 0 10px;font-size:1.05rem;color:var(--black)">Proprietăți vizionate confirmate</h4>'+html) : '';
+  /* PDF + trimitere WhatsApp (client + broker) */
+  var pdf = d.pdf_url || P.pdf_url || '';
+  var acts=$('cDoneActions');
+  if(acts){
+    if(pdf){
+      var waMsg = 'Contract vizionare IMONDO nr. '+(d.numar_contract||P.numar_contract||'')+' semnat. PDF: '+pdf;
+      acts.innerHTML = '<a class="btn btn-wa" target="_blank" rel="noopener" href="https://wa.me/'+BROKER_WA+'?text='+encodeURIComponent(waMsg)+'">💬 Trimite pe WhatsApp</a>'
+        + '<a class="btn btn-ol2" target="_blank" rel="noopener" href="'+esc(pdf)+'">⬇️ Descarcă PDF</a>';
+    } else {
+      acts.innerHTML = '<div style="font-size:.8rem;color:var(--ink4)">PDF-ul nu a putut fi arhivat automat. Contactează consultantul pentru o copie.</div>';
+    }
+  }
   $('cContent').style.display='none'; $('cLoading').style.display='none';
   if($('cDoneNr')) $('cDoneNr').textContent = d.numar_contract ? ('Nr. contract: '+d.numar_contract) : '';
   $('cDone').style.display='block'; window.scrollTo(0,0);
@@ -356,6 +379,11 @@ function renderBody(){
   // proprietati (mereu)
   html += '<div class="sec"><h3>Proprietăți vizionate <span style="font-size:.72rem;color:var(--ink4);font-family:Poppins">(Anexa A1)</span></h3><div id="secProp">'+propHtml()+'</div>'
     + '<button class="addbtn" id="addProp">+ Adaugă altă proprietate</button></div>';
+  // acorduri obligatorii
+  html += '<div class="sec"><h3>Acord</h3>'
+    + '<label class="agree"><input type="checkbox" id="agrTerms"><span>Am citit și sunt de acord cu termenii prezentului contract.</span></label>'
+    + '<label class="agree"><input type="checkbox" id="agrData"><span>Declar că toate datele introduse sunt reale și complete.</span></label>'
+    + '</div>';
   $('cBody').innerHTML = html;
 
   // client signatures (mod full) — la finalul textului
@@ -428,9 +456,78 @@ function revalidate(){
   proprietati.forEach(function(p){ need++; if(!p.semnatura_client_proprietate_base64) missing++; if(!p.tip) missing++; });
   // insotitor cu nume completat trebuie semnat
   insotitori.forEach(function(p){ if((p.nume&&p.nume.trim()) && !p.semnatura_base64) missing++; });
-  var ok = missing===0;
+  // acorduri obligatorii (decizii 2 + 3)
+  var terms = $('agrTerms') && $('agrTerms').checked;
+  var dataOk = $('agrData') && $('agrData').checked;
+  var sigsOk = missing===0;
+  var ok = sigsOk && terms && dataOk;
   $('cSubmit').disabled = !ok;
-  $('cStatus').innerHTML = ok ? 'Toate semnăturile obligatorii sunt completate. <b>Poți semna.</b>' : 'Completează câmpurile și semnăturile obligatorii';
+  $('cStatus').innerHTML = ok ? 'Totul e completat. <b>Poți semna.</b>'
+    : (!sigsOk ? 'Completează câmpurile și semnăturile obligatorii'
+      : 'Bifează cele două căsuțe de acord pentru a putea semna');
+}
+
+/* ════ DOVEZI TEHNICE + PDF + ARHIVARE (decizii 4, 5, 9) ════ */
+var PRIMA_DESCHIDERE = new Date().toISOString(); // momentul deschiderii linkului (client-side)
+var CLOUD_NAME='dwq9qgunh', CLOUD_PRESET='imondo_preset';
+var BROKER_WA='40752942828';
+
+function derivaPlatforma(ua){
+  ua=ua||''; var os='necunoscut', br='necunoscut';
+  if(/Windows/i.test(ua))os='Windows'; else if(/Android/i.test(ua))os='Android'; else if(/iPhone|iPad|iPod/i.test(ua))os='iOS'; else if(/Mac OS X|Macintosh/i.test(ua))os='macOS'; else if(/Linux/i.test(ua))os='Linux';
+  if(/Edg\//i.test(ua))br='Edge'; else if(/OPR\/|Opera/i.test(ua))br='Opera'; else if(/Chrome\//i.test(ua))br='Chrome'; else if(/Firefox\//i.test(ua))br='Firefox'; else if(/Safari\//i.test(ua))br='Safari';
+  return os+' · '+br;
+}
+async function capturaDovezi(){
+  var ua = navigator.userAgent || '';
+  var ip = '';
+  try{ var r = await fetch('https://api.ipify.org?format=json'); var j = await r.json(); ip = j.ip||''; }catch(e){ ip=''; }
+  return { ip_address: ip, user_agent: ua, platforma: derivaPlatforma(ua) };
+}
+async function sha256hex(str){
+  try{ var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str||'')); return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join(''); }
+  catch(e){ return ''; }
+}
+/* QR code → dataURL (via qrcode.js pe un container temporar) */
+function qrDataURL(text){
+  return new Promise(function(res){
+    try{
+      var d=document.createElement('div'); d.style.cssText='position:fixed;left:-99999px;top:0'; document.body.appendChild(d);
+      new QRCode(d, { text:text, width:120, height:120, correctLevel:QRCode.CorrectLevel.M });
+      setTimeout(function(){ var img=d.querySelector('img'), cv=d.querySelector('canvas'); var url = img?img.src : (cv?cv.toDataURL('image/png'):''); d.remove(); res(url); }, 120);
+    }catch(e){ res(''); }
+  });
+}
+/* HTML-ul PDF-ului (diacritice corecte — randare browser, nu jsPDF.text) */
+function archivaHtml(c, qrUrl){
+  function sig(b64){ return b64 ? '<img src="'+b64+'" style="height:56px;border:1px solid #ddd;border-radius:4px;background:#fff;display:block;margin-top:3px"/>' : '<span style="color:#999;font-size:11px">(nesemnat)</span>'; }
+  var GOLD='#C9A84C', SUB='#6b6458';
+  var cli=(c.clienti||[]).length?'<div style="margin-top:14px"><div style="font-family:Playfair Display,serif;font-size:14px;color:'+GOLD+';font-weight:600;margin-bottom:6px">Clienți</div>'+(c.clienti||[]).map(function(cl,i){return '<div style="margin-bottom:9px;padding-bottom:8px;border-bottom:1px solid #eee"><div style="font-weight:600;font-size:12px">'+(i+1)+'. '+esc(cl.nume||'—')+' &nbsp;·&nbsp; CNP: '+esc(cl.cnp||'—')+'</div>'+(cl.adresa?'<div style="color:'+SUB+';font-size:11px">'+esc(cl.adresa)+'</div>':'')+'<div style="font-size:10px;color:#999;margin-top:3px">Semnătură Contract:</div>'+sig(cl.semnatura_contract_base64)+'</div>';}).join('')+'</div>':'';
+  var ins=(c.insotitori||[]).length?'<div style="margin-top:12px"><div style="font-family:Playfair Display,serif;font-size:14px;color:'+GOLD+';font-weight:600;margin-bottom:6px">Persoane însoțitoare</div>'+(c.insotitori||[]).map(function(p){return '<div style="margin-bottom:8px"><div style="font-size:12px">'+esc(p.nume||'—')+' &nbsp;·&nbsp; CNP: '+esc(p.cnp||'—')+'</div><div style="font-size:10px;color:#999;margin-top:3px">Semnătură:</div>'+sig(p.semnatura_base64)+'</div>';}).join('')+'</div>':'';
+  var prop='<div style="margin-top:12px"><div style="font-family:Playfair Display,serif;font-size:14px;color:'+GOLD+';font-weight:600;margin-bottom:6px">Proprietăți vizionate (Anexa A1)</div>'+(c.proprietati||[]).map(function(p,i){var adr=[p.strada,p.numar&&('nr. '+p.numar),p.bloc&&('bl. '+p.bloc),p.scara&&('sc. '+p.scara),p.etaj&&('et. '+p.etaj),p.apartament&&('ap. '+p.apartament)].filter(Boolean).join(', ');var pr=[p.istoric_an_constructie&&('Istoric/an: '+p.istoric_an_constructie),p.situatie_juridica&&('Situație juridică: '+p.situatie_juridica),p.pret_solicitat&&('Preț solicitat: '+p.pret_solicitat),p.pret_mediu_piata&&('Preț mediu: '+p.pret_mediu_piata),p.alte_costuri_estimative&&('Alte costuri: '+p.alte_costuri_estimative)].filter(Boolean).join(' · ');return '<div style="margin-bottom:10px;padding-bottom:9px;border-bottom:1px solid #eee"><div style="font-weight:600;font-size:12px">'+(i+1)+'. '+esc(p.tip||'—')+' — '+esc([p.localitate,p.judet_sector].filter(Boolean).join(', '))+'</div>'+(adr?'<div style="font-size:11px;color:'+SUB+'">'+esc(adr)+'</div>':'')+(pr?'<div style="font-size:11px;color:'+SUB+'">'+esc(pr)+'</div>':'')+'<div style="font-size:10px;color:#999;margin-top:3px">Semnătură client:</div>'+sig(p.semnatura_client_proprietate_base64)+'</div>';}).join('')+'</div>';
+  var text=c.text_contract_snapshot?('<div style="margin-top:16px;page-break-before:always"><div style="font-family:Playfair Display,serif;font-size:14px;color:'+GOLD+';font-weight:600;margin-bottom:8px">Text contract (la data semnării)</div>'+String(c.text_contract_snapshot).split(/\n\s*\n/).map(function(par){return '<p style="font-size:11px;line-height:1.5;margin:0 0 7px;color:#333">'+esc(par)+'</p>';}).join('')+'</div>'):'';
+  var qr = qrUrl?('<div style="text-align:center;margin-left:12px"><img src="'+qrUrl+'" style="width:96px;height:96px"/><div style="font-size:8px;color:#999">Verificare autenticitate</div></div>'):'';
+  var dov = '<div style="margin-top:14px;font-size:9px;color:#999;padding:6px 10px;background:#f7f4ee;border-radius:4px">Dovezi tehnice: IP '+esc(c.ip_address||'—')+' · '+esc(c.platforma||'—')+' · hash text '+esc((c.hash_text_contract||'').slice(0,16))+'…</div>';
+  return '<div style="width:190mm;font-family:Poppins,Arial,sans-serif;color:#1a1a1a;background:#fff">'
+    + '<div style="display:flex;justify-content:space-between;align-items:center;background:#0D0D0D;color:'+GOLD+';padding:10px 14px;border-radius:6px"><div style="font-family:Playfair Display,serif;font-weight:700;font-size:15px">IMONDO REAL ESTATE — Contract Vizionare</div>'+qr+'</div>'
+    + '<div style="font-family:Playfair Display,serif;font-size:17px;font-weight:600;margin:12px 0 2px">Contract Prestări Servicii — Vizionare / Intermediere Cumpărător</div>'
+    + '<div style="font-size:11px;color:'+SUB+';line-height:1.6">Nr: <b>'+esc(c.numar_contract||'—')+'</b> · Consultant: <b>'+esc(c.agent_nume||'—')+'</b> · Comision: <b>'+esc(c.comision||'—')+'% + TVA</b></div>'
+    + '<div style="font-size:10px;color:#888;margin-top:6px;padding:6px 10px;background:#f7f4ee;border-radius:4px">BROKER: IMONDO REAL ESTATE S.R.L. · CUI 44477606 · J40/10801 · Cont RO19 INGB 0000 9999 1457 8893 · ING</div>'
+    + cli + ins + prop + text + dov + '</div>';
+}
+/* generează PDF + upload Cloudinary → secure_url (best-effort) */
+async function genereazaSiUploadPdf(fullDoc, qrUrl){
+  try{
+    var wrap=document.createElement('div'); wrap.style.cssText='position:fixed;left:0;top:0;width:190mm;height:1px;overflow:hidden;z-index:-1;pointer-events:none';
+    var inner=document.createElement('div'); inner.id='pdf-arhiva-content'; inner.innerHTML=archivaHtml(fullDoc, qrUrl);
+    wrap.appendChild(inner); document.body.appendChild(wrap);
+    var blob = await html2pdf().set({ margin:10, image:{type:'jpeg',quality:0.98}, html2canvas:{scale:2,useCORS:true}, jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}, pagebreak:{mode:['css','legacy']} }).from(inner).outputPdf('blob');
+    wrap.remove();
+    var fd=new FormData(); fd.append('file', blob, 'Contract_'+(fullDoc.numar_contract||'IMONDO')+'.pdf'); fd.append('upload_preset', CLOUD_PRESET);
+    var res = await fetch('https://api.cloudinary.com/v1_1/'+CLOUD_NAME+'/auto/upload', { method:'POST', body:fd });
+    var j = await res.json();
+    return j.secure_url || '';
+  }catch(e){ console.warn('PDF/upload', e); return ''; }
 }
 
 /* ── submit → UPDATE doc (in_asteptare → semnat) ── */
@@ -439,25 +536,50 @@ async function submit(){
   try{
     var now=new Date();
     var exp=new Date(now.getTime()); exp.setMonth(exp.getMonth()+12);
+    var insSemnate = insotitori.filter(function(p){ return (p.nume&&p.nume.trim()); });
+    var snapshot = MODE==='full' ? legalPlain() : null;
+    var hash = snapshot ? await sha256hex(snapshot) : '';
+    var dovezi = await capturaDovezi();
+    /* document complet în memorie (pentru PDF) */
+    var fullDoc = { numar_contract:P.numar_contract, agent_nume:P.agent_nume, comision:P.comision,
+      clienti:(MODE==='full'?clienti:[]), insotitori:insSemnate, proprietati:proprietati,
+      text_contract_snapshot:snapshot, ip_address:dovezi.ip_address, platforma:dovezi.platforma, hash_text_contract:hash };
+    /* QR spre pagina de verificare (fără date sensibile) */
+    var verifUrl = 'https://imondorealestate.com/verificare-contract.html?id='+encodeURIComponent(DOC_ID);
+    var qrUrl = await qrDataURL(verifUrl);
+    /* PDF + arhivare Cloudinary (best-effort) */
+    $('cStatus').textContent='Se generează PDF...';
+    var pdf_url = await genereazaSiUploadPdf(fullDoc, qrUrl);
+    /* update doc (in_asteptare → semnat) — câmpurile de business rămân blocate de regulă */
+    $('cStatus').textContent='Se salvează...';
     var patch = {
       status: 'semnat',
       data_semnare: serverTimestamp(),
+      data_ora_semnare: serverTimestamp(),
       data_expirare: Timestamp.fromDate(exp),
-      text_contract_snapshot: MODE==='full' ? legalPlain() : null,
+      text_contract_snapshot: snapshot,
+      hash_text_contract: hash,
       clienti: MODE==='full' ? clienti : [],
-      insotitori: insotitori.filter(function(p){ return (p.nume&&p.nume.trim()); }),
-      proprietati: proprietati
+      insotitori: insSemnate,
+      proprietati: proprietati,
+      ip_address: dovezi.ip_address,
+      user_agent: dovezi.user_agent,
+      platforma: dovezi.platforma,
+      data_prima_deschidere: PRIMA_DESCHIDERE,
+      acord_termeni: true,
+      acord_date_reale: true,
+      pdf_url: pdf_url
     };
-    /* NU modificăm agent_uid / numar_contract / comision / contract_referinta_id — rămân blocate de regula Firestore */
     await updateDoc(doc(db,'contracte_vizionare_vanzare',DOC_ID), patch);
-    renderFinalSummary({ proprietati: proprietati, numar_contract: P.numar_contract });
+    /* doc public de verificare (DOAR date ne-sensibile) — pentru QR/terți */
+    try{ await setDoc(doc(db,'verificari_contracte',DOC_ID), { numar_contract:P.numar_contract||'', data_semnare:serverTimestamp(), data_expirare:Timestamp.fromDate(exp), status:'semnat', valabil:true }); }catch(e){ console.warn('verificare', e); }
+    renderFinalSummary({ proprietati: proprietati, numar_contract: P.numar_contract, pdf_url: pdf_url });
   }catch(err){
     console.warn('submit', err);
     if(String(err.code||'').indexOf('permission')>=0 || String(err.message||'').indexOf('permission')>=0){
-      // regula respinge update pe doc deja semnat → deja semnat
       $('cContent').style.display='none'; $('cAlready').style.display='block'; window.scrollTo(0,0);
     } else {
-      $('cSubmit').disabled=false; $('cStatus').textContent='Eroare la salvare. Reîncearcă.';
+      $('cSubmit').disabled=false; revalidate(); $('cStatus').textContent='Eroare la salvare. Reîncearcă.';
       alert('Nu am putut salva contractul. Verifică conexiunea și reîncearcă.');
     }
   }
