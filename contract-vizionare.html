@@ -530,8 +530,11 @@ function archivaHtml(c, qrUrl){
   var text=c.text_contract_snapshot?('<div style="margin-top:16px;page-break-before:always"><div style="font-family:Playfair Display,serif;font-size:14px;color:'+GOLD+';font-weight:600;margin-bottom:8px">Text contract (la data semnării)</div>'+String(c.text_contract_snapshot).split(/\n\s*\n/).map(function(par){return '<p style="font-size:11px;line-height:1.5;margin:0 0 7px;color:#333">'+esc(par)+'</p>';}).join('')+'</div>'):'';
   var qr = qrUrl?('<div style="text-align:center;margin-left:12px"><img src="'+qrUrl+'" width="150" height="150" style="width:150px;height:150px;display:block"/><div style="font-size:9px;color:#fff;opacity:.75;margin-top:3px">Verificare autenticitate</div></div>'):'';
   var dov = '<div style="margin-top:14px;font-size:9px;color:#999;padding:6px 10px;background:#f7f4ee;border-radius:4px">Dovezi tehnice: IP '+esc(c.ip_address||'—')+' · '+esc(c.platforma||'—')+' · hash text '+esc((c.hash_text_contract||'').slice(0,16))+'…</div>';
-  return '<div style="width:760px;font-family:Poppins,Arial,sans-serif;color:#1a1a1a;background:#fff;padding:4px">'
-    + '<div style="display:flex;justify-content:space-between;align-items:center;background:#0D0D0D;color:'+GOLD+';padding:10px 14px;border-radius:6px"><div style="font-family:Playfair Display,serif;font-weight:700;font-size:15px">IMONDO REAL ESTATE — Contract Vizionare</div>'+qr+'</div>'
+  return '<style>#pdf-arhiva-content,#pdf-arhiva-content *{box-sizing:border-box !important;}'
+    + '#pdf-arhiva-content p,#pdf-arhiva-content div,#pdf-arhiva-content span{overflow-wrap:break-word !important;word-wrap:break-word !important;white-space:normal !important;max-width:100%;}'
+    + '#pdf-arhiva-content p{page-break-inside:avoid;}</style>'
+    + '<div style="width:724px;max-width:724px;font-family:Poppins,Arial,sans-serif;color:#1a1a1a;background:#fff;padding:0">'
+    + '<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;background:#0D0D0D;color:'+GOLD+';padding:10px 14px;border-radius:6px"><div style="font-family:Playfair Display,serif;font-weight:700;font-size:15px">IMONDO REAL ESTATE — Contract Vizionare</div>'+qr+'</div>'
     + '<div style="font-family:Playfair Display,serif;font-size:17px;font-weight:600;margin:12px 0 2px">Contract Prestări Servicii — Vizionare / Intermediere Cumpărător</div>'
     + '<div style="font-size:11px;color:'+SUB+';line-height:1.6">Nr: <b>'+esc(c.numar_contract||'—')+'</b> · Consultant: <b>'+esc(c.agent_nume||'—')+'</b> · Comision: <b>'+esc(c.comision||'—')+'% + TVA</b></div>'
     + '<div style="font-size:10px;color:#888;margin-top:6px;padding:6px 10px;background:#f7f4ee;border-radius:4px">BROKER: IMONDO REAL ESTATE S.R.L. · CUI 44477606 · J40/10801 · Cont RO19 INGB 0000 9999 1457 8893 · ING</div>'
@@ -542,8 +545,8 @@ function archivaHtml(c, qrUrl){
    completă pe care îl targhetăm; așteptăm TOATE imaginile (QR + semnături) încărcate. */
 async function elementToPdfBlob(html){
   var wrap=document.createElement('div');
-  wrap.style.cssText='position:fixed;left:0;top:0;width:800px;height:1px;overflow:hidden;z-index:-1;pointer-events:none;background:#fff';
-  var inner=document.createElement('div'); inner.id='pdf-arhiva-content'; inner.innerHTML=html;
+  wrap.style.cssText='position:fixed;left:0;top:0;width:724px;height:1px;overflow:hidden;z-index:-1;pointer-events:none;background:#fff';
+  var inner=document.createElement('div'); inner.id='pdf-arhiva-content'; inner.style.width='724px'; inner.innerHTML=html;
   wrap.appendChild(inner); document.body.appendChild(wrap);
   await waitImgs(inner);
   await new Promise(function(r){ setTimeout(r, 60); }); // lasă layout-ul să se stabilizeze
