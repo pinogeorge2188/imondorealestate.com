@@ -161,8 +161,6 @@ img{display:block;max-width:100%}
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4/dist/signature_pad.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script type="module">
 import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getFirestore, doc, getDoc, updateDoc, setDoc, serverTimestamp, Timestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
@@ -476,10 +474,13 @@ function revalidate(){
       : 'Bifează cele două căsuțe de acord pentru a putea semna');
 }
 
-/* ════ DOVEZI TEHNICE + PDF + ARHIVARE (decizii 4, 5, 9) ════ */
-var PRIMA_DESCHIDERE = new Date().toISOString(); // momentul deschiderii linkului (client-side)
-var CLOUD_NAME='dwq9qgunh', CLOUD_PRESET='imondo_preset';
+/* ════ DOVEZI TEHNICE (decizia 4) ════ */
+var PRIMA_DESCHIDERE = new Date().toISOString(); // momentul deschiderii linkului
 var BROKER_WA='40752942828';
+/* PDF-ul NU se mai generează în browser. Îl produce funcția Netlify
+   (pdfmake → text vectorial real, diacritice corecte, QR 600px), care îl
+   arhivează în Cloudinary și scrie pdf_url în documentul Firestore. */
+var PDF_FN = 'https://melodious-llama-4a28ab.netlify.app/.netlify/functions/generate-contract-pdf';
 
 function derivaPlatforma(ua){
   ua=ua||''; var os='necunoscut', br='necunoscut';
@@ -497,82 +498,13 @@ async function sha256hex(str){
   try{ var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str||'')); return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join(''); }
   catch(e){ return ''; }
 }
-/* QR code → dataURL de ÎNALTĂ REZOLUȚIE (500px) cu margine albă (quiet zone) 60px baked-in,
-   nivel de corecție H. NU redimensionare CSS — pixelii reali sunt generați aici. */
-function qrDataURL(text){
-  return new Promise(function(res){
-    try{
-      var SIZE=500, MARGIN=60;
-      var d=document.createElement('div'); d.style.cssText='position:absolute;left:-9999px;top:0'; document.body.appendChild(d);
-      new QRCode(d, { text:text, width:SIZE, height:SIZE, correctLevel:QRCode.CorrectLevel.H });
-      var n=0; var iv=setInterval(function(){
-        n++;
-        var cv=d.querySelector('canvas'), img=d.querySelector('img');
-        var src = cv || (img && img.naturalWidth>0 ? img : null);
-        if(src || n>90){
-          clearInterval(iv);
-          if(!src){ d.remove(); res(''); return; }
-          var out=document.createElement('canvas'); out.width=SIZE+2*MARGIN; out.height=SIZE+2*MARGIN;
-          var ctx=out.getContext('2d'); ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,out.width,out.height);
-          try{ ctx.drawImage(src, MARGIN, MARGIN, SIZE, SIZE); }catch(e){ d.remove(); res(''); return; }
-          d.remove(); res(out.toDataURL('image/png'));
-        }
-      }, 40);
-    }catch(e){ res(''); }
-  });
-}
-/* așteaptă ca toate imaginile dintr-un element să fie încărcate (base64 sau URL) înainte de captură */
-function waitImgs(el){
-  var imgs=[].slice.call(el.querySelectorAll('img'));
-  return Promise.all(imgs.map(function(im){
-    if(im.complete && im.naturalWidth>0) return Promise.resolve();
-    return new Promise(function(r){ im.onload=r; im.onerror=r; setTimeout(r, 2000); });
-  }));
-}
-/* HTML-ul PDF-ului (diacritice corecte — randare browser, nu jsPDF.text) */
-function archivaHtml(c, qrUrl){
-  function sig(b64){ return b64 ? '<img src="'+b64+'" style="height:56px;border:1px solid #ddd;border-radius:4px;background:#fff;display:block;margin-top:3px"/>' : '<span style="color:#999;font-size:11px">(nesemnat)</span>'; }
-  var GOLD='#C9A84C', SUB='#6b6458';
-  var cli=(c.clienti||[]).length?'<div style="margin-top:14px"><div style="font-family:Playfair Display,serif;font-size:14px;color:'+GOLD+';font-weight:600;margin-bottom:6px">Clienți</div>'+(c.clienti||[]).map(function(cl,i){return '<div style="margin-bottom:9px;padding-bottom:8px;border-bottom:1px solid #eee"><div style="font-weight:600;font-size:12px">'+(i+1)+'. '+esc(cl.nume||'—')+' &nbsp;·&nbsp; CNP: '+esc(cl.cnp||'—')+'</div>'+(cl.adresa?'<div style="color:'+SUB+';font-size:11px">'+esc(cl.adresa)+'</div>':'')+'<div style="font-size:10px;color:#999;margin-top:3px">Semnătură Contract:</div>'+sig(cl.semnatura_contract_base64)+'</div>';}).join('')+'</div>':'';
-  var ins=(c.insotitori||[]).length?'<div style="margin-top:12px"><div style="font-family:Playfair Display,serif;font-size:14px;color:'+GOLD+';font-weight:600;margin-bottom:6px">Persoane însoțitoare</div>'+(c.insotitori||[]).map(function(p){return '<div style="margin-bottom:8px"><div style="font-size:12px">'+esc(p.nume||'—')+' &nbsp;·&nbsp; CNP: '+esc(p.cnp||'—')+'</div><div style="font-size:10px;color:#999;margin-top:3px">Semnătură:</div>'+sig(p.semnatura_base64)+'</div>';}).join('')+'</div>':'';
-  var prop='<div style="margin-top:12px"><div style="font-family:Playfair Display,serif;font-size:14px;color:'+GOLD+';font-weight:600;margin-bottom:6px">Proprietăți vizionate (Anexa A1)</div>'+(c.proprietati||[]).map(function(p,i){var adr=[p.strada,p.numar&&('nr. '+p.numar),p.bloc&&('bl. '+p.bloc),p.scara&&('sc. '+p.scara),p.etaj&&('et. '+p.etaj),p.apartament&&('ap. '+p.apartament)].filter(Boolean).join(', ');var pr=[p.istoric_an_constructie&&('Istoric/an: '+p.istoric_an_constructie),p.situatie_juridica&&('Situație juridică: '+p.situatie_juridica),p.pret_solicitat&&('Preț solicitat: '+p.pret_solicitat),p.pret_mediu_piata&&('Preț mediu: '+p.pret_mediu_piata),p.alte_costuri_estimative&&('Alte costuri: '+p.alte_costuri_estimative)].filter(Boolean).join(' · ');return '<div style="margin-bottom:10px;padding-bottom:9px;border-bottom:1px solid #eee"><div style="font-weight:600;font-size:12px">'+(i+1)+'. '+esc(p.tip||'—')+' — '+esc([p.localitate,p.judet_sector].filter(Boolean).join(', '))+'</div>'+(adr?'<div style="font-size:11px;color:'+SUB+'">'+esc(adr)+'</div>':'')+(pr?'<div style="font-size:11px;color:'+SUB+'">'+esc(pr)+'</div>':'')+'<div style="font-size:10px;color:#999;margin-top:3px">Semnătură client:</div>'+sig(p.semnatura_client_proprietate_base64)+'</div>';}).join('')+'</div>';
-  var text=c.text_contract_snapshot?('<div style="margin-top:16px;page-break-before:always"><div style="font-family:Playfair Display,serif;font-size:14px;color:'+GOLD+';font-weight:600;margin-bottom:8px">Text contract (la data semnării)</div>'+String(c.text_contract_snapshot).split(/\n\s*\n/).map(function(par){return '<p style="font-size:11px;line-height:1.5;margin:0 0 7px;color:#333">'+esc(par)+'</p>';}).join('')+'</div>'):'';
-  var qr = qrUrl?('<div style="text-align:center;margin-left:12px"><img src="'+qrUrl+'" width="150" height="150" style="width:150px;height:150px;display:block"/><div style="font-size:9px;color:#fff;opacity:.75;margin-top:3px">Verificare autenticitate</div></div>'):'';
-  var dov = '<div style="margin-top:14px;font-size:9px;color:#999;padding:6px 10px;background:#f7f4ee;border-radius:4px">Dovezi tehnice: IP '+esc(c.ip_address||'—')+' · '+esc(c.platforma||'—')+' · hash text '+esc((c.hash_text_contract||'').slice(0,16))+'…</div>';
-  return '<style>#pdf-arhiva-content,#pdf-arhiva-content *{box-sizing:border-box !important;}'
-    + '#pdf-arhiva-content p,#pdf-arhiva-content div,#pdf-arhiva-content span{overflow-wrap:break-word !important;word-wrap:break-word !important;white-space:normal !important;max-width:100%;}'
-    + '#pdf-arhiva-content p{page-break-inside:avoid;}</style>'
-    + '<div style="width:724px;max-width:724px;font-family:Poppins,Arial,sans-serif;color:#1a1a1a;background:#fff;padding:0">'
-    + '<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;background:#0D0D0D;color:'+GOLD+';padding:10px 14px;border-radius:6px"><div style="font-family:Playfair Display,serif;font-weight:700;font-size:15px">IMONDO REAL ESTATE — Contract Vizionare</div>'+qr+'</div>'
-    + '<div style="font-family:Playfair Display,serif;font-size:17px;font-weight:600;margin:12px 0 2px">Contract Prestări Servicii — Vizionare / Intermediere Cumpărător</div>'
-    + '<div style="font-size:11px;color:'+SUB+';line-height:1.6">Nr: <b>'+esc(c.numar_contract||'—')+'</b> · Consultant: <b>'+esc(c.agent_nume||'—')+'</b> · Comision: <b>'+esc(c.comision||'—')+'% + TVA</b></div>'
-    + '<div style="font-size:10px;color:#888;margin-top:6px;padding:6px 10px;background:#f7f4ee;border-radius:4px">BROKER: IMONDO REAL ESTATE S.R.L. · CUI 44477606 · J40/10801 · Cont RO19 INGB 0000 9999 1457 8893 · ING</div>'
-    + cli + ins + prop + text + dov + '</div>';
-}
-/* randează un element HTML într-un blob PDF (diacritice corecte).
-   Pattern dovedit: wrapper care clipează (NU display:none) + element interior la dimensiune
-   completă pe care îl targhetăm; așteptăm TOATE imaginile (QR + semnături) încărcate. */
-async function elementToPdfBlob(html){
-  var wrap=document.createElement('div');
-  wrap.style.cssText='position:fixed;left:0;top:0;width:724px;height:1px;overflow:hidden;z-index:-1;pointer-events:none;background:#fff';
-  var inner=document.createElement('div'); inner.id='pdf-arhiva-content'; inner.style.width='724px'; inner.innerHTML=html;
-  wrap.appendChild(inner); document.body.appendChild(wrap);
-  await waitImgs(inner);
-  await new Promise(function(r){ setTimeout(r, 60); }); // lasă layout-ul să se stabilizeze
-  var blob = await html2pdf().set({ margin:8, image:{type:'jpeg',quality:0.98}, html2canvas:{scale:2,useCORS:true,backgroundColor:'#ffffff'}, jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}, pagebreak:{mode:['css','legacy']} }).from(inner).outputPdf('blob');
-  wrap.remove();
-  return blob;
-}
-/* generează PDF + upload Cloudinary → secure_url (best-effort) */
-async function genereazaSiUploadPdf(fullDoc, qrUrl){
+/* cere funcției Netlify să genereze + arhiveze PDF-ul; întoarce pdf_url ('' la eșec) */
+async function cerePdfServer(docId){
   try{
-    var blob = await elementToPdfBlob(archivaHtml(fullDoc, qrUrl));
-    window.__lastPdfKb = Math.round(blob.size/1024); // pt. verificare
-    var fd=new FormData(); fd.append('file', blob, 'Contract_'+(fullDoc.numar_contract||'IMONDO')+'.pdf'); fd.append('upload_preset', CLOUD_PRESET);
-    var res = await fetch('https://api.cloudinary.com/v1_1/'+CLOUD_NAME+'/auto/upload', { method:'POST', body:fd });
-    var j = await res.json();
-    return j.secure_url || '';
-  }catch(e){ console.warn('PDF/upload', e); return ''; }
+    var r = await fetch(PDF_FN, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ docId: docId }) });
+    var j = await r.json();
+    return j.pdf_url || '';
+  }catch(e){ console.warn('PDF server:', e); return ''; }
 }
 
 /* ── submit → UPDATE doc (in_asteptare → semnat) ── */
@@ -585,18 +517,7 @@ async function submit(){
     var snapshot = MODE==='full' ? legalPlain() : null;
     var hash = snapshot ? await sha256hex(snapshot) : '';
     var dovezi = await capturaDovezi();
-    /* document complet în memorie (pentru PDF) */
-    var fullDoc = { numar_contract:P.numar_contract, agent_nume:P.agent_nume, comision:P.comision,
-      clienti:(MODE==='full'?clienti:[]), insotitori:insSemnate, proprietati:proprietati,
-      text_contract_snapshot:snapshot, ip_address:dovezi.ip_address, platforma:dovezi.platforma, hash_text_contract:hash };
-    /* QR spre pagina de verificare (fără date sensibile) */
-    var verifUrl = 'https://imondorealestate.com/verificare-contract.html?id='+encodeURIComponent(DOC_ID);
-    var qrUrl = await qrDataURL(verifUrl);
-    /* PDF + arhivare Cloudinary (best-effort) */
-    $('cStatus').textContent='Se generează PDF...';
-    var pdf_url = await genereazaSiUploadPdf(fullDoc, qrUrl);
     /* update doc (in_asteptare → semnat) — câmpurile de business rămân blocate de regulă */
-    $('cStatus').textContent='Se salvează...';
     var patch = {
       status: 'semnat',
       data_semnare: serverTimestamp(),
@@ -612,12 +533,14 @@ async function submit(){
       platforma: dovezi.platforma,
       data_prima_deschidere: PRIMA_DESCHIDERE,
       acord_termeni: true,
-      acord_date_reale: true,
-      pdf_url: pdf_url
+      acord_date_reale: true
     };
     await updateDoc(doc(db,'contracte_vizionare_vanzare',DOC_ID), patch);
     /* doc public de verificare (DOAR date ne-sensibile) — pentru QR/terți */
     try{ await setDoc(doc(db,'verificari_contracte',DOC_ID), { numar_contract:P.numar_contract||'', data_semnare:serverTimestamp(), data_expirare:Timestamp.fromDate(exp), status:'semnat', valabil:true }); }catch(e){ console.warn('verificare', e); }
+    /* PDF-ul îl generează serverul (funcția Netlify) și tot el scrie pdf_url */
+    $('cStatus').textContent='Se generează documentul...';
+    var pdf_url = await cerePdfServer(DOC_ID);
     renderFinalSummary({ proprietati: proprietati, numar_contract: P.numar_contract, pdf_url: pdf_url });
   }catch(err){
     console.warn('submit', err);
