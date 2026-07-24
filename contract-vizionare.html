@@ -291,7 +291,7 @@ function legalHtml(){
 }
 /* versiune text simplu a contractului pentru snapshot — cu paragraf separat per articol */
 function legalPlain(){
-  var s = legalHtml().replace(/<\/(h4|p)>/gi,'\n\n').replace(/<br\s*\/?>/gi,'\n').replace(/<[^>]+>/g,'');
+  var s = legalHtml().replace(/<\/(h4|p|div)>/gi,'\n\n').replace(/<br\s*\/?>/gi,'\n').replace(/<[^>]+>/g,'');
   var ta=document.createElement('textarea'); ta.innerHTML=s; s=ta.value;
   return s.replace(/[ \t]+\n/g,'\n').replace(/\n{3,}/g,'\n\n').trim();
 }
