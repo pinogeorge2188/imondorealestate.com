@@ -54,8 +54,11 @@
 .pd-desc{font-size:.92rem;color:var(--ink3);line-height:1.9;white-space:pre-line}
 .pd-fac-list{display:flex;flex-wrap:wrap;gap:.6rem}
 .pd-fac{padding:.4rem .9rem;background:var(--s1);border:1px solid var(--border);font-size:.8rem;color:var(--ink3)}
-.pd-map{height:200px;background:var(--s2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.5rem;color:var(--ink4);font-size:.85rem;cursor:pointer;transition:background var(--t);text-align:center}
+.pd-map{height:200px;background:var(--s2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.5rem;color:var(--ink4);font-size:.85rem;cursor:pointer;transition:background var(--t);text-align:center;border-radius:12px}
 .pd-map:hover{background:var(--s3)}
+.pd-mapbox{height:350px;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.pd-mapnote{font-size:.78rem;color:var(--ink4);margin-top:.6rem;text-align:center}
+.leaflet-container{font-family:'Jost',sans-serif}
 /* sidebar consultant */
 .pd-aside{position:sticky;top:90px;border:1px solid var(--border);background:var(--w);padding:1.8rem}
 .pd-aside h4{font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:.3rem}
@@ -80,6 +83,8 @@
 .ploc{font-size:.74rem;color:var(--ink4)}
 @media(max-width:900px){.pd-grid{grid-template-columns:1fr}.pd-aside{position:static}.pd-gallery{height:360px}.pgrid{grid-template-columns:1fr}}
 </style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 <div id="site-header"></div>
@@ -128,6 +133,10 @@
         </div>
         <div class="pd-sec">
           <h3>Localizare</h3>
+          <div id="pdMapReal" style="display:none">
+            <div id="pdMapCanvas" class="pd-mapbox"></div>
+            <p class="pd-mapnote">Locație aproximativă. Adresa exactă se comunică la programarea vizionării.</p>
+          </div>
           <a class="pd-map" id="pdMap" target="_blank" rel="noopener">
             <span style="font-size:1.4rem">🗺️</span>
             <span id="pdMapText">Deschide harta zonei</span>
@@ -325,10 +334,27 @@ function render(p){
   (p.facilitati||[]).forEach(f=>{ if(f) fac.push(f); });
   if(fac.length){ $('pdFacSec').style.display=''; $('pdFac').innerHTML = fac.map(f=>`<span class="pd-fac">✓ ${f}</span>`).join(''); }
 
-  /* hartă (link Google Maps) */
-  const q = encodeURIComponent([p.adresa, zona, 'București'].filter(Boolean).join(', '));
-  $('pdMap').href = 'https://www.google.com/maps/search/?api=1&query=' + q;
-  $('pdMapText').textContent = (zona||'București') + ' — deschide harta';
+  /* hartă — cerc de aproximare din coordonate manuale (CRM); altfel placeholder link */
+  const lat = parseFloat(String(p.latitudine||'').replace(',', '.'));
+  const lng = parseFloat(String(p.longitudine||'').replace(',', '.'));
+  if (window.L && isFinite(lat) && isFinite(lng)) {
+    $('pdMap').style.display = 'none';
+    $('pdMapReal').style.display = '';
+    try {
+      const map = L.map('pdMapCanvas', { scrollWheelZoom:false, attributionControl:true }).setView([lat, lng], 15);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19, attribution: '© OpenStreetMap'
+      }).addTo(map);
+      L.circle([lat, lng], {
+        radius: 400, color:'#C9A84C', weight:2, fillColor:'#C9A84C', fillOpacity:0.18
+      }).addTo(map);
+      setTimeout(() => map.invalidateSize(), 200);
+    } catch(e) { console.warn('Hartă:', e); $('pdMapReal').style.display='none'; $('pdMap').style.display=''; }
+  } else {
+    const q = encodeURIComponent([p.adresa, zona, 'București'].filter(Boolean).join(', '));
+    $('pdMap').href = 'https://www.google.com/maps/search/?api=1&query=' + q;
+    $('pdMapText').textContent = (zona||'București') + ' — deschide harta';
+  }
 
   /* WhatsApp precompletat */
   const waText = encodeURIComponent('Bună ziua! Sunt interesat(ă) de proprietatea "' + titlu + '" (ref. ' + (p.id||'') + ') de pe imondorealestate.com. Aș dori mai multe detalii.');

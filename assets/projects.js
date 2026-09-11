@@ -146,6 +146,19 @@ function renderProjectDetail(p){
   if(p.tur_virtual) res += `<a href="${p.tur_virtual}" target="_blank" rel="noopener" class="btn btn-ol">🎥 Tur virtual</a>`;
   if(res){ $('pjResSec').style.display=''; $('pjRes').innerHTML=res; }
 
+  /* hartă — cerc de aproximare din coordonate manuale (CRM) */
+  const lat = parseFloat(String(p.latitudine||'').replace(',', '.'));
+  const lng = parseFloat(String(p.longitudine||'').replace(',', '.'));
+  if(window.L && isFinite(lat) && isFinite(lng)){
+    $('pjMapSec').style.display='';
+    try{
+      const map = L.map('pjMapCanvas', { scrollWheelZoom:false, attributionControl:true }).setView([lat, lng], 15);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
+      L.circle([lat, lng], { radius: 400, color:'#C9A84C', weight:2, fillColor:'#C9A84C', fillOpacity:0.18 }).addTo(map);
+      setTimeout(()=>map.invalidateSize(), 200);
+    }catch(e){ console.warn('Hartă:', e); $('pjMapSec').style.display='none'; }
+  }
+
   /* WhatsApp precompletat */
   const wa = encodeURIComponent('Bună ziua! Sunt interesat(ă) de proiectul "' + nume + '" de pe imondorealestate.com. Aș dori mai multe detalii.');
   $('pjWa').href = 'https://wa.me/40752942828?text=' + wa;

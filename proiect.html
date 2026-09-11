@@ -36,8 +36,13 @@
 .pj-aside .sub{font-size:.8rem;color:var(--ink4);margin-bottom:1.4rem}
 .pj-aside .btn{width:100%;justify-content:center;margin-bottom:.7rem}
 .pj-res{display:flex;flex-wrap:wrap;gap:.7rem}
+.pd-mapbox{height:350px;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.pd-mapnote{font-size:.78rem;color:var(--ink4);margin-top:.6rem;text-align:center}
+.leaflet-container{font-family:'Jost',sans-serif}
 @media(max-width:900px){.pj-grid{grid-template-columns:1fr}.pj-aside{position:static}}
 </style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 <div id="site-header"></div>
@@ -71,6 +76,11 @@
         <div class="pd-sec"><h3>Despre ansamblu</h3><div class="pj-desc" id="pjDesc"></div></div>
         <div class="pd-sec" id="pjFacSec" style="display:none"><h3>Facilități ansamblu</h3><div class="pd-fac-list" id="pjFac"></div></div>
         <div class="pd-sec" id="pjResSec" style="display:none"><h3>Resurse</h3><div class="pj-res" id="pjRes"></div></div>
+        <div class="pd-sec" id="pjMapSec" style="display:none">
+          <h3>Localizare</h3>
+          <div id="pjMapCanvas" class="pd-mapbox"></div>
+          <p class="pd-mapnote">Locație aproximativă a ansamblului.</p>
+        </div>
       </div>
       <aside class="pj-aside">
         <h4>Interesat?</h4>
