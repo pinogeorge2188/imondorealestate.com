@@ -1417,7 +1417,7 @@ const FIREBASE_CONFIG = window.IMONDO_FIREBASE_CONFIG || {
 function buildPropCard(p, idx) {
   const isRent = (p.tip_tranzactie||p.tipTranzactie||'').toLowerCase().includes('inchir');
   const pret = p.pret || p.pret_nou || 0;
-  const price = pret ? new Intl.NumberFormat('de-DE').format(pret) + ' €' + (isRent ? ' <small>/ lună</small>' : '') : '—';
+  const price = pret ? new Intl.NumberFormat('de-DE').format(pret) + ' €' + (p.pret_plus_tva ? ' + TVA' : '') + (isRent ? ' <small>/ lună</small>' : '') : '—';
   // CRM uses 'poze' array for Cloudinary images
   const imgs = p.poze || p.imagini || [];
   const img = imgs.length > 0 ? imgs[0] : 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&q=85';

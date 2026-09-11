@@ -80,7 +80,7 @@ function render(p, agent){
 
   $('fName').textContent = nume;
   if($('fLoc')) $('fLoc').textContent = p.zona || p.adresa || '';
-  $('fPrice').innerHTML = p.pret ? (Number(p.pret).toLocaleString('ro-RO')+' €'+(isRent?' <small>/ lună</small>':'')) : 'Preț la cerere';
+  $('fPrice').innerHTML = p.pret ? (Number(p.pret).toLocaleString('ro-RO')+' €'+(p.pret_plus_tva?' + TVA':'')+(isRent?' <small>/ lună</small>':'')) : 'Preț la cerere';
 
   /* comision cumpărător — DOAR pe fisa-client (containerul există doar acolo) */
   if($('fCommission')){

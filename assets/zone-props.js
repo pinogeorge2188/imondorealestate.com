@@ -25,7 +25,7 @@ const norm = s => String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(
 
 function fmtPrice(p){
   const pret = p.pret || p.pret_nou || 0;
-  return pret ? new Intl.NumberFormat('de-DE').format(pret) + ' €' + (isRentOf(p) ? ' <small>/ lună</small>' : '') : 'Preț la cerere';
+  return pret ? new Intl.NumberFormat('de-DE').format(pret) + ' €' + (p.pret_plus_tva ? ' + TVA' : '') + (isRentOf(p) ? ' <small>/ lună</small>' : '') : 'Preț la cerere';
 }
 function titleOf(p){
   const camere = p.camere || p.nrCamere || '';

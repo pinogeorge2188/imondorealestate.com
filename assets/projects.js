@@ -17,9 +17,10 @@ const FIREBASE_CONFIG = window.IMONDO_FIREBASE_CONFIG || {
 const FALLBACK_IMG = 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=85';
 const $ = id => document.getElementById(id);
 
+function fmtEur(v){ return new Intl.NumberFormat('de-DE').format(v) + ' €'; }
 function fmtFrom(p){
   const v = parseInt(p.pret_de_la||0,10);
-  return v ? ('de la ' + new Intl.NumberFormat('de-DE').format(v) + ' €') : '';
+  return v ? ('de la ' + fmtEur(v) + (p.pret_plus_tva ? ' + TVA' : '')) : '';
 }
 function projUrl(p){
   return p.slug ? ('proiect.html?slug=' + encodeURIComponent(p.slug))
@@ -126,11 +127,13 @@ function renderProjectDetail(p){
   $('pjFrom').innerHTML = fmtFrom(p);
 
   /* specs */
+  const parcare = parseInt(p.pret_parcare||0,10);
   const specs = [
     {v:p.tipuri_apartamente, l:'Tipuri apartamente'},
     {v:p.suprafete, l:'Suprafețe'},
     {v:p.stadiu, l:'Stadiu'},
-    {v:p.termen_finalizare, l:'Finalizare'}
+    {v:p.termen_finalizare, l:'Finalizare'},
+    {v: parcare ? (fmtEur(parcare) + (p.pret_parcare_plus_tva ? ' + TVA' : '')) : '', l:'Loc de parcare'}
   ].filter(s=>s.v);
   $('pjSpecs').innerHTML = specs.map(s=>`<div class="pd-spec"><span class="pd-spec-val" style="font-size:1.05rem">${s.v}</span><span class="pd-spec-lab">${s.l}</span></div>`).join('');
 
