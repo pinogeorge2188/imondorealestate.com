@@ -72,7 +72,7 @@ function render(p, agent){
   var neutral = !document.getElementById('fCommission');
   var nume = p.denumire || p.titlu || (p.tipologie || 'Proprietate');
   if(neutral) nume = neutralize(nume);
-  var isRent = /inchir/i.test(p.tip_tranzactie||'');
+  var isRent = /^inchir/.test(String(p.tip_tranzactie||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim());
   document.title = nume + (neutral ? ' — Fișă proprietate' : ' — IMONDO Real Estate');
 
   /* galerie */

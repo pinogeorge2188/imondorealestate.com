@@ -38,7 +38,10 @@ const ADAPTIVE = {
 
 const $ = id => document.getElementById(id);
 const L = () => (window.T_SHARED && window.T_SHARED[document.documentElement.lang||'ro']) || window.T_SHARED.ro;
-const isRentOf = p => (p.tip_tranzactie||p.tipTranzactie||'').toLowerCase().includes('inchir');
+/* Tip tranzacție canonic: 'vanzare' | 'inchiriere' | '' (lipsă). Insensibil la diacritice/majuscule
+   — CRM salvează „Vânzare" / „Închiriere" (cu Î: „închiriere".includes("inchir") === false). */
+const tipTranz = p => { const n = String((p&&(p.tip_tranzactie||p.tipTranzactie))||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim(); return n.startsWith('vanz') ? 'vanzare' : n.startsWith('inchir') ? 'inchiriere' : ''; };
+const isRentOf = p => tipTranz(p) === 'inchiriere';
 /* Normalizare insensibilă la diacritice — site folosește "Herăstrău", CRM "Herastrau" */
 const norm = s => String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[șşȘŞ]/g,'s').replace(/[țţȚŢ]/g,'t').toLowerCase().trim();
 
@@ -240,7 +243,10 @@ window.initListings = async function(opts){
         if(st==='activ'||st==='active') all.push({...p,_ownerId:doc.id});
       });
     });
-    pool = all.filter(p => isRentOf(p) === (PAGE_TYPE==='inchiriere'));
+    // strict și simetric: fiecare pagină DOAR tipul ei; fără tip valid → nicăieri (de completat în CRM)
+    pool = all.filter(p => tipTranz(p) === PAGE_TYPE);
+    const faraTip = all.filter(p => !tipTranz(p));
+    if (faraTip.length) console.warn('[IMONDO] Proprietăți active fără tip_tranzactie valid (nelistate):', faraTip.map(p => p.denumire || p.id));
 
     $('listLoading').style.display='none';
     buildPanel();
