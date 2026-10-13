@@ -65,7 +65,7 @@ window.initZoneProps = async function(opts){
     const db = getFirestore(fbApp);
 
     const all = [];
-    const snap = await getDocs(collection(db,'proprietari'));
+    const snap = await (await import('/assets/data.js')).incarcaProprietari(db);
     snap.forEach(doc=>{
       (doc.data().proprietati||[]).forEach(p=>{
         const st=(p.status||'').toLowerCase();
