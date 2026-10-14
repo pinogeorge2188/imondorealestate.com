@@ -37,7 +37,7 @@ function titleOf(p){
 }
 function card(p, base){
   const isRent = isRentOf(p);
-  const img = (p.poze||p.imagini||[])[0] || FALLBACK_IMG;
+  const img = ((a,s)=>a.find(u=>!s.has(u))||a[0])((p.poze||p.imagini||[]).filter(Boolean), new Set(p.poze_schite||[])) || FALLBACK_IMG;   // copertă: prima fotografie care nu e schiță
   const url = base + 'proprietate.html?id=' + encodeURIComponent(p.id||'');
   const specs = [
     (p.camere||p.nrCamere) ? `🛏 ${p.camere||p.nrCamere} cam.` : null,

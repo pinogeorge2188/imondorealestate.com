@@ -39,8 +39,8 @@ img{display:block;max-width:100%}
 .btn{display:inline-block;font-family:'Poppins',sans-serif;font-size:.75rem;font-weight:500;letter-spacing:.08em;padding:.8rem 1.6rem;border-radius:8px;text-decoration:none;cursor:pointer;border:none}
 .btn-gd{background:var(--gold);color:var(--black)}.btn-ol{background:transparent;color:var(--ink);border:1px solid var(--border)}
 /* galerie */
-.gal-main{position:relative;border-radius:14px;overflow:hidden;background:#eee;margin-bottom:10px}
-.gal-main img{width:100%;height:clamp(240px,52vw,520px);object-fit:cover}
+.gal-main{position:relative;border-radius:14px;overflow:hidden;background:#F9F5EE;margin-bottom:10px}
+.gal-main img{width:100%;height:clamp(240px,52vw,520px);object-fit:contain;cursor:zoom-in}
 .gal-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border:none;background:rgba(13,13,13,.55);color:#fff;font-size:1.3rem;cursor:pointer;border-radius:50%}
 .gal-prev{left:12px}.gal-next{right:12px}.gal-nav:hover{background:var(--gold);color:var(--black)}
 .gal-thumbs{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
@@ -114,6 +114,7 @@ img{display:block;max-width:100%}
   </div>
 </main>
 
+<script src="assets/lightbox.js"></script>
 <script src="assets/fise.js"></script>
 <script>initFisa();</script>
 </body>

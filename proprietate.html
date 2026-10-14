@@ -30,13 +30,20 @@
 .prop-error h2{font-size:2rem;margin-bottom:1rem}.prop-error h2 em{color:var(--gold);font-style:italic}
 .prop-error p{color:var(--ink3);max-width:440px;margin:0 auto 2rem}
 /* galerie */
-.pd-gallery{position:relative;height:520px;overflow:hidden;background:var(--s3);margin-bottom:2.5rem}
-.pd-gallery img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0;transition:opacity .4s}
-.pd-gallery img.on{opacity:1}
+.pd-gallery{position:relative;height:520px;overflow:hidden;background:#F9F5EE;margin-bottom:2.5rem}
+/* imaginea se vede ÎNTREAGĂ (verticală → pe înălțime, orizontală → pe lățime), fundal crem, niciodată tăiată */
+.pd-gallery img{width:100%;height:100%;object-fit:contain;position:absolute;inset:0;opacity:0;transition:opacity .4s;cursor:zoom-in}
+.pd-full{position:absolute;top:1.2rem;right:1.2rem;z-index:5;border:none;background:rgba(20,18,16,.55);color:#fff;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:.45rem .8rem;cursor:pointer;transition:.2s}
+.pd-full:hover{background:var(--gold)}
+.pd-schite{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}
+.pd-schite button{display:block;aspect-ratio:4/3;width:100%;padding:.6rem;background:#F9F5EE;border:1px solid var(--border);cursor:zoom-in}
+.pd-schite img{width:100%;height:100%;object-fit:contain}
+.pd-gallery img{pointer-events:none}   /* pozele ascunse (opacitate 0) nu iau click-ul celei vizibile */
+.pd-gallery img.on{opacity:1;pointer-events:auto}
 .pd-prev,.pd-next{position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;background:rgba(20,18,16,.55);border:none;color:#fff;font-size:1.2rem;cursor:pointer;z-index:5;transition:.2s}
 .pd-prev{left:1rem}.pd-next{right:1rem}.pd-prev:hover,.pd-next:hover{background:var(--gold)}
 .pd-dots{position:absolute;bottom:1.2rem;left:50%;transform:translateX(-50%);display:flex;gap:.45rem;z-index:5}
-.pd-dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.45);cursor:pointer;transition:.2s}
+.pd-dot{width:9px;height:9px;border-radius:50%;background:rgba(13,13,13,.22);cursor:pointer;transition:.2s}
 .pd-dot.on{background:var(--gold)}
 .pd-badge{position:absolute;top:1.2rem;left:1.2rem;z-index:5;font-size:.6rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:.4rem .9rem}
 /* layout */
@@ -129,6 +136,10 @@
           <h3>Dotări &amp; facilități</h3>
           <div class="pd-fac-list" id="pdFac"></div>
         </div>
+        <div class="pd-sec" id="pdSchiteSec" style="display:none">
+          <h3>Schițe și planuri</h3>
+          <div class="pd-schite" id="pdSchite"></div>
+        </div>
         <div class="pd-sec">
           <h3>Localizare</h3>
           <div id="pdMapReal" style="display:none">
@@ -169,6 +180,7 @@ window.IMONDO_PAGE = { active:'sales', crumbs:[
 </script>
 <script src="assets/i18n.js"></script>
 <script src="assets/include.js"></script>
+<script src="assets/lightbox.js"></script>
 <script type="module">
 /* Aceeași config Firebase ca homepage (proiect imondo-crm) */
 const FIREBASE_CONFIG = window.IMONDO_FIREBASE_CONFIG || {
@@ -204,20 +216,25 @@ function titleOf(p){
 }
 
 let allProps = [];
-let galImgs = [], galIdx = 0;
+let galImgs = [], galIdx = 0, galBadge = '', galReal = false;
 window.pdGo = i => { galIdx = i; renderGallery(); };
 window.pdNav = d => pdGo((galIdx + d + galImgs.length) % galImgs.length);
 function renderGallery(){
   const g = $('pdGallery');
-  g.innerHTML = galImgs.map((s,i)=>`<img src="${s}" class="${i===galIdx?'on':''}" alt="Foto ${i+1}" onerror="this.src='${FALLBACK_IMG}'">`).join('')
+  g.innerHTML = galImgs.map((s,i)=>`<img src="${s}" class="${i===galIdx?'on':''}" alt="Foto ${i+1}" onerror="this.src='${FALLBACK_IMG}'"${galReal ? ` onclick="pdFull(${i})"` : ''}>`).join('')
+    + galBadge
+    + (galReal ? `<button class="pd-full" type="button" onclick="pdFull()">⤢ Ecran complet</button>` : '')
     + (galImgs.length>1 ? `<button class="pd-prev" onclick="pdNav(-1)">‹</button><button class="pd-next" onclick="pdNav(1)">›</button>
        <div class="pd-dots">${galImgs.map((_,i)=>`<div class="pd-dot ${i===galIdx?'on':''}" onclick="pdGo(${i})"></div>`).join('')}</div>` : '');
 }
 
+window.pdFull = i => { if (galReal && window.IMONDO_lightbox) IMONDO_lightbox.open(galImgs, i == null ? galIdx : i); };
+window.pdSchita = i => { if (window.IMONDO_lightbox) IMONDO_lightbox.open(galSchite, i, 'Schiță'); };
+let galSchite = [];
+
 function buildSimilarCard(p){
   const isRent = isRentOf(p);
-  const imgs = p.poze || p.imagini || [];
-  const img = imgs[0] || FALLBACK_IMG;
+  const img = IMONDO_fotos(p).cover || FALLBACK_IMG;
   const url = 'proprietate.html?id=' + encodeURIComponent(p.id||'');
   return `<a class="pcard" href="${url}">
     <div class="pi"><img src="${img}" alt="${titleOf(p)}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
@@ -257,10 +274,16 @@ function render(p){
   }catch(e){}
 
   /* galerie */
-  galImgs = (p.poze || p.imagini || []).filter(Boolean);
+  // fotografiile în galerie; schițele / planurile separat, după fotografii (marcate „Schiță” în CRM)
+  const fs = IMONDO_fotos(p);
+  galImgs = fs.fotos; galReal = galImgs.length > 0; galSchite = fs.schite;
   if(!galImgs.length) galImgs = [FALLBACK_IMG];
+  galBadge = tipTranz(p) ? `<span class="pd-badge ${isRent?'ptag-i':'ptag-v'}">${isRent?'De închiriat':'De vânzare'}</span>` : '';
   galIdx = 0; renderGallery();
-  if (tipTranz(p)) $('pdGallery').insertAdjacentHTML('beforeend', `<span class="pd-badge ${isRent?'ptag-i':'ptag-v'}">${isRent?'De închiriat':'De vânzare'}</span>`);
+  if (galSchite.length) {
+    $('pdSchite').innerHTML = galSchite.map((u,i)=>`<button type="button" onclick="pdSchita(${i})" aria-label="Schiță ${i+1}, deschide mărit"><img src="${u}" alt="Schiță ${i+1}" loading="lazy"></button>`).join('');
+    $('pdSchiteSec').style.display = '';
+  }
 
   /* preț / titlu / loc */
   $('pdPrice').innerHTML = fmtPrice(p);

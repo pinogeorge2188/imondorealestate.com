@@ -25,8 +25,8 @@ img{display:block;max-width:100%}
 .state h2{font-size:1.6rem;margin-bottom:.6rem}.state h2 em{color:var(--gold);font-style:italic}
 .state p{color:var(--ink3);max-width:420px;margin:0 auto}
 /* galerie */
-.gal-main{position:relative;border-radius:14px;overflow:hidden;background:#eee;margin-bottom:10px}
-.gal-main img{width:100%;height:clamp(240px,52vw,520px);object-fit:cover}
+.gal-main{position:relative;border-radius:14px;overflow:hidden;background:#F9F5EE;margin-bottom:10px}
+.gal-main img{width:100%;height:clamp(240px,52vw,520px);object-fit:contain;cursor:zoom-in}
 .gal-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border:none;background:rgba(26,23,18,.55);color:#fff;font-size:1.3rem;cursor:pointer;border-radius:50%}
 .gal-prev{left:12px}.gal-next{right:12px}.gal-nav:hover{background:var(--gold);color:var(--dark)}
 .gal-thumbs{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
@@ -81,6 +81,7 @@ img{display:block;max-width:100%}
   <div class="foot">Document de prezentare · <span id="fDate"></span></div>
 </main>
 
+<script src="assets/lightbox.js"></script>
 <script src="assets/fise.js"></script>
 <script>document.getElementById('fDate').textContent=new Date().toLocaleDateString('ro-RO');initFisa();</script>
 </body>
