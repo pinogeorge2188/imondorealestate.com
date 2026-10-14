@@ -79,7 +79,7 @@ function render(p, agent){
   gImgs = (p.poze||[]).filter(Boolean); if(!gImgs.length) gImgs=[FALLBACK_IMG]; gIdx=0; buildGallery();
 
   $('fName').textContent = nume;
-  if($('fLoc')) $('fLoc').textContent = p.zona || p.adresa || '';
+  if($('fLoc')) $('fLoc').textContent = p.zona || '';
   $('fPrice').innerHTML = p.pret ? (Number(p.pret).toLocaleString('ro-RO')+' €'+(p.pret_plus_tva?' + TVA':'')+(isRent?' <small>/ lună</small>':'')) : 'Preț la cerere';
 
   /* comision cumpărător — DOAR pe fisa-client (containerul există doar acolo) */

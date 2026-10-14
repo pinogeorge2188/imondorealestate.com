@@ -56,7 +56,7 @@ function fmtPrice(p){
 }
 function titleOf(p){
   const camere = p.camere || p.nrCamere || '';
-  const zona = p.zona || p.adresa || '';
+  const zona = p.zona || '';
   return p.denumire || p.titlu || ((p.tipologie||p.tipProprietate||'Proprietate') + (camere ? ' ' + camere + ' camere' : '') + (zona ? ', ' + zona : ''));
 }
 function card(p){
@@ -73,7 +73,7 @@ function card(p){
       <span class="ptag ${isRent?'ptag-i':'ptag-v'}">${isRent?L().list_rent:L().list_sale}</span>
       <span class="pref">${p.id||''}</span></div>
     <div class="pbody"><div class="pprice">${fmtPrice(p)}</div><div class="ptitle">${titleOf(p)}</div>
-      <div class="ploc">📍 ${p.zona||p.adresa||'—'}</div>
+      <div class="ploc">📍 ${p.zona||'—'}</div>
       <div class="pspecs">${specs.map(s=>`<span>${s}</span>`).join('')}</div></div>
   </a>`;
 }

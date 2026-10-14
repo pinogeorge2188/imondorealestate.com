@@ -83,8 +83,6 @@
 .ploc{font-size:.74rem;color:var(--ink4)}
 @media(max-width:900px){.pd-grid{grid-template-columns:1fr}.pd-aside{position:static}.pd-gallery{height:360px}.pgrid{grid-template-columns:1fr}}
 </style>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 <div id="site-header"></div>
@@ -201,7 +199,7 @@ function fmtPrice(p){
 }
 function titleOf(p){
   const camere = p.camere || p.nrCamere || '';
-  const zona = p.zona || p.adresa || '';
+  const zona = p.zona || '';   // NICIODATĂ adresa: e confidențială (se comunică la vizionare)
   return p.denumire || p.titlu || ((p.tipologie||p.tipProprietate||'Proprietate') + (camere ? ' ' + camere + ' camere' : '') + (zona ? ', ' + zona : ''));
 }
 
@@ -224,14 +222,14 @@ function buildSimilarCard(p){
   return `<a class="pcard" href="${url}">
     <div class="pi"><img src="${img}" alt="${titleOf(p)}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
       ${tipTranz(p) ? `<span class="ptag ${isRent?'ptag-i':'ptag-v'}">${isRent?'De închiriat':'De vânzare'}</span>` : ''}</div>
-    <div class="pbody"><div class="pprice">${fmtPrice(p)}</div><div class="ptitle">${titleOf(p)}</div><div class="ploc">📍 ${p.zona||p.adresa||'—'}</div></div>
+    <div class="pbody"><div class="pprice">${fmtPrice(p)}</div><div class="ptitle">${titleOf(p)}</div><div class="ploc">📍 ${p.zona||'—'}</div></div>
   </a>`;
 }
 
 function render(p){
   const isRent = isRentOf(p);
   const titlu = titleOf(p);
-  const zona = p.zona || p.adresa || '';
+  const zona = p.zona || '';   // NICIODATĂ adresa: e confidențială (se comunică la vizionare)
 
   /* title + OG dinamic (browser) */
   document.title = titlu + ' | IMONDO Real Estate';
@@ -267,7 +265,7 @@ function render(p){
   /* preț / titlu / loc */
   $('pdPrice').innerHTML = fmtPrice(p);
   $('pdTitle').textContent = titlu;
-  $('pdLoc').textContent = '📍 ' + [p.adresa, zona].filter(Boolean).join(', ');
+  $('pdLoc').textContent = '📍 ' + (zona || 'București');
 
   /* specs — caracteristici complete (afișare adaptivă) */
   const _has = v => v!==undefined && v!==null && String(v).trim()!=='';
@@ -336,27 +334,10 @@ function render(p){
   (p.facilitati||[]).forEach(f=>{ if(f) fac.push(f); });
   if(fac.length){ $('pdFacSec').style.display=''; $('pdFac').innerHTML = fac.map(f=>`<span class="pd-fac">✓ ${f}</span>`).join(''); }
 
-  /* hartă — cerc de aproximare din coordonate manuale (CRM); altfel placeholder link */
-  const lat = parseFloat(String(p.latitudine||'').replace(',', '.'));
-  const lng = parseFloat(String(p.longitudine||'').replace(',', '.'));
-  if (window.L && isFinite(lat) && isFinite(lng)) {
-    $('pdMap').style.display = 'none';
-    $('pdMapReal').style.display = '';
-    try {
-      const map = L.map('pdMapCanvas', { scrollWheelZoom:false, attributionControl:true }).setView([lat, lng], 15);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19, attribution: '© OpenStreetMap'
-      }).addTo(map);
-      L.circle([lat, lng], {
-        radius: 400, color:'#C9A84C', weight:2, fillColor:'#C9A84C', fillOpacity:0.18
-      }).addTo(map);
-      setTimeout(() => map.invalidateSize(), 200);
-    } catch(e) { console.warn('Hartă:', e); $('pdMapReal').style.display='none'; $('pdMap').style.display=''; }
-  } else {
-    const q = encodeURIComponent([p.adresa, zona, 'București'].filter(Boolean).join(', '));
-    $('pdMap').href = 'https://www.google.com/maps/search/?api=1&query=' + q;
-    $('pdMapText').textContent = (zona||'București') + ' — deschide harta';
-  }
+  /* hartă: DOAR zona — niciodată adresa sau coordonatele proprietății (confidențiale).
+     Harta pe zonă (MapLibre, centrată pe centrul zonei) vine separat; până atunci, linkul caută zona. */
+  $('pdMap').href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent([zona, 'București'].filter(Boolean).join(', '));
+  $('pdMapText').textContent = (zona||'București') + ' — deschide harta';
 
   /* WhatsApp precompletat */
   const waText = encodeURIComponent('Bună ziua! Sunt interesat(ă) de proprietatea "' + titlu + '" (ref. ' + (p.id||'') + ') de pe imondorealestate.com. Aș dori mai multe detalii.');
