@@ -1414,8 +1414,12 @@ const FIREBASE_CONFIG = window.IMONDO_FIREBASE_CONFIG || {
    };
 */
 
+/* Tip tranzacție canonic, insensibil la diacritice (CRM: „Vânzare" / „Închiriere") */
+function tipTranz(p){ const n = String((p&&(p.tip_tranzactie||p.tipTranzactie))||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim(); return n.startsWith('vanz') ? 'vanzare' : n.startsWith('inchir') ? 'inchiriere' : ''; }
+
 function buildPropCard(p, idx) {
-  const isRent = (p.tip_tranzactie||p.tipTranzactie||'').toLowerCase().includes('inchir');
+  if (!tipTranz(p)) return ''; // fără tip tranzacție valid → nu se afișează (de completat în CRM)
+  const isRent = tipTranz(p) === 'inchiriere';
   const pret = p.pret || p.pret_nou || 0;
   const price = pret ? new Intl.NumberFormat('de-DE').format(pret) + ' €' + (p.pret_plus_tva ? ' + TVA' : '') + (isRent ? ' <small>/ lună</small>' : '') : '—';
   // CRM uses 'poze' array for Cloudinary images

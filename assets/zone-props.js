@@ -19,7 +19,10 @@ const FIREBASE_CONFIG = window.IMONDO_FIREBASE_CONFIG || {
 const FALLBACK_IMG = 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&q=85';
 const $ = id => document.getElementById(id);
 const L = () => (window.T_SHARED && window.T_SHARED[document.documentElement.lang||'ro']) || window.T_SHARED.ro;
-const isRentOf = p => (p.tip_tranzactie||p.tipTranzactie||'').toLowerCase().includes('inchir');
+/* Tip tranzacție canonic: 'vanzare' | 'inchiriere' | '' (lipsă). Insensibil la diacritice/majuscule
+   — CRM salvează „Vânzare" / „Închiriere" (cu Î: „închiriere".includes("inchir") === false). */
+const tipTranz = p => { const n = String((p&&(p.tip_tranzactie||p.tipTranzactie))||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim(); return n.startsWith('vanz') ? 'vanzare' : n.startsWith('inchir') ? 'inchiriere' : ''; };
+const isRentOf = p => tipTranz(p) === 'inchiriere';
 /* Normalizare insensibilă la diacritice (site "Herăstrău" vs CRM "Herastrau") */
 const norm = s => String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[șşȘŞ]/g,'s').replace(/[țţȚŢ]/g,'t').toLowerCase().trim();
 
@@ -66,7 +69,7 @@ window.initZoneProps = async function(opts){
     snap.forEach(doc=>{
       (doc.data().proprietati||[]).forEach(p=>{
         const st=(p.status||'').toLowerCase();
-        if(st==='activ'||st==='active') all.push(p);
+        if((st==='activ'||st==='active') && tipTranz(p)) all.push(p);
       });
     });
     const list = all.filter(p => norm(p.zona) === norm(zona));

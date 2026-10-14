@@ -192,7 +192,9 @@ function showError(msg){
 }
 
 function getId(){ return new URLSearchParams(location.search).get('id'); }
-function isRentOf(p){ return (p.tip_tranzactie||p.tipTranzactie||'').toLowerCase().includes('inchir'); }
+function tipTranz(p){ const n = String((p&&(p.tip_tranzactie||p.tipTranzactie))||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim(); return n.startsWith('vanz') ? 'vanzare' : n.startsWith('inchir') ? 'inchiriere' : ''; }
+/* CRM salvează „Vânzare" / „Închiriere" — comparația trebuie să fie insensibilă la diacritice */
+function isRentOf(p){ return tipTranz(p) === 'inchiriere'; }
 function fmtPrice(p){
   const pret = p.pret || p.pret_nou || 0;
   return pret ? new Intl.NumberFormat('de-DE').format(pret) + ' €' + (p.pret_plus_tva ? ' + TVA' : '') + (isRentOf(p) ? ' <small>/ lună</small>' : '') : 'Preț la cerere';
@@ -221,7 +223,7 @@ function buildSimilarCard(p){
   const url = 'proprietate.html?id=' + encodeURIComponent(p.id||'');
   return `<a class="pcard" href="${url}">
     <div class="pi"><img src="${img}" alt="${titleOf(p)}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
-      <span class="ptag ${isRent?'ptag-i':'ptag-v'}">${isRent?'De închiriat':'De vânzare'}</span></div>
+      ${tipTranz(p) ? `<span class="ptag ${isRent?'ptag-i':'ptag-v'}">${isRent?'De închiriat':'De vânzare'}</span>` : ''}</div>
     <div class="pbody"><div class="pprice">${fmtPrice(p)}</div><div class="ptitle">${titleOf(p)}</div><div class="ploc">📍 ${p.zona||p.adresa||'—'}</div></div>
   </a>`;
 }
@@ -260,7 +262,7 @@ function render(p){
   galImgs = (p.poze || p.imagini || []).filter(Boolean);
   if(!galImgs.length) galImgs = [FALLBACK_IMG];
   galIdx = 0; renderGallery();
-  $('pdGallery').insertAdjacentHTML('beforeend', `<span class="pd-badge ${isRent?'ptag-i':'ptag-v'}">${isRent?'De închiriat':'De vânzare'}</span>`);
+  if (tipTranz(p)) $('pdGallery').insertAdjacentHTML('beforeend', `<span class="pd-badge ${isRent?'ptag-i':'ptag-v'}">${isRent?'De închiriat':'De vânzare'}</span>`);
 
   /* preț / titlu / loc */
   $('pdPrice').innerHTML = fmtPrice(p);
@@ -368,7 +370,7 @@ function render(p){
   $('propContent').style.display='';
 
   /* similare: aceeași tranzacție sau aceeași zonă, exclus curentul */
-  const sim = allProps.filter(x => x.id !== p.id && (isRentOf(x)===isRent || (x.zona&&x.zona===p.zona))).slice(0,3);
+  const sim = allProps.filter(x => x.id !== p.id && tipTranz(x) && (isRentOf(x)===isRent || (x.zona&&x.zona===p.zona))).slice(0,3);
   if(sim.length){ $('pdSimilar').innerHTML = sim.map(buildSimilarCard).join(''); $('pdSimilarSec').style.display=''; }
 }
 
