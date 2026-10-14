@@ -71,6 +71,18 @@
 .pd-aside h4{font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:.3rem}
 .pd-aside .sub{font-size:.8rem;color:var(--ink4);margin-bottom:1.4rem}
 .pd-aside .btn{width:100%;justify-content:center;margin-bottom:.7rem}
+.pd-ag-tag{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;font-weight:500}
+.pd-ag{display:flex;align-items:center;gap:1rem;margin-bottom:1.1rem}
+.pd-ag-foto{width:72px;height:72px;border-radius:50%;overflow:hidden;flex-shrink:0;background:#F9F5EE;border:1px solid rgba(201,168,76,.45);display:flex;align-items:center;justify-content:center}
+.pd-ag-foto img{width:100%;height:100%;object-fit:cover}
+.pd-ag-foto span{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:#C9A84C;letter-spacing:.04em}
+.pd-ag-nume{font-family:'Cormorant Garamond',serif;font-size:1.35rem;line-height:1.2;color:var(--ink)}
+.pd-ag-rol{font-size:.72rem;color:var(--ink4);margin-top:.15rem}
+.pd-ag-ct{display:flex;flex-direction:column;gap:.45rem;margin-bottom:1.3rem;padding-top:1rem;border-top:1px solid var(--border);font-size:.82rem}
+.pd-ag-ct a{color:var(--ink2,var(--ink));word-break:break-all}
+.pd-ag-ct a:hover{color:var(--gold)}
+.pd-ag-form{padding:1.2rem;margin-top:.4rem}
+.pd-ag-ftitle{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--ink)}
 .pd-aside .ref{margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--border);font-size:.72rem;color:var(--ink4);letter-spacing:.05em}
 /* similar */
 .pd-similar{background:var(--s1);padding:90px 4%}
@@ -153,11 +165,38 @@
         </div>
       </div>
       <aside class="pd-aside">
-        <h4>Interesat?</h4>
-        <div class="sub">Programează o vizionare gratuită cu un consultant IMONDO.</div>
-        <a href="tel:+40752942828" class="btn btn-gd">📞 Sună acum</a>
+        <!-- BROKERUL RESPONSABIL — date în assets/agenti.js (după agent_uid-ul public al proprietarului) -->
+        <div class="pd-ag-tag">Brokerul tău</div>
+        <div class="pd-ag">
+          <div class="pd-ag-foto" id="pdAgFoto"><span>IM</span></div>
+          <div><div class="pd-ag-nume" id="pdAgNume">IMONDO Real Estate</div><div class="pd-ag-rol" id="pdAgRol">Consultant dedicat</div></div>
+        </div>
+        <div class="pd-ag-ct">
+          <a id="pdAgTel" href="tel:+40752942828"><span aria-hidden="true">📞</span> <span id="pdAgTelTxt">+40 752 942 828</span></a>
+          <a id="pdAgMail" href="mailto:officeimondo@gmail.com"><span aria-hidden="true">✉</span> <span id="pdAgMailTxt">officeimondo@gmail.com</span></a>
+        </div>
+        <button type="button" class="btn btn-gd" data-cerere="vizionare">Programează o vizionare</button>
+        <button type="button" class="btn btn-ol" data-cerere="detalii">Solicită detalii</button>
         <a id="pdWa" href="https://wa.me/40752942828" target="_blank" rel="noopener" class="btn btn-dk">💬 WhatsApp</a>
-        <a href="contact.html" class="btn btn-ol">Trimite mesaj →</a>
+        <form class="cform pd-ag-form" id="pdAgForm" action="https://formspree.io/f/mwvzagkq" method="POST" data-lead="proprietate" style="display:none">
+          <div class="pd-ag-ftitle" id="pdAgFTitle">Programează o vizionare</div>
+          <input type="hidden" name="sursa" value="pagina proprietății">
+          <input type="hidden" name="tip_cerere" id="pdAgTip" value="vizionare">
+          <input type="hidden" name="proprietate_ref" id="pdAgRef" value="">
+          <input type="hidden" name="proprietate" id="pdAgTitlu" value="">
+          <input type="hidden" name="broker" id="pdAgBroker" value="">
+          <div class="fg"><label for="pdAgN">Nume *</label><input id="pdAgN" type="text" name="nume" required autocomplete="name"></div>
+          <div class="fg"><label for="pdAgT">Telefon *</label><input id="pdAgT" type="tel" name="telefon" required autocomplete="tel"></div>
+          <div class="fg"><label for="pdAgE">Email</label><input id="pdAgE" type="email" name="email" autocomplete="email"></div>
+          <div class="fg"><label for="pdAgMsg">Mesaj</label><textarea id="pdAgMsg" name="mesaj"></textarea></div>
+          <label class="fconsent" style="display:flex;gap:.6rem;align-items:flex-start;font-size:.74rem;line-height:1.55;color:var(--ink3);text-transform:none;letter-spacing:0;cursor:pointer">
+            <input type="checkbox" name="acord_confidentialitate" value="da" required style="margin-top:.2rem;accent-color:#C9A84C;width:auto;flex-shrink:0">
+            <span>Sunt de acord ca IMONDO să mă contacteze în legătură cu această solicitare și am citit <a href="confidentialitate.html" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:underline">Politica de confidențialitate</a>.</span>
+          </label>
+          <input type="hidden" name="politica_versiune" value="1.0 / ianuarie 2025">
+          <button type="submit" class="btn btn-gd">Trimite →</button>
+        </form>
+        <div class="fok">✦ Mulțumim! Te contactăm în maximum 2 ore.</div>
         <div class="ref" id="pdRef"></div>
       </aside>
     </div>
@@ -180,6 +219,7 @@ window.IMONDO_PAGE = { active:'sales', crumbs:[
 </script>
 <script src="assets/i18n.js"></script>
 <script src="assets/include.js"></script>
+<script src="assets/agenti.js"></script>
 <script src="assets/lightbox.js"></script>
 <script type="module">
 /* Aceeași config Firebase ca homepage (proiect imondo-crm) */
@@ -194,6 +234,35 @@ const FIREBASE_CONFIG = window.IMONDO_FIREBASE_CONFIG || {
 const FALLBACK_IMG = 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=980&q=85';
 
 const $ = id => document.getElementById(id);
+/* GA4 (doar cu acord — assets/consent.js): galerie_deschisa și vizualizare_proprietate, cu ID-ul proprietății */
+let curId = '';
+function imEv(name){ const a = [name, { property_id: String(curId) }]; if (window.IMONDO_track) IMONDO_track(a[0], a[1]); else (window.IMONDO_tq = window.IMONDO_tq || []).push(a); }
+const escH = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+/* BROKERUL RESPONSABIL: agent_uid (public, pe fișa proprietarului) → assets/agenti.js; altfel datele agenției */
+function renderBroker(p, agentUid, titlu){
+  const A = window.IMONDO_AGENTI || {}, ag = (agentUid && A[agentUid]) || window.IMONDO_AGENTIE;
+  if (!ag) return;   // fără fișierul de configurare rămân datele agenției din pagină
+  const tel = String(ag.telefon || '').replace(/[^\d+]/g, ''), wa = String(ag.whatsapp || tel).replace(/\D/g, '');
+  const ini = String(ag.nume || '').split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+  $('pdAgNume').textContent = ag.nume || '';
+  $('pdAgRol').textContent = ag.rol || '';
+  $('pdAgFoto').innerHTML = ag.foto ? `<img src="${escH(ag.foto)}" alt="${escH(ag.nume)}" loading="lazy">` : `<span>${escH(ini)}</span>`;
+  if (tel) { $('pdAgTel').href = 'tel:' + tel; $('pdAgTelTxt').textContent = tel.replace(/^\+40(\d{3})(\d{3})(\d{3})$/, '+40 $1 $2 $3'); } else $('pdAgTel').style.display = 'none';
+  if (ag.email) { $('pdAgMail').href = 'mailto:' + ag.email; $('pdAgMailTxt').textContent = ag.email; } else $('pdAgMail').style.display = 'none';
+  const waText = encodeURIComponent('Bună ziua! Sunt interesat(ă) de proprietatea "' + titlu + '" (ref. ' + (p.id||'') + ') de pe imondorealestate.com. Aș dori mai multe detalii.');
+  if (wa) $('pdWa').href = 'https://wa.me/' + wa + '?text=' + waText;
+  $('pdAgRef').value = p.id || ''; $('pdAgTitlu').value = titlu; $('pdAgBroker').value = ag.nume || '';
+}
+/* „Programează o vizionare” / „Solicită detalii” → formularul scurt din casetă (Formspree, prin include.js) */
+document.addEventListener('click', ev => {
+  const b = ev.target.closest('[data-cerere]'); if (!b) return;
+  const viz = b.dataset.cerere === 'vizionare', f = $('pdAgForm');
+  $('pdAgTip').value = viz ? 'vizionare' : 'detalii';
+  $('pdAgFTitle').textContent = viz ? 'Programează o vizionare' : 'Solicită detalii';
+  $('pdAgMsg').placeholder = viz ? 'Când ți-ar conveni? Zile și interval orar.' : 'Ce ai vrea să afli despre proprietate?';
+  f.style.display = 'flex'; b.closest('.pd-aside').style.position = 'static'; $('pdAgN').focus();
+});
 function showError(msg){
   $('propLoading').style.display='none';
   $('propContent').style.display='none';
@@ -228,8 +297,8 @@ function renderGallery(){
        <div class="pd-dots">${galImgs.map((_,i)=>`<div class="pd-dot ${i===galIdx?'on':''}" onclick="pdGo(${i})"></div>`).join('')}</div>` : '');
 }
 
-window.pdFull = i => { if (galReal && window.IMONDO_lightbox) IMONDO_lightbox.open(galImgs, i == null ? galIdx : i); };
-window.pdSchita = i => { if (window.IMONDO_lightbox) IMONDO_lightbox.open(galSchite, i, 'Schiță'); };
+window.pdFull = i => { if (galReal && window.IMONDO_lightbox) { IMONDO_lightbox.open(galImgs, i == null ? galIdx : i); imEv('galerie_deschisa'); } };
+window.pdSchita = i => { if (window.IMONDO_lightbox) { IMONDO_lightbox.open(galSchite, i, 'Schiță'); imEv('galerie_deschisa'); } };
 let galSchite = [];
 
 function buildSimilarCard(p){
@@ -362,9 +431,8 @@ function render(p){
   $('pdMap').href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent([zona, 'București'].filter(Boolean).join(', '));
   $('pdMapText').textContent = (zona||'București') + ' — deschide harta';
 
-  /* WhatsApp precompletat */
-  const waText = encodeURIComponent('Bună ziua! Sunt interesat(ă) de proprietatea "' + titlu + '" (ref. ' + (p.id||'') + ') de pe imondorealestate.com. Aș dori mai multe detalii.');
-  $('pdWa').href = 'https://wa.me/40752942828?text=' + waText;
+  /* broker + WhatsApp precompletat */
+  renderBroker(p, p._agentUid, titlu);
 
   /* ref */
   $('pdRef').textContent = 'Ref. ' + (p.id || '—');
@@ -398,7 +466,10 @@ async function init(){
 
     const prop = allProps.find(p => String(p.id) === String(id));
     if(!prop){ showError('Anunțul căutat nu mai este disponibil sau a fost retras.'); return; }
+    snap.forEach(d => { if (d.id === prop._ownerId) prop._agentUid = (d.data() || {}).agent_uid || ''; });
+    curId = prop.id;
     render(prop);
+    imEv('vizualizare_proprietate');
   }catch(err){
     console.warn('IMONDO proprietate:', err.message);
     showError('Nu am putut încărca proprietatea. Verifică conexiunea și încearcă din nou.');

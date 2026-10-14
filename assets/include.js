@@ -123,9 +123,9 @@
   </footer>
   <a href="${WA}" target="_blank" class="wa" title="WhatsApp IMONDO">💬</a>
   <div class="mcta">
-    <a href="tel:${PHONE}" data-event="click_telefon"><span class="mcta-ico">📞</span><span data-t="mcta_call">Sună</span></a>
-    <a id="mctaWa" href="${WA}" target="_blank" rel="noopener" data-event="click_whatsapp"><span class="mcta-ico">💬</span><span data-t="mcta_wa">WhatsApp</span></a>
-    <a href="${B}contact.html?subiect=evaluare" class="mcta-gd" data-event="cta_evaluare"><span class="mcta-ico">✦</span><span data-t="mcta_eval">Evaluare</span></a>
+    <a href="tel:${PHONE}"><span class="mcta-ico">📞</span><span data-t="mcta_call">Sună</span></a>
+    <a id="mctaWa" href="${WA}" target="_blank" rel="noopener"><span class="mcta-ico">💬</span><span data-t="mcta_wa">WhatsApp</span></a>
+    <a href="${B}contact.html?subiect=evaluare" class="mcta-gd"><span class="mcta-ico">✦</span><span data-t="mcta_eval">Evaluare</span></a>
   </div>`;
 
   /* ── INJECTARE ── */
@@ -181,13 +181,14 @@
     document.head.appendChild(s);
   }
 
-  /* ── TRACKING delegat (telefon/WhatsApp + data-event) — no-op fără GTM/GA/Meta ── */
-  function imTrack(name){try{window.dataLayer=window.dataLayer||[];window.dataLayer.push({event:name});if(typeof gtag==='function')gtag('event',name);if(typeof fbq==='function')fbq('trackCustom',name);}catch(e){}}
+  /* ── TRACKING: click pe telefon / WhatsApp (GA4, doar cu acord — assets/consent.js) ── */
+  function imTrack(name, params){ if(window.IMONDO_track) window.IMONDO_track(name, params); else (window.IMONDO_tq = window.IMONDO_tq || []).push([name, params]); }
+  window.imTrack = imTrack;
   document.addEventListener('click',e=>{
     const a=e.target.closest('a[href]'); if(!a) return;
     const href=a.getAttribute('href')||'';
-    const ev=a.dataset.event || (href.startsWith('tel:')?'click_telefon':/wa\.me|whatsapp/i.test(href)?'click_whatsapp':null);
-    if(ev)imTrack(ev);
+    if(href.startsWith('tel:')) imTrack('click_telefon');
+    else if(/wa\.me|whatsapp/i.test(href)) imTrack('click_whatsapp');
   });
 
   /* ── FORMULARE LEAD segmentate (Formspree) — handler delegat ── */
@@ -204,7 +205,7 @@
       const res = await fetch(f.action, {method:'POST', body:new FormData(f), headers:{'Accept':'application/json'}});
       if(!res.ok) throw 0;
       f.style.display='none'; if(ok) ok.style.display='block';
-      imTrack('submit_formular_' + (f.dataset.lead||'lead'));
+      imTrack('formular_trimis');
     }catch(_){
       if(btn){ btn.textContent='Eroare — reîncearcă'; btn.disabled=false; }
       f.style.opacity='1'; f.style.pointerEvents='auto';

@@ -116,7 +116,7 @@ async function submitForm(e){
   btn.textContent='Se trimite...';btn.disabled=true;f.style.opacity='.6';f.style.pointerEvents='none';
   try{
     const res=await fetch('https://formspree.io/f/mwvzagkq',{method:'POST',body:new FormData(f),headers:{'Accept':'application/json'}});
-    if(res.ok){f.style.display='none';document.getElementById('fOk').style.display='block';}
+    if(res.ok){f.style.display='none';document.getElementById('fOk').style.display='block';if(window.imTrack)imTrack('formular_trimis');}
     else{btn.textContent='Eroare — încearcă din nou';btn.disabled=false;f.style.opacity='1';f.style.pointerEvents='auto';}
   }catch(err){btn.textContent='Eroare — încearcă din nou';btn.disabled=false;f.style.opacity='1';f.style.pointerEvents='auto';}
 }
