@@ -1,0 +1,3 @@
+Aici vin pozele brokerilor, folosite în caseta de pe pagina proprietății.
+Format: JPG, pătrat 1:1, 800x800 px, sub 200 KB, fața centrată, fundal deschis.
+Nume: george.jpg, stefan.jpg, camelia.jpg. Apoi se completează „foto” în assets/agenti.js.

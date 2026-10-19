@@ -5,6 +5,7 @@
    cookie-urile de analiză și reîncarcă pagina, ca scripturile să nu mai ruleze.
    Bannerul apare pe orice pagină până la prima alegere; „Setări cookie-uri” (subsol / politică) îl redeschide.
    Încărcat pe toate paginile: direct (index, fișe) sau prin include.js.
+   IMONDO_track(nume, parametri): cele cinci evenimente GA4 (vezi mai jos).
    ════════════════════════════════════════════════════════════════ */
 (function () {
   if (window.IMONDO_consent) return;
@@ -67,6 +68,18 @@
   }
   function init() { const v = get(); if (v === 'all') loadTrackers(); else if (v !== 'essential') showBanner(); }
 
+  /* Evenimente GA4: DOAR acestea cinci, DOAR după „Accept toate”. Fără Google Tag Manager.
+     Ultimele două primesc { property_id }. Evenimentele cerute înainte de încărcarea acestui fișier
+     stau în window.IMONDO_tq; fără acord se aruncă, nu se păstrează pentru mai târziu. */
+  const EVENTS = ['click_telefon', 'click_whatsapp', 'formular_trimis', 'galerie_deschisa', 'vizualizare_proprietate'];
+  function track(name, params) {
+    if (EVENTS.indexOf(name) < 0 || get() !== 'all') return;
+    loadTrackers();
+    try { window.gtag('event', name, params || {}); } catch (e) { }
+  }
+
   window.IMONDO_consent = { get, set, open: showBanner, allowed: () => get() === 'all', _loaded: () => loaded };
+  window.IMONDO_track = track;
+  (window.IMONDO_tq || []).splice(0).forEach(a => track(a[0], a[1]));
   if (document.body) init(); else document.addEventListener('DOMContentLoaded', init);
 })();
