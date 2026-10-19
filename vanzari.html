@@ -68,6 +68,11 @@
           <div class="fg"><label data-t="f_phone">Telefon</label><input type="tel" name="telefon"></div>
         </div>
         <div class="fg"><label data-t="lf_what">Ce cauți / detalii</label><textarea name="mesaj" placeholder="Zonă, nr. camere, buget, tip proprietate..."></textarea></div>
+        <label class="fconsent" style="display:flex;gap:.6rem;align-items:flex-start;font-size:.78rem;line-height:1.55;color:var(--ink3);text-transform:none;letter-spacing:0;cursor:pointer">
+          <input type="checkbox" name="acord_confidentialitate" value="da" required style="margin-top:.2rem;accent-color:#C9A84C;width:auto;flex-shrink:0">
+          <span>Sunt de acord ca IMONDO să mă contacteze în legătură cu această solicitare și am citit <a href="confidentialitate.html" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:underline">Politica de confidențialitate</a>.</span>
+        </label>
+        <input type="hidden" name="politica_versiune" value="1.0 / ianuarie 2025">
         <button type="submit" class="btn btn-gd" style="justify-content:center;padding:1rem" data-t="f_send">Trimite →</button>
       </form>
       <div class="fok" data-t="f_ok">✦ Mulțumim! Te contactăm în maximum 2 ore.</div>

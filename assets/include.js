@@ -19,19 +19,10 @@
   const EMAIL = "officeimondo@gmail.com";
   const B = PAGE.base || ''; // prefix pentru pagini în subfolder (ex: zone/ → '../')
 
-  /* ── Google Analytics 4 — o singură dată, pe toate paginile care încarcă include.js.
-     index.html e self-contained și are GA direct în <head>, deci NU trece pe aici. ── */
+  /* ── Cookie-uri / Google Analytics: DOAR după „Accept toate” (assets/consent.js) — 14.10.2026 ── */
   (function(){
-    const GA_ID = 'G-49RFGB91ZH';
-    if(window.__imondoGA) return; window.__imondoGA = true;
-    if(document.querySelector('script[src*="googletagmanager.com/gtag/js"]')) return; // deja prezent → nu dubla
-    const s = document.createElement('script');
-    s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
-    document.head.appendChild(s);
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function(){ dataLayer.push(arguments); };
-    gtag('js', new Date());
-    gtag('config', GA_ID);
+    if(window.IMONDO_consent || document.querySelector('script[src*="assets/consent.js"]')) return;
+    const s = document.createElement('script'); s.src = B + 'assets/consent.js'; document.head.appendChild(s);
   })();
 
   /* ── HEADER ── */
@@ -111,9 +102,10 @@
       </div>
       <div class="flegal">
         <div class="flegal-links">
-          <a href="${B}index.html" data-t="leg1">Politică de Confidențialitate</a>
+          <a href="${B}confidentialitate.html" data-t="leg1">Politică de Confidențialitate</a>
           <a href="${B}index.html" data-t="leg2">Termeni și Condiții</a>
-          <a href="${B}index.html" data-t="leg3">Politică Cookie-uri</a>
+          <a href="${B}confidentialitate.html#cookies" data-t="leg3">Politică Cookie-uri</a>
+          <a href="#" onclick="window.IMONDO_consent&&IMONDO_consent.open();return false">Setări cookie-uri</a>
           <a href="https://anpc.ro" target="_blank" rel="noopener">ANPC</a>
         </div>
         <span class="fcopy" data-t="leg_copy">© 2025 IMONDO REAL ESTATE S.R.L. · CUI RO 44477606</span>

@@ -91,9 +91,8 @@
 <!-- Google Tag Manager — înlocuiește [GTM_ID]
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','[GTM_ID]');</script>
 -->
-<!-- Google Analytics 4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-49RFGB91ZH"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-49RFGB91ZH');</script>
+<!-- Google Analytics 4: se încarcă DOAR după „Accept toate” (assets/consent.js) -->
+<script src="assets/consent.js"></script>
 <!-- Meta Pixel — înlocuiește [META_PIXEL_ID]
 <script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','[META_PIXEL_ID]');fbq('track','PageView');</script>
 -->
@@ -1120,6 +1119,11 @@ footer{background:var(--ink);padding:5rem 4% 0}
             </select>
           </div>
           <div class="fg"><label data-t="f_msg">Mesaj</label><textarea name="mesaj"></textarea></div>
+          <label class="fconsent" style="display:flex;gap:.6rem;align-items:flex-start;font-size:.78rem;line-height:1.55;color:var(--ink3);text-transform:none;letter-spacing:0;cursor:pointer">
+            <input type="checkbox" name="acord_confidentialitate" value="da" required style="margin-top:.2rem;accent-color:#C9A84C;width:auto;flex-shrink:0">
+            <span>Sunt de acord ca IMONDO să mă contacteze în legătură cu această solicitare și am citit <a href="confidentialitate.html" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:underline">Politica de confidențialitate</a>.</span>
+          </label>
+          <input type="hidden" name="politica_versiune" value="1.0 / ianuarie 2025">
           <button type="submit" class="btn btn-gd" style="width:100%;justify-content:center;padding:1rem" data-t="f_send">Trimite mesajul →</button>
           <div class="fok" id="fOk" data-t="f_ok">✦ Mulțumim! Te contactăm în maximum 2 ore.</div>
         </form>
@@ -1145,9 +1149,10 @@ footer{background:var(--ink);padding:5rem 4% 0}
     <!-- LEGAL LINKS -->
     <div class="flegal">
       <div class="flegal-links">
-        <a onclick="openModal('mConf')" data-t="leg1">Politică de Confidențialitate</a>
+        <a href="confidentialitate.html" data-t="leg1">Politică de Confidențialitate</a>
         <a onclick="openModal('mTerms')" data-t="leg2">Termeni și Condiții</a>
-        <a onclick="openModal('mCookie')" data-t="leg3">Politică Cookie-uri</a>
+        <a href="confidentialitate.html#cookies" data-t="leg3">Politică Cookie-uri</a>
+        <a href="#" onclick="window.IMONDO_consent&&IMONDO_consent.open();return false">Setări cookie-uri</a>
         <a href="https://anpc.ro" target="_blank">ANPC</a>
         <a href="https://ec.europa.eu/consumers/odr/main/index.cfm?event=main.home2.show&lng=RO" target="_blank">SOL</a>
       </div>
@@ -1238,15 +1243,7 @@ footer{background:var(--ink);padding:5rem 4% 0}
   </div>
 </div>
 
-<!-- COOKIE BANNER -->
-<div class="cbanner" id="cb">
-  <p>🍪 Folosim cookie-uri pentru a îmbunătăți experiența pe site. <a href="#" onclick="openModal('mCookie');return false">Politica Cookie-uri</a>.</p>
-  <div class="cb-btns">
-    <button class="cb-set" onclick="openModal('mCookie')">Detalii</button>
-    <button class="cb-rej" onclick="setCookie('essential')">Refuz opționalele</button>
-    <button class="cb-acc" onclick="setCookie('all')">Accept toate</button>
-  </div>
-</div>
+<!-- COOKIE BANNER: assets/consent.js -->
 
 <script>
 /* ── TRANSLATIONS ── */
@@ -1346,8 +1343,7 @@ function closeOut(e,el){if(e.target===el)closeModal(el.id)}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.overlay.open').forEach(m=>closeModal(m.id))});
 
 /* COOKIE BANNER */
-function setCookie(v){localStorage.setItem('imondo_cookie',v);document.getElementById('cb').style.display='none'}
-window.addEventListener('DOMContentLoaded',()=>{const cb=document.getElementById('cb');if(!localStorage.getItem('imondo_cookie'))setTimeout(()=>cb.style.display='flex',1500);else cb.style.display='none'});
+function setCookie(v){ if(window.IMONDO_consent) IMONDO_consent.set(v); }
 
 /* FORM */
 async function submitForm(e){
