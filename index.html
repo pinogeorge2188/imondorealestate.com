@@ -1423,8 +1423,7 @@ function buildPropCard(p, idx) {
   const pret = p.pret || p.pret_nou || 0;
   const price = pret ? new Intl.NumberFormat('de-DE').format(pret) + ' €' + (p.pret_plus_tva ? ' + TVA' : '') + (isRent ? ' <small>/ lună</small>' : '') : '—';
   // CRM uses 'poze' array for Cloudinary images
-  const imgs = p.poze || p.imagini || [];
-  const img = imgs.length > 0 ? imgs[0] : 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&q=85';
+  const img = ((a,s)=>a.find(u=>!s.has(u))||a[0])((p.poze||p.imagini||[]).filter(Boolean), new Set(p.poze_schite||[])) || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&q=85';   // prima fotografie care nu e schiță
   const tagClass = isRent ? 'ptag-i' : 'ptag-v';
   const tagText = isRent ? 'De închiriat' : 'De vânzare';
   const typeAttr = isRent ? 'inchiriere' : 'vanzare';
@@ -1432,7 +1431,7 @@ function buildPropCard(p, idx) {
   const camere = p.camere || p.nrCamere || '';
   const suprafata = p.suprafata || '';
   const etaj = p.etaj || '';
-  const zona = p.zona || p.adresa || '—';
+  const zona = p.zona || '—';
   const titlu = p.denumire || p.titlu || ((p.tipologie||p.tipProprietate||'Proprietate') + (camere ? ' ' + camere + ' camere' : '') + ', ' + zona);
   const specs = [
     camere ? `🛏 ${camere} cam.` : null,
@@ -1556,9 +1555,9 @@ async function loadSoldFromFirebase() {
 
     const grid = document.getElementById('soldGrid');
     grid.innerHTML = sold.map((p, i) => {
-      const img = (p.poze || p.imagini || [])[0] || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&q=85';
+      const img = ((a,s)=>a.find(u=>!s.has(u))||a[0])((p.poze||p.imagini||[]).filter(Boolean), new Set(p.poze_schite||[])) || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&q=85';
       const denumire = p.denumire || p.titlu || (p.tipologie || 'Proprietate');
-      const zona = p.zona || p.adresa || '';
+      const zona = p.zona || '';
       const stamp = (T[curLang] && T[curLang].sold_stamp) || 'Vândut';
       return `<div class="sold-card" style="opacity:0;animation:fadeInUp .5s ease ${i*0.08}s forwards">
         <div class="sold-img"><img src="${img}" alt="${denumire}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&q=85'"><span class="sold-stamp">${stamp}</span></div>

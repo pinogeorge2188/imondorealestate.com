@@ -32,12 +32,12 @@ function fmtPrice(p){
 }
 function titleOf(p){
   const camere = p.camere || p.nrCamere || '';
-  const zona = p.zona || p.adresa || '';
+  const zona = p.zona || '';
   return p.denumire || p.titlu || ((p.tipologie||p.tipProprietate||'Proprietate') + (camere ? ' ' + camere + ' camere' : '') + (zona ? ', ' + zona : ''));
 }
 function card(p, base){
   const isRent = isRentOf(p);
-  const img = (p.poze||p.imagini||[])[0] || FALLBACK_IMG;
+  const img = ((a,s)=>a.find(u=>!s.has(u))||a[0])((p.poze||p.imagini||[]).filter(Boolean), new Set(p.poze_schite||[])) || FALLBACK_IMG;   // copertă: prima fotografie care nu e schiță
   const url = base + 'proprietate.html?id=' + encodeURIComponent(p.id||'');
   const specs = [
     (p.camere||p.nrCamere) ? `🛏 ${p.camere||p.nrCamere} cam.` : null,
@@ -49,7 +49,7 @@ function card(p, base){
       <span class="ptag ${isRent?'ptag-i':'ptag-v'}">${isRent?L().list_rent:L().list_sale}</span>
       <span class="pref">${p.id||''}</span></div>
     <div class="pbody"><div class="pprice">${fmtPrice(p)}</div><div class="ptitle">${titleOf(p)}</div>
-      <div class="ploc">📍 ${p.zona||p.adresa||'—'}</div>
+      <div class="ploc">📍 ${p.zona||'—'}</div>
       <div class="pspecs">${specs.map(s=>`<span>${s}</span>`).join('')}</div></div>
   </a>`;
 }

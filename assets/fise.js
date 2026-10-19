@@ -48,14 +48,15 @@ async function loadPropertyById(id){
 }
 
 /* ── GALERIE (imagine mare + thumbnails) ── */
-let gImgs=[], gIdx=0;
+let gImgs=[], gIdx=0, gReal=false;
 function buildGallery(){
   var g=$('fGallery'); if(!g) return;
-  g.innerHTML = '<div class="gal-main"><img id="fMainImg" src="'+esc(gImgs[0])+'" alt="" loading="eager" onerror="this.src=\''+FALLBACK_IMG+'\'">'
+  g.innerHTML = '<div class="gal-main"><img id="fMainImg" src="'+esc(gImgs[0])+'" alt="" loading="eager" onclick="fisaFull()" onerror="this.src=\''+FALLBACK_IMG+'\'">'
     + (gImgs.length>1 ? '<button class="gal-nav gal-prev" onclick="fisaNav(-1)" aria-label="Anterior">‹</button><button class="gal-nav gal-next" onclick="fisaNav(1)" aria-label="Următor">›</button>' : '')
     + '</div>'
     + (gImgs.length>1 ? '<div class="gal-thumbs" id="fThumbs">'+gImgs.map(function(u,i){ return '<img class="'+(i===0?'on':'')+'" src="'+esc(u)+'" onclick="fisaGo('+i+')" loading="lazy" alt="" onerror="this.style.display=\'none\'">'; }).join('')+'</div>' : '');
 }
+window.fisaFull = function(){ if (gReal && window.IMONDO_lightbox) IMONDO_lightbox.open(gImgs, gIdx); };
 window.fisaGo = function(i){ gIdx=i; var m=$('fMainImg'); if(m) m.src=gImgs[i]; var ts=document.querySelectorAll('#fThumbs img'); ts.forEach(function(t,j){ t.classList.toggle('on', j===i); }); };
 window.fisaNav = function(d){ window.fisaGo((gIdx+d+gImgs.length)%gImgs.length); };
 
@@ -76,10 +77,12 @@ function render(p, agent){
   document.title = nume + (neutral ? ' — Fișă proprietate' : ' — IMONDO Real Estate');
 
   /* galerie */
-  gImgs = (p.poze||[]).filter(Boolean); if(!gImgs.length) gImgs=[FALLBACK_IMG]; gIdx=0; buildGallery();
+  // fotografiile întâi, apoi schițele / planurile (marcate „Schiță” în CRM) — nu amestecate
+  var fsx = window.IMONDO_fotos ? IMONDO_fotos(p) : { fotos:(p.poze||[]).filter(Boolean), schite:[] };
+  gImgs = fsx.fotos.concat(fsx.schite); gReal = gImgs.length > 0; if(!gImgs.length) gImgs=[FALLBACK_IMG]; gIdx=0; buildGallery();
 
   $('fName').textContent = nume;
-  if($('fLoc')) $('fLoc').textContent = p.zona || p.adresa || '';
+  if($('fLoc')) $('fLoc').textContent = p.zona || '';
   $('fPrice').innerHTML = p.pret ? (Number(p.pret).toLocaleString('ro-RO')+' €'+(p.pret_plus_tva?' + TVA':'')+(isRent?' <small>/ lună</small>':'')) : 'Preț la cerere';
 
   /* comision cumpărător — DOAR pe fisa-client (containerul există doar acolo) */
