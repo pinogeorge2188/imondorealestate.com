@@ -1402,12 +1402,16 @@ async function loadPropsFromFirebase() {
   }
 }
 
-/* PRIMA PAGINĂ: cele 6 din assets/selectie-homepage.js, în ordine. ID inactiv / greșit / dublat → sărit;
-   locurile libere se completează cu următoarele proprietăți active, în ordinea obișnuită. */
+/* PRIMA PAGINĂ: decide bifa din CRM (prima_pagina === true, ordonat după prima_pagina_ordine 1–6).
+   assets/selectie-homepage.js e rezervă DOAR cât timp nicio proprietate activă nu e bifată.
+   ID inactiv / greșit / dublat → sărit; locurile libere se completează cu următoarele active. */
 function alegeHomepage(all) {
   const N = 6, valide = all.filter(p => tipTranz(p) && p.id), dupaId = new Map(), alese = [], folosite = new Set();
   valide.forEach(p => { if (!dupaId.has(String(p.id))) dupaId.set(String(p.id), p); });
-  const lista = Array.isArray(window.IMONDO_SELECTIE_HOMEPAGE) ? window.IMONDO_SELECTIE_HOMEPAGE : [];
+  const ord = p => { const n = Number(p.prima_pagina_ordine); return n >= 1 && n <= N ? n : 99; };
+  const bifate = valide.filter(p => p.prima_pagina === true).sort((a, b) => ord(a) - ord(b));
+  const lista = bifate.length ? bifate.map(p => p.id)
+    : (Array.isArray(window.IMONDO_SELECTIE_HOMEPAGE) ? window.IMONDO_SELECTIE_HOMEPAGE : []);
   const adauga = p => { if (p && alese.length < N && !folosite.has(String(p.id))) { alese.push(p); folosite.add(String(p.id)); } };
   lista.forEach(id => adauga(dupaId.get(String(id).trim())));
   valide.forEach(adauga);
