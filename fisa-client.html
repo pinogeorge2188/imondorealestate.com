@@ -68,6 +68,7 @@ img{display:block;max-width:100%}
 .cta .btn-wa{background:#25D366;color:#fff}.cta .btn-tel{background:var(--gold);color:var(--black)}.cta .btn-web{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.3)}
 @media(max-width:640px){.specs{grid-template-columns:1fr}.phead{flex-direction:column;align-items:flex-start}}
 </style>
+<script src="assets/contact.js"></script>
 </head>
 <body>
 <header class="brand">
@@ -101,13 +102,14 @@ img{display:block;max-width:100%}
     <h3>Interesat de <em>această proprietate?</em></h3>
     <div class="agent">Consultant responsabil: <span id="fAgentName"></span></div>
     <div class="cta-btns">
-      <a href="tel:+40752942828" class="btn btn-tel">📞 +40 752 942 828</a>
-      <a href="https://wa.me/40752942828" target="_blank" rel="noopener" class="btn btn-wa">💬 WhatsApp</a>
+      <a id="fAgentTel" href="tel:+40752942828" class="btn btn-tel">📞 <span id="fAgentTelTxt">+40 752 942 828</span></a>
+      <a id="fAgentWa" href="https://wa.me/40752942828" target="_blank" rel="noopener" class="btn btn-wa">💬 WhatsApp</a>
       <a href="https://imondorealestate.com" target="_blank" rel="noopener" class="btn btn-web">🌐 imondorealestate.com</a>
     </div>
   </div>
 </main>
 
+<script src="assets/agenti.js"></script>
 <script src="assets/lightbox.js"></script>
 <script src="assets/fise.js"></script>
 <script>initFisa();</script>

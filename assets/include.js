@@ -14,9 +14,11 @@
 (function(){
   const PAGE = window.IMONDO_PAGE || {active:'', crumbs:[]};
   const T = window.T_SHARED;
-  const PHONE = "+40752942828", PHONE_FMT = "+40 752 942 828";
-  const WA = "https://wa.me/40752942828";
-  const EMAIL = "officeimondo@gmail.com";
+  /* datele agenției: assets/contact.js (singurul loc de modificat) */
+  const CT = window.IMONDO_CONTACT || { telefon: "+40752942828", whatsapp: "40752942828", email: "officeimondo@gmail.com" };
+  const PHONE = CT.telefon, PHONE_FMT = CT.telefonAfisat || String(CT.telefon).replace(/^\+40(\d{3})(\d{3})(\d{3})$/, "+40 $1 $2 $3");
+  const WA = "https://wa.me/" + CT.whatsapp;
+  const EMAIL = CT.email;
   const B = PAGE.base || ''; // prefix pentru pagini în subfolder (ex: zone/ → '../')
 
   /* ── Cookie-uri / Google Analytics: DOAR după „Accept toate” (assets/consent.js) — 14.10.2026 ── */
