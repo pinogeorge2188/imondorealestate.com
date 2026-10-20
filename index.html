@@ -1369,7 +1369,7 @@ async function loadPropsFromFirebase() {
     grid.style.display = 'none';
 
     // Query: owners collection → proprietati subcollection sau array
-    const ownersSnap = await getDocs(collection(db, 'proprietari'));
+    const ownersSnap = await (await import('/assets/data.js')).incarcaProprietari(db);
     const allProps = [];
     ownersSnap.forEach(doc => {
       const owner = doc.data();
@@ -1450,7 +1450,7 @@ async function loadSoldFromFirebase() {
     const db = getFirestore(fbApp);
 
     const sold = [];
-    const ownersSnap = await getDocs(collection(db, 'proprietari'));
+    const ownersSnap = await (await import('/assets/data.js')).incarcaProprietari(db);
     ownersSnap.forEach(doc => {
       (doc.data().proprietati || []).forEach(p => {
         const status = (p.status || '').toLowerCase();

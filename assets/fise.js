@@ -38,7 +38,7 @@ async function loadPropertyById(id){
   const appId='imondo-fisa';
   const app=getApps().find(a=>a.name===appId)||initializeApp(FIREBASE_CONFIG,appId);
   const db=getFirestore(app);
-  const snap=await getDocs(collection(db,'proprietari'));
+  const snap=await (await import('/assets/data.js')).incarcaProprietari(db);
   let found=null;
   snap.forEach(function(doc){
     var o=doc.data();
