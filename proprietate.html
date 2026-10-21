@@ -342,7 +342,7 @@ function render(p){
       "image":(p.poze||p.imagini||[]).slice(0,5),
       "numberOfRooms":p.camere||p.nrCamere||undefined,
       "floorSize": p.suprafata?{"@type":"QuantitativeValue","value":p.suprafata,"unitCode":"MTK"}:undefined,
-      "address":{"@type":"PostalAddress","addressLocality":zona||"București","addressRegion":"București","addressCountry":"RO"}
+      "address":(r => ({"@type":"PostalAddress","addressLocality":r.reg==='Ilfov'?r.loc:(zona||"București"),"addressRegion":r.reg,"addressCountry":"RO"}))(zonaRegiune(zona))
     };
     if(pretNum) ld.offers={"@type":"Offer","price":pretNum,"priceCurrency":"EUR","availability":"https://schema.org/InStock","url":location.href};
     const s=document.createElement('script'); s.type='application/ld+json'; s.textContent=JSON.stringify(ld);
@@ -364,7 +364,7 @@ function render(p){
   /* preț / titlu / loc */
   $('pdPrice').innerHTML = fmtPrice(p);
   $('pdTitle').textContent = titlu;
-  $('pdLoc').textContent = '📍 ' + (zona || 'București');
+  $('pdLoc').textContent = '📍 ' + zonaText(zona);
 
   /* specs — caracteristici complete (afișare adaptivă) */
   const _has = v => v!==undefined && v!==null && String(v).trim()!=='';
@@ -459,13 +459,23 @@ function zoneCenter(zona){
   const row = (window.IMONDO_ZONE_CENTRE || []).find(r => String(r[0]).split('/').some(a => n(a) === z));
   return row ? [row[1], row[2]] : null;
 }
+/* zonă din Ilfov → { loc: localitatea, reg: 'Ilfov' }; altfel București */
+function zonaRegiune(zona){
+  const n = s => String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+  const m = window.IMONDO_ZONE_ILFOV || {}, k = Object.keys(m).find(x => n(x) === n(zona));
+  return k ? { loc: m[k], reg: 'Ilfov' } : { loc: 'București', reg: 'București' };
+}
+function zonaText(zona){
+  const r = zonaRegiune(zona); if (!zona) return 'București';
+  return r.reg === 'Ilfov' ? [zona].concat(r.loc !== zona ? [r.loc] : []).concat(['Ilfov']).join(', ') : zona;
+}
 function renderHarta(p, zona){
   const lat = parseFloat(String(p.latitudine||'').replace(',', '.')), lng = parseFloat(String(p.longitudine||'').replace(',', '.'));
   const pin = p.locatie_discreta !== true && isFinite(lat) && isFinite(lng) && lat !== 0 && lng !== 0;
   const zc = pin ? null : zoneCenter(zona);
   const link = $('pdMap');
   if (pin) link.href = 'https://www.google.com/maps/search/?api=1&query=' + lat + ',' + lng;
-  else link.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent([zona, 'București'].filter(Boolean).join(', '));
+  else link.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(zona ? (zonaRegiune(zona).reg === 'Ilfov' ? zonaText(zona) : zona + ', București') : 'București');
   $('pdMapText').textContent = (zona || 'Localizare') + ' — deschide harta';
   if (!pin && !zc) { $('pdMapReal').style.display = 'none'; if (!zona) $('pdLocSec').style.display = 'none'; return; }
   if (!window.L) {   // Leaflet (defer) încă se încarcă → reîncercăm la load; dacă lipsește de tot, rămâne doar linkul
