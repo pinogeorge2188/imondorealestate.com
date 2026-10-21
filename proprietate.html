@@ -21,6 +21,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/shared.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="assets/zone-centre.js"></script>
 <style>
 /* ── PROPRIETATE (detaliu) ── */
 .prop-wrap{padding:40px 4% 90px}
@@ -66,6 +69,7 @@
 .pd-mapbox{height:350px;border:1px solid var(--border);border-radius:12px;overflow:hidden}
 .pd-mapnote{font-size:.78rem;color:var(--ink4);margin-top:.6rem;text-align:center}
 .leaflet-container{font-family:'Jost',sans-serif}
+.pd-pin span{display:block;width:26px;height:26px;border-radius:50% 50% 50% 0;background:#C9A84C;border:2px solid #0D0D0D;transform:rotate(-45deg)}
 /* sidebar consultant */
 .pd-aside{position:sticky;top:90px;border:1px solid var(--border);background:var(--w);padding:1.8rem}
 .pd-aside h4{font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:.3rem}
@@ -152,11 +156,11 @@
           <h3>Schițe și planuri</h3>
           <div class="pd-schite" id="pdSchite"></div>
         </div>
-        <div class="pd-sec">
+        <div class="pd-sec" id="pdLocSec">
           <h3>Localizare</h3>
           <div id="pdMapReal" style="display:none">
             <div id="pdMapCanvas" class="pd-mapbox"></div>
-            <p class="pd-mapnote">Locație aproximativă. Adresa exactă se comunică la programarea vizionării.</p>
+            <p class="pd-mapnote" id="pdMapNote"></p>
           </div>
           <a class="pd-map" id="pdMap" target="_blank" rel="noopener">
             <span style="font-size:1.4rem">🗺️</span>
@@ -338,7 +342,7 @@ function render(p){
       "image":(p.poze||p.imagini||[]).slice(0,5),
       "numberOfRooms":p.camere||p.nrCamere||undefined,
       "floorSize": p.suprafata?{"@type":"QuantitativeValue","value":p.suprafata,"unitCode":"MTK"}:undefined,
-      "address":{"@type":"PostalAddress","addressLocality":zona||"București","addressRegion":"București","addressCountry":"RO"}
+      "address":(r => ({"@type":"PostalAddress","addressLocality":r.reg==='Ilfov'?r.loc:(zona||"București"),"addressRegion":r.reg,"addressCountry":"RO"}))(zonaRegiune(zona))
     };
     if(pretNum) ld.offers={"@type":"Offer","price":pretNum,"priceCurrency":"EUR","availability":"https://schema.org/InStock","url":location.href};
     const s=document.createElement('script'); s.type='application/ld+json'; s.textContent=JSON.stringify(ld);
@@ -360,7 +364,7 @@ function render(p){
   /* preț / titlu / loc */
   $('pdPrice').innerHTML = fmtPrice(p);
   $('pdTitle').textContent = titlu;
-  $('pdLoc').textContent = '📍 ' + (zona || 'București');
+  $('pdLoc').textContent = '📍 ' + zonaText(zona);
 
   /* specs — caracteristici complete (afișare adaptivă) */
   const _has = v => v!==undefined && v!==null && String(v).trim()!=='';
@@ -429,10 +433,10 @@ function render(p){
   (p.facilitati||[]).forEach(f=>{ if(f) fac.push(f); });
   if(fac.length){ $('pdFacSec').style.display=''; $('pdFac').innerHTML = fac.map(f=>`<span class="pd-fac">✓ ${f}</span>`).join(''); }
 
-  /* hartă: DOAR zona — niciodată adresa sau coordonatele proprietății (confidențiale).
-     Harta pe zonă (MapLibre, centrată pe centrul zonei) vine separat; până atunci, linkul caută zona. */
-  $('pdMap').href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent([zona, 'București'].filter(Boolean).join(', '));
-  $('pdMapText').textContent = (zona||'București') + ' — deschide harta';
+  /* hartă (20.10.2026): PINUL EXACT când proprietatea are coordonate și nu e „locație discretă” (ca pe Imobiliare.ro);
+     altfel cerc de 450 m pe centrul zonei (assets/zone-centre.js); fără pin și fără zonă cunoscută, harta nu apare.
+     Textul adresei (stradă, număr…) nu ajunge niciodată pe site. */
+  renderHarta(p, zona);
 
   /* broker + WhatsApp precompletat */
   renderBroker(p, p._agentUid, titlu);
@@ -447,6 +451,46 @@ function render(p){
   /* similare: aceeași tranzacție sau aceeași zonă, exclus curentul */
   const sim = allProps.filter(x => x.id !== p.id && tipTranz(x) && (isRentOf(x)===isRent || (x.zona&&x.zona===p.zona))).slice(0,3);
   if(sim.length){ $('pdSimilar').innerHTML = sim.map(buildSimilarCard).join(''); $('pdSimilarSec').style.display=''; }
+}
+
+function zoneCenter(zona){
+  const n = s => String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/^p-?ta\.?\s+|^piata\s+/,'').trim();
+  const z = n(zona); if (!z) return null;
+  const row = (window.IMONDO_ZONE_CENTRE || []).find(r => String(r[0]).split('/').some(a => n(a) === z));
+  return row ? [row[1], row[2]] : null;
+}
+/* zonă din Ilfov → { loc: localitatea, reg: 'Ilfov' }; altfel București */
+function zonaRegiune(zona){
+  const n = s => String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+  const m = window.IMONDO_ZONE_ILFOV || {}, k = Object.keys(m).find(x => n(x) === n(zona));
+  return k ? { loc: m[k], reg: 'Ilfov' } : { loc: 'București', reg: 'București' };
+}
+function zonaText(zona){
+  const r = zonaRegiune(zona); if (!zona) return 'București';
+  return r.reg === 'Ilfov' ? [zona].concat(r.loc !== zona ? [r.loc] : []).concat(['Ilfov']).join(', ') : zona;
+}
+function renderHarta(p, zona){
+  const lat = parseFloat(String(p.latitudine||'').replace(',', '.')), lng = parseFloat(String(p.longitudine||'').replace(',', '.'));
+  const pin = p.locatie_discreta !== true && isFinite(lat) && isFinite(lng) && lat !== 0 && lng !== 0;
+  const zc = pin ? null : zoneCenter(zona);
+  const link = $('pdMap');
+  if (pin) link.href = 'https://www.google.com/maps/search/?api=1&query=' + lat + ',' + lng;
+  else link.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(zona ? (zonaRegiune(zona).reg === 'Ilfov' ? zonaText(zona) : zona + ', București') : 'București');
+  $('pdMapText').textContent = (zona || 'Localizare') + ' — deschide harta';
+  if (!pin && !zc) { $('pdMapReal').style.display = 'none'; if (!zona) $('pdLocSec').style.display = 'none'; return; }
+  if (!window.L) {   // Leaflet (defer) încă se încarcă → reîncercăm la load; dacă lipsește de tot, rămâne doar linkul
+    if (document.readyState !== 'complete' && !renderHarta._asteapta) { renderHarta._asteapta = 1; window.addEventListener('load', () => renderHarta(p, zona), { once: true }); }
+    $('pdMapReal').style.display = 'none'; return; }
+  $('pdMapReal').style.display = '';
+  $('pdMapNote').textContent = pin ? 'Poziția proprietății. Adresa exactă se comunică la programarea vizionării.'
+    : 'Zona proprietății (aproximativ, ' + (window.IMONDO_RAZA_ZONA_M || 450) + ' m). Adresa exactă se comunică la programarea vizionării.';
+  const c = pin ? [lat, lng] : zc;
+  const map = L.map('pdMapCanvas', { scrollWheelZoom: false, attributionControl: true }).setView(c, pin ? 16 : 15);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(map);
+  if (pin) L.marker(c, { icon: L.divIcon({ className: 'pd-pin', html: '<span></span>', iconSize: [26, 26], iconAnchor: [13, 26] }) }).addTo(map);
+  else L.circle(c, { radius: window.IMONDO_RAZA_ZONA_M || 450, color: '#C9A84C', weight: 2, fillColor: '#C9A84C', fillOpacity: 0.15 }).addTo(map);
+  window.__pdHarta = { mod: pin ? 'pin' : 'zona', centru: c };
+  setTimeout(() => map.invalidateSize(), 50);
 }
 
 async function init(){
