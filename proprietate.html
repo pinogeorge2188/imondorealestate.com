@@ -431,7 +431,8 @@ function render(p){
   (p.facilitati||[]).forEach(f=>{ if(f) fac.push(f); });
   if(fac.length){ $('pdFacSec').style.display=''; $('pdFac').innerHTML = fac.map(f=>`<span class="pd-fac">✓ ${f}</span>`).join(''); }
 
-  /* hartă (20.10.2026): PINUL EXACT când proprietatea are coordonate și nu e „locație discretă” (ca pe Imobiliare.ro);
+  /* hartă (21.10.2026): implicit CERC de 450 m pe centrul zonei. PINUL EXACT doar când brokerul a bifat în CRM
+     „Afișează pinul exact pe site” (pozitie_exacta === true) și proprietatea are coordonate;
      altfel cerc de 450 m pe centrul zonei (assets/zone-centre.js); fără pin și fără zonă cunoscută, harta nu apare.
      Textul adresei (stradă, număr…) nu ajunge niciodată pe site. */
   renderHarta(p, zona);
@@ -469,7 +470,7 @@ function zonaText(zona){
 }
 function renderHarta(p, zona){
   const lat = parseFloat(String(p.latitudine||'').replace(',', '.')), lng = parseFloat(String(p.longitudine||'').replace(',', '.'));
-  const pin = p.locatie_discreta !== true && isFinite(lat) && isFinite(lng) && lat !== 0 && lng !== 0;
+  const pin = p.pozitie_exacta === true && isFinite(lat) && isFinite(lng) && lat !== 0 && lng !== 0;
   const zc = pin ? null : zoneCenter(zona);
   const link = $('pdMap');
   if (pin) link.href = 'https://www.google.com/maps/search/?api=1&query=' + lat + ',' + lng;
