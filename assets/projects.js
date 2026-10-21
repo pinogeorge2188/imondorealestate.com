@@ -164,7 +164,7 @@ function renderProjectDetail(p){
 
   /* WhatsApp precompletat */
   const wa = encodeURIComponent('Bună ziua! Sunt interesat(ă) de proiectul "' + nume + '" de pe imondorealestate.com. Aș dori mai multe detalii.');
-  $('pjWa').href = 'https://wa.me/40752942828?text=' + wa;
+  $('pjWa').href = 'https://wa.me/' + ((window.IMONDO_CONTACT && IMONDO_CONTACT.whatsapp) || '40752942828') + '?text=' + wa;
 
   /* schema RealEstateAgent + Residence (dinamic) */
   try{

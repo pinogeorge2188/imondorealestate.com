@@ -218,6 +218,7 @@ window.IMONDO_PAGE = { active:'sales', crumbs:[
 ] };
 </script>
 <script src="assets/i18n.js"></script>
+<script src="assets/contact.js"></script>
 <script src="assets/include.js"></script>
 <script src="assets/agenti.js"></script>
 <script src="assets/lightbox.js"></script>
@@ -241,8 +242,10 @@ const escH = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;'
 
 /* BROKERUL RESPONSABIL: agent_uid (public, pe fișa proprietarului) → assets/agenti.js; altfel datele agenției */
 function renderBroker(p, agentUid, titlu){
-  const A = window.IMONDO_AGENTI || {}, ag = (agentUid && A[agentUid]) || window.IMONDO_AGENTIE;
-  if (!ag) return;   // fără fișierul de configurare rămân datele agenției din pagină
+  const A = window.IMONDO_AGENTI || {}, R = window.IMONDO_AGENTIE || {}, a0 = (agentUid && A[agentUid]) || null;
+  if (!a0 && !window.IMONDO_AGENTIE) return;
+  // rândurile goale ale brokerului → datele agenției (assets/contact.js)
+  const ag = a0 ? Object.assign({}, a0, { telefon: a0.telefon || R.telefon, whatsapp: a0.whatsapp || (a0.telefon ? '' : R.whatsapp), email: a0.email || R.email }) : R;   // fără fișierul de configurare rămân datele agenției din pagină
   const tel = String(ag.telefon || '').replace(/[^\d+]/g, ''), wa = String(ag.whatsapp || tel).replace(/\D/g, '');
   const ini = String(ag.nume || '').split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase();
   $('pdAgNume').textContent = ag.nume || '';
@@ -456,7 +459,7 @@ async function init(){
     const fbApp = getApps().find(a=>a.name===appId) || initializeApp(FIREBASE_CONFIG, appId);
     const db = getFirestore(fbApp);
 
-    const snap = await getDocs(collection(db,'proprietari'));
+    const snap = await (await import('/assets/data.js')).incarcaProprietari(db);
     snap.forEach(doc=>{
       (doc.data().proprietati||[]).forEach(p=>{
         const st=(p.status||'').toLowerCase();

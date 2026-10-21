@@ -38,11 +38,11 @@ async function loadPropertyById(id){
   const appId='imondo-fisa';
   const app=getApps().find(a=>a.name===appId)||initializeApp(FIREBASE_CONFIG,appId);
   const db=getFirestore(app);
-  const snap=await getDocs(collection(db,'proprietari'));
+  const snap=await (await import('/assets/data.js')).incarcaProprietari(db);
   let found=null;
   snap.forEach(function(doc){
     var o=doc.data();
-    (o.proprietati||[]).forEach(function(p){ if(String(p.id)===String(id)) found={ p:p, agent:(o.agent_nume||'') }; });
+    (o.proprietati||[]).forEach(function(p){ if(String(p.id)===String(id)) found={ p:p, agent:(o.agent_nume||''), agentUid:(o.agent_uid||'') }; });
   });
   return found;
 }
@@ -68,7 +68,7 @@ function showErr(msg){
 /* pagina de colaborare e neutră (fără brand) → scoate orice mențiune IMONDO din textele proprietății */
 function neutralize(s){ return String(s==null?'':s).replace(/IMONDO\s+Real\s+Estate/gi,'Agenția').replace(/\bIMONDO\b/gi,'Agenția').replace(/ {2,}/g,' ').trim(); }
 
-function render(p, agent){
+function render(p, agent, agentUid){
   /* branded = pagina client (are containerul de comision); altfel = colaborare (neutru) */
   var neutral = !document.getElementById('fCommission');
   var nume = p.denumire || p.titlu || (p.tipologie || 'Proprietate');
@@ -164,7 +164,17 @@ function render(p, agent){
   fillChips('fFac', 'fFacSec', dot);
 
   /* agent (CTA) — doar pe fisa-client */
-  if($('fAgentName')) $('fAgentName').textContent = agent || 'Consultant IMONDO';
+  if($('fAgentName')){
+    /* brokerul din assets/agenti.js (după agent_uid-ul proprietarului); altfel datele agenției */
+    var A = window.IMONDO_AGENTI || {}, ag = (agentUid && A[agentUid]) || null, R = window.IMONDO_AGENTIE || null;
+    var src = ag ? { telefon: ag.telefon || (R && R.telefon), whatsapp: ag.whatsapp || (ag.telefon ? '' : (R && R.whatsapp)) } : R;
+    $('fAgentName').textContent = (ag && ag.nume) || agent || 'Consultant IMONDO';
+    if(src){
+      var tel = String(src.telefon||'').replace(/[^\d+]/g,''), wa = String(src.whatsapp||tel).replace(/\D/g,'');
+      if(tel && $('fAgentTel')){ $('fAgentTel').href = 'tel:'+tel; $('fAgentTelTxt').textContent = tel.replace(/^\+40(\d{3})(\d{3})(\d{3})$/, '+40 $1 $2 $3'); }
+      if(wa && $('fAgentWa')) $('fAgentWa').href = 'https://wa.me/'+wa;
+    }
+  }
 
   hide('fLoading'); $('fContent').style.display='';
 }
@@ -175,7 +185,7 @@ window.initFisa = async function(){
   try{
     var found = await loadPropertyById(id);
     if(!found){ showErr('Proprietatea căutată nu este disponibilă.'); return; }
-    render(found.p, found.agent);
+    render(found.p, found.agent, found.agentUid);
   }catch(err){
     console.warn('IMONDO fișă:', err.message);
     showErr('Nu am putut încărca proprietatea. Verifică conexiunea și reîncarcă.');

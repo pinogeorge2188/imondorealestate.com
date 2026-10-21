@@ -236,7 +236,7 @@ window.initListings = async function(opts){
     const fbApp = getApps().find(a=>a.name===appId) || initializeApp(FIREBASE_CONFIG, appId);
     const db = getFirestore(fbApp);
     const all = [];
-    const snap = await getDocs(collection(db,'proprietari'));
+    const snap = await (await import('/assets/data.js')).incarcaProprietari(db);
     snap.forEach(doc=>{
       (doc.data().proprietati||[]).forEach(p=>{
         const st=(p.status||'').toLowerCase();

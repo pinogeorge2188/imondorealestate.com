@@ -10,7 +10,7 @@
 window.IMONDO_SELECTIE_HOMEPAGE = [
   'pp_461pgvlq',   // Vila Monumentala, Cotroceni — 1.900.000 €
   'pp_9zdh1t22',   // Penthouse UP-Site, Floreasca — 1.800.000 €
-  'pp_1p4dy8q1',   // 4 Camere UP-Site, Floreasca — 1.000.000 €
+  'pp_lp4dy8ql',   // 4 Camere UP-Site, Floreasca — 1.000.000 €
   'pp_ek5gcjmu',   // Apartament 5 Camere, Kiseleff — 575.000 €
   'pp_8xzp63fs',   // 3 Camere UP-Site, Floreasca — 500.000 €
   'pp_r3mf5x3b',   // Penthouse
