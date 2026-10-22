@@ -1,7 +1,7 @@
 {
   "name": "IMONDO Real Estate",
   "short_name": "IMONDO",
-  "description": "Agenție imobiliară premium în București",
+  "description": "Consultanță imobiliară în nordul și centrul Bucureștiului",
   "start_url": "./index.html",
   "scope": "./",
   "display": "browser",

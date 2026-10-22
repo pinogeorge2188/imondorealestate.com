@@ -1,0 +1,75 @@
+/* ════════════════════════════════════════════════════════════════
+   IMONDO — TEMA ZI / NOAPTE (22.10.2026). Comutatorul: assets/tema.js. Alegerea: în <head>, înainte de prima randare.
+   Paleta de noapte e DEFINITĂ, nu inversată: fundal #0D0D0D, carduri și panouri puțin mai deschise, text crem #F9F5EE,
+   auriu #C9A84C la accente și butoane. Fotografiile, schițele și harta NU primesc filtre.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── ZI: doar lizibilitate (contrast ≥ 4,5:1 pe textul mic gri) ── */
+html:root{--ink4:#736B5F}
+html .lang-bar-left span,html .lang-bar-contact,html .lang-bar-contact a{color:rgba(255,255,255,.66)}
+html .pv{--k4:#6E665A}
+/* subsolul și banda de sus (închise pe ambele teme): textul mic devine lizibil (≥ 4,5:1), aceeași nuanță, mai puțin transparentă */
+html :is(.fcol ul li a,.fbrand p){color:rgba(255,255,255,.62)}
+html .flegal-links a{color:rgba(255,255,255,.58)}
+html .fcopy{color:rgba(255,255,255,.5)}
+html .lang-btn{color:rgba(255,255,255,.78)}
+html :is(.lang-btn.on,.lang-btn:hover){color:#C9A84C}
+html footer .lang-btn{color:rgba(255,255,255,.72)!important}   /* limbile din subsol au culoarea scrisă în pagină */
+html footer :is(.lang-btn.on,.lang-btn:hover){color:#C9A84C!important}
+html .ti{color:rgba(255,255,255,.62)}
+html .abadge strong{color:rgba(255,255,255,.7)}
+html .abadge span{color:rgba(255,255,255,.55)}
+
+/* ── NOAPTE ── */
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --w:#F9F5EE;                       /* textul de pe fundal închis / auriu rămâne crem */
+  --s0:#0D0D0D;--s1:#121110;--s2:#1A1816;--s3:#25221F;
+  --ink:#F9F5EE;--ink2:#ECE5D8;--ink3:#D2CABB;--ink4:#ADA596;
+  --gold:#C9A84C;--gold2:#D9BC6A;--gold3:rgba(201,168,76,.12);
+  --border:rgba(249,245,238,.12);--border2:rgba(201,168,76,.32);
+  --card:#171513;--panou:#141311;
+}
+html[data-theme="dark"] body{background:#0D0D0D;color:#F9F5EE}
+html[data-theme="dark"] nav{background:rgba(13,13,13,.96);border-bottom-color:rgba(249,245,238,.1)}
+html[data-theme="dark"] .hbg span{background:#F9F5EE}
+
+/* cardurile și câmpurile care foloseau albul ca fundal → card închis */
+html[data-theme="dark"] :is(.lpanel,.pcard,.projcard,.agcard,.val-card:hover,#searchbar,.wcard:hover,#testi,.tcard,.about-nums,.help-card,.sold-card,.zchip,.pfav,.pj-aside,.pd-aside,.serv--w,.mmenu,.mobile-menu){background:var(--card)}
+html[data-theme="dark"] :is(.cform input,.cform select,.cform textarea,.fg input,.fg select,.fg textarea,.sf select option,.fg select option,.lf-check input){background:#1F1C19;color:#F9F5EE;border-color:rgba(249,245,238,.18)}
+html[data-theme="dark"] ::placeholder{color:#8F877A}
+
+/* secțiunile care erau negre rămân închise (nu devin crem) */
+html[data-theme="dark"] :is(footer,.lang-bar,.page-hero,.lead-form-sec,.mcta,#trust,#owners,.mhead,.cbanner,#founder,#process,.about-cta,.serv-cta,.ag-avatar){background:var(--panou)}
+html[data-theme="dark"] :is(footer,.lang-bar,.mcta,.cbanner){border-color:rgba(201,168,76,.18)}
+
+/* butoanele și etichetele negre → aurii; textul de pe auriu → negru */
+html[data-theme="dark"] :is(.btn-dk,.ptag-v,.lp-type.on,.fb.on,.fb:hover,.stab.on,.stab:hover,.ztb.on,.ztb:hover,.fb-reset:hover,.btn-ol:hover){background:#C9A84C;border-color:#C9A84C;color:#0D0D0D}
+html[data-theme="dark"] .btn-dk:hover{background:#D9BC6A}
+html[data-theme="dark"] :is(.btn-gd,.ptag-i,.mcta a.mcta-gd,.projcard-stage,.sb-go,.cb-acc,.sold-stamp,.zbadge-ilf,.btn-cw){color:#0D0D0D}
+html[data-theme="dark"] .btn-cw{background:#C9A84C}
+
+/* ── pagina proprietății (varianta 2): aceeași paletă ── */
+html[data-theme="dark"] .pv{--c:#1A1816;--k:#F9F5EE;--k3:#D2CABB;--k4:#ADA596;--ln:rgba(249,245,238,.12)}
+html[data-theme="dark"] :is(.pv-panel,.pv .pcard){background:var(--card)}
+html[data-theme="dark"] .pd-similar{background:#121110}
+html[data-theme="dark"] .pv-calc input{background:#0D0D0D;color:#F9F5EE;border-color:rgba(249,245,238,.18)}
+html[data-theme="dark"] .pv-btn{background:transparent;color:#F9F5EE;border-color:rgba(249,245,238,.35)}
+html[data-theme="dark"] .pv-btn:hover{background:#F9F5EE;color:#0D0D0D}
+html[data-theme="dark"] :is(.pv-btn.pr,.pv-btn.gd){background:#C9A84C;border-color:#C9A84C;color:#0D0D0D}
+html[data-theme="dark"] :is(.pv-btn.pr,.pv-btn.gd):hover{background:#D9BC6A;color:#0D0D0D}
+html[data-theme="dark"] .pv-badge{background:#0D0D0D;color:#F9F5EE}
+html[data-theme="dark"] .pv-badge.i{background:#C9A84C;color:#0D0D0D}
+html[data-theme="dark"] .pv-gal button{background:#1A1816}
+html[data-theme="dark"] .pd-mapbox{border-color:rgba(249,245,238,.12)}
+
+/* fotografii, schițe, hartă: neatinse (fără filtre, fără întunecare) */
+html[data-theme="dark"] :is(img,picture,video,.leaflet-container,.leaflet-tile){filter:none!important;opacity:1}
+
+/* comutatorul */
+.tema-btn{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;padding:0;margin:0;border:1px solid rgba(255,255,255,.28);border-radius:50%;background:transparent;color:rgba(255,255,255,.85);cursor:pointer;transition:border-color .2s,color .2s;flex-shrink:0}
+.tema-btn:hover,.tema-btn:focus-visible{border-color:#C9A84C;color:#C9A84C;outline:none}
+.tema-btn svg{width:14px;height:14px;display:block}
+
+/* la tipar: întotdeauna pagina de zi */
+@media print{html[data-theme="dark"]{color-scheme:light}}

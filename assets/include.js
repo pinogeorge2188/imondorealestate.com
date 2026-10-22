@@ -14,6 +14,9 @@
 (function(){
   const PAGE = window.IMONDO_PAGE || {active:'', crumbs:[]};
   const T = window.T_SHARED;
+  /* textul din banda de sus: assets/contact.js (slogan) — un singur loc de modificat */
+  const SLOGAN = (window.IMONDO_CONTACT && window.IMONDO_CONTACT.slogan) || 'Consultanță imobiliară în nordul și centrul Bucureștiului';
+  if (T && T.ro) { T.ro.tagline = SLOGAN; T.ro.foot_p = SLOGAN + '. Transparență, profesionalism și rezultate reale — pentru fiecare client în parte.'; }
   /* datele agenției: assets/contact.js (singurul loc de modificat) */
   const CT = window.IMONDO_CONTACT || { telefon: "+40752942828", whatsapp: "40752942828", email: "officeimondo@gmail.com" };
   const PHONE = CT.telefon, PHONE_FMT = CT.telefonAfisat || String(CT.telefon).replace(/^\+40(\d{3})(\d{3})(\d{3})$/, "+40 $1 $2 $3");
@@ -32,7 +35,7 @@
   const header = `
   <div class="lang-bar">
     <div class="lang-bar-left">
-      <span data-t="tagline">Agenție imobiliară premium</span>
+      <span data-t="tagline">${SLOGAN}</span>
       <div class="lang-switch">
         <button class="lang-btn on" data-lang="ro">RO</button>
         <button class="lang-btn" data-lang="en">EN</button>
@@ -97,7 +100,7 @@
   <footer>
     <div class="container">
       <div class="fgrid">
-        <div class="fbrand"><a href="${B}index.html" class="flogo">IMONDO<em>.</em></a><p data-t="foot_p">Agenție imobiliară premium în București. Transparență, profesionalism și rezultate reale — pentru fiecare client în parte.</p></div>
+        <div class="fbrand"><a href="${B}index.html" class="flogo">IMONDO<em>.</em></a><p data-t="foot_p">${SLOGAN}. Transparență, profesionalism și rezultate reale — pentru fiecare client în parte.</p></div>
         <div class="fcol"><h4 data-t="fc1_h">Proprietăți</h4><ul><li><a href="${B}vanzari.html" data-t="fc1_1">De vânzare</a></li><li><a href="${B}inchirieri.html" data-t="fc1_2">De închiriat</a></li><li><a href="${B}proiecte.html" data-t="fc1_3">Proiecte rezidențiale</a></li></ul></div>
         <div class="fcol"><h4 data-t="fc2_h">Servicii</h4><ul><li><a href="${B}servicii.html" data-t="fc2_1">Pentru proprietari</a></li><li><a href="${B}servicii.html" data-t="fc2_2">Pentru cumpărători</a></li><li><a href="${B}servicii.html" data-t="fc2_3">Pentru chiriași</a></li></ul></div>
         <div class="fcol"><h4 data-t="fc3_h">Contact</h4><ul><li><a href="tel:${PHONE}">${PHONE_FMT}</a></li><li><a href="mailto:${EMAIL}">${EMAIL}</a></li><li><a href="${WA}" data-t="fc3_wa">WhatsApp</a></li><li><a href="https://imondorealestate.com">imondorealestate.com</a></li><li><a href="${B}contact.html">București, Sector 1</a></li></ul></div>

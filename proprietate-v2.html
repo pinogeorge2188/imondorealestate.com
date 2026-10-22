@@ -3,11 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- tema zi / noapte: aleasă ÎNAINTE de prima randare (fără clipire); butonul și culorile: assets/tema.js, assets/tema.css -->
+<script>(function(){var t;try{t=localStorage.getItem('imondo_tema')}catch(e){}if(t!=='dark'&&t!=='light')t=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t)})();</script>
+<link rel="stylesheet" href="assets/tema.css">
+<script src="assets/tema.js" defer></script>
 <!-- VARIANTĂ NOUĂ (previzualizare, 22.10.2026): structura după angluxury.ro, tema IMONDO. Nelegată de nicăieri, neindexată.
      Pagina live rămâne proprietate.html până la aprobare. -->
 <meta name="robots" content="noindex, nofollow">
 <title>Proprietate | IMONDO Real Estate București</title>
-<meta name="description" content="Detalii proprietate — IMONDO Real Estate, agenție imobiliară premium în București.">
+<meta name="description" content="Detalii proprietate — IMONDO Real Estate, consultanță imobiliară în nordul și centrul Bucureștiului.">
 <link rel="icon" type="image/png" sizes="64x64" href="favicon-64.png">
 <meta name="theme-color" content="#0D0D0D">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -340,7 +344,19 @@ function caracteristici(p, k){
     ['Disponibil din', 'ahlc', p.data_disponibilitate ? new Date(p.data_disponibilitate).toLocaleDateString('ro-RO') : ''],
     ['Casă pasivă', 'h', da(p.casa_pasiva)]
   ];
-  return R.filter(r => r[1].includes(k) && has(r[2]));
+  // dubluri (22.10.2026): un rând care repetă ce spune deja alt rând sau o placă nu se mai afișează
+  const same = (x, y) => has(x) && has(y) && n0(x) === n0(y);
+  const valOf = l => (R.find(r => r[0] === l) || [])[2];
+  const GENERIC = { 'Spațiu comercial': 'Spații comerciale', 'Spațiu birouri': 'Birouri' };
+  const dublura = r => {
+    if (r[0] === 'Tip locuință') return same(r[2], p.tipologie);                                  // „Apartament” = „Apartament”
+    if (r[0] === 'Subcategorie') return same(r[2], GENERIC[p.tipologie]);                         // „Spații comerciale” la un spațiu comercial
+    if (r[0] === 'Supr. utilă totală') return num(p.suprafata_utila_totala) === ariaRef(p, k);    // aceeași cifră ca placa „Suprafață utilă”
+    if (r[0] === 'Destinație') return (p.scop || []).length === 1 && same(p.scop[0], p.subtip_teren);   // „Agricol” = tipul terenului
+    if (r[0] === 'Tip imobil' && k === 'c') return same(r[2], valOf('Tip proprietate / imobil'));
+    return false;
+  };
+  return R.filter(r => r[1].includes(k) && has(r[2]) && !dublura(r));
 }
 
 /* FACILITĂȚI și FINISAJE — dotările bifate în CRM (grupurile din nomenclator) + câmpurile vechi, fără dubluri */
