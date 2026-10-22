@@ -76,6 +76,11 @@
 .pv-calc-out b{font-family:'Playfair Display',serif;font-weight:500;font-size:1.9rem;color:var(--k)}
 .pv-calc-out span{font-size:.82rem;color:var(--k3)}
 .pv-calc small{display:block;margin-top:.8rem;font-size:.72rem;color:var(--k4);line-height:1.5}
+.pv-dob{padding:.6rem 0;font-size:.95rem;font-weight:500;color:var(--k)}
+/* finanțare: discret, o invitație la discuție */
+.pv-fin{border-left:2px solid var(--g);padding:.2rem 0 .2rem 1.2rem}
+.pv-fin p{font-size:.92rem;line-height:1.8;color:var(--k3);margin:0 0 1rem;max-width:620px}
+.pv-fin-btns{display:flex;flex-wrap:wrap;gap:.6rem}.pv-fin-btns .pv-btn{min-width:200px}
 /* panoul din dreapta */
 .pv-panel{position:sticky;top:92px;background:#fff;border:1px solid var(--ln);padding:1.6rem}
 .pv-price{font-family:'Playfair Display',serif;font-size:2.1rem;line-height:1.1;color:var(--k)}
@@ -148,12 +153,21 @@
       <section class="pv-sec" id="pvCalcSec" style="display:none"><h2>Calculator de rată</h2>
         <div class="pv-calc">
           <div class="pv-calc-in">
-            <div><label for="pvAvans">Avans (%)</label><input id="pvAvans" type="number" min="0" max="100" step="1" value="20"></div>
-            <div><label for="pvDob">Dobândă anuală (%)</label><input id="pvDob" type="number" min="0" max="30" step="0.1" value="6"></div>
-            <div><label for="pvAni">Perioadă (ani)</label><input id="pvAni" type="number" min="1" max="35" step="1" value="30"></div>
+            <div><label for="pvAvans">Avans (%)</label><input id="pvAvans" type="number" min="0" max="95" step="1"></div>
+            <div><label for="pvAni">Perioadă (ani)</label><input id="pvAni" type="number" min="1" max="40" step="1"></div>
+            <div><label>Dobândă anuală</label><div class="pv-dob" id="pvDob"></div></div>
           </div>
           <div class="pv-calc-out"><div><span>Rata lunară estimată</span><br><b id="pvRata">—</b></div><span id="pvCredit"></span></div>
-          <small>Estimare orientativă, calculată cu rată lunară constantă (anuitate). Nu este o ofertă de creditare: costurile reale (DAE, asigurări, comisioane) le stabilește banca.</small>
+          <small id="pvCalcNota"></small>
+        </div>
+      </section>
+      <section class="pv-sec" id="pvFinSec2" style="display:none"><h2>Finanțare</h2>
+        <div class="pv-fin">
+          <p>Înainte să te hotărăști asupra unei proprietăți, merită să știi exact cu ce buget lucrezi. Sună-ne și analizăm împreună situația ta, ca să găsim varianta care ți se potrivește.</p>
+          <div class="pv-fin-btns">
+            <a class="pv-btn pr" id="pvFinTel" href="tel:+40752942828">Sună · <span id="pvFinTelTxt">+40 752 942 828</span></a>
+            <a class="pv-btn gd" id="pvFinWa" href="https://wa.me/40752942828" target="_blank" rel="noopener">WhatsApp</a>
+          </div>
         </div>
       </section>
     </main>
@@ -177,10 +191,14 @@
           <input type="hidden" name="proprietate_ref" id="pdAgRef" value="">
           <input type="hidden" name="proprietate" id="pdAgTitlu" value="">
           <input type="hidden" name="broker" id="pdAgBroker" value="">
+          <input type="hidden" name="_subject" id="pdAgSubj" value="Cerere de pe pagina proprietății">
           <div class="fg"><label for="pdAgN">Nume *</label><input id="pdAgN" type="text" name="nume" required autocomplete="name"></div>
           <div class="fg"><label for="pdAgT">Telefon *</label><input id="pdAgT" type="tel" name="telefon" required autocomplete="tel"></div>
           <div class="fg"><label for="pdAgE">Email</label><input id="pdAgE" type="email" name="email" autocomplete="email"></div>
           <div class="fg"><label for="pdAgMsg">Mesaj</label><textarea id="pdAgMsg" name="mesaj"></textarea></div>
+          <label style="display:flex;gap:.6rem;align-items:center;font-size:.82rem;color:var(--k3,#5E574C);text-transform:none;letter-spacing:0;cursor:pointer">
+            <input type="checkbox" name="ajutor_finantare" value="da" id="pdAgFin" style="accent-color:#C9A84C;width:auto;flex-shrink:0"> Vreau și ajutor cu finanțarea
+          </label>
           <label class="fconsent" style="display:flex;gap:.6rem;align-items:flex-start;font-size:.74rem;line-height:1.55;color:var(--ink3);text-transform:none;letter-spacing:0;cursor:pointer">
             <input type="checkbox" name="acord_confidentialitate" value="da" required style="margin-top:.2rem;accent-color:#C9A84C;width:auto;flex-shrink:0">
             <span>Sunt de acord ca IMONDO să mă contacteze în legătură cu această solicitare și am citit <a href="confidentialitate.html" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:underline">Politica de confidențialitate</a>.</span>
@@ -385,26 +403,46 @@ function renderDesc(p){
   }
 }
 
-/* calculator de rată: anuitate, rată lunară constantă */
+/* calculator de rată: anuitate, rată lunară constantă. Dobânda = IRCC + marja băncii, din setările CRM
+   (site_cache/credit, publicate din Panou). Fără setări valide, calculatorul nu apare — nicio cifră scrisă în cod. */
 function rataLunara(credit, dobAn, ani){
   const n = Math.round(ani * 12), r = dobAn / 100 / 12;
   if (!(credit > 0) || !(n > 0)) return 0;
   return r > 0 ? credit * r / (1 - Math.pow(1 + r, -n)) : credit / n;
 }
 window.__pvRata = rataLunara;
-function renderCalc(p){
+const pct = x => fmtN(x, 2) + '%';
+function renderCalc(p, cr){
   const pret = num(p.pret);
   if (isRentOf(p) || !pret || p.pret_la_cerere === true) return;
+  $('pvFinSec2').style.display = '';                       // finanțare: la vânzare, chiar dacă lipsesc setările calculatorului
+  if (!cr || !(cr.ircc >= 0) || !(cr.marja >= 0)) return;
+  const dob = Math.round((cr.ircc + cr.marja) * 100) / 100;
   $('pvCalcSec').style.display = '';
+  $('pvAvans').value = cr.avans != null ? cr.avans : '';
+  $('pvAni').value = cr.perioada != null ? cr.perioada : '';
+  $('pvDob').textContent = pct(dob);
+  const zi = String(cr.valabil_la || '').slice(0, 10).split('-').reverse().join('.');
+  $('pvCalcNota').textContent = 'Estimare pe baza IRCC ' + pct(cr.ircc) + ' plus marjă ' + pct(cr.marja) + (zi ? ', valabilă la data ' + zi : '') + '. Nu reprezintă o ofertă de creditare.';
   const upd = () => {
-    const av = Math.min(100, Math.max(0, num($('pvAvans').value))), credit = pret * (1 - av / 100);
-    const rata = rataLunara(credit, num($('pvDob').value), num($('pvAni').value));
+    const av = Math.min(95, Math.max(0, num($('pvAvans').value))), credit = pret * (1 - av / 100);
+    const rata = rataLunara(credit, dob, num($('pvAni').value));
     $('pvRata').textContent = rata ? fmtN(Math.round(rata)) + ' €' : '—';
     $('pvCredit').textContent = 'Credit: ' + fmtN(Math.round(credit)) + ' € · avans ' + fmtN(Math.round(pret - credit)) + ' €';
   };
-  ['pvAvans', 'pvDob', 'pvAni'].forEach(id => $(id).addEventListener('input', upd));
+  ['pvAvans', 'pvAni'].forEach(id => $(id).addEventListener('input', upd));
   upd();
 }
+/* finanțare: numărul și WhatsApp-ul AGENȚIEI (assets/contact.js) */
+function renderFinantare(){
+  const C = window.IMONDO_CONTACT || {}, tel = String(C.telefon || '').replace(/[^\d+]/g, ''), wa = String(C.whatsapp || tel).replace(/\D/g, '');
+  if (tel) { $('pvFinTel').href = 'tel:' + tel; $('pvFinTelTxt').textContent = tel.replace(/^\+40(\d{3})(\d{3})(\d{3})$/, '+40 $1 $2 $3'); }
+  if (wa) $('pvFinWa').href = 'https://wa.me/' + wa + '?text=' + encodeURIComponent('Bună ziua! Aș vrea să discutăm despre finanțarea unei proprietăți de pe imondorealestate.com.');
+}
+/* bifa „Vreau și ajutor cu finanțarea” → subiectul emailului spune asta din prima */
+document.addEventListener('change', ev => {
+  if (ev.target && ev.target.id === 'pdAgFin') $('pdAgSubj').value = (ev.target.checked ? '[FINANȚARE] ' : '') + 'Cerere de pe pagina proprietății — ref. ' + ($('pdAgRef').value || '');
+});
 
 /* BROKERUL RESPONSABIL: agent_uid → assets/agenti.js; altfel datele agenției */
 function renderBroker(p, agentUid, titlu){
@@ -466,7 +504,8 @@ function render(p){
   window.__pv = { tiles, car, fac: d.fac, fin: d.fin };
 
   renderHarta(p, zona);
-  renderCalc(p);
+  renderCalc(p, window.__pvCredit);
+  renderFinantare();
   renderBroker(p, p._agentUid, titlu);
   $('propLoading').style.display='none'; $('propContent').style.display='';
 
@@ -523,11 +562,14 @@ async function init(){
   if(!id){ showError('Lipsește identificatorul proprietății din adresă.'); return; }
   try{
     const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js');
-    const { getFirestore } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+    const { getFirestore, getDoc, doc } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
     const appId = 'imondo-prop';
     const fbApp = getApps().find(a=>a.name===appId) || initializeApp(FIREBASE_CONFIG, appId);
     const db = getFirestore(fbApp);
+    // setările calculatorului (publicate din CRM); dacă citirea eșuează, calculatorul nu apare — restul paginii merge
+    const creditP = getDoc(doc(db, 'site_cache', 'credit')).then(d => d && d.exists() ? d.data() : null).catch(() => null);
     const snap = await (await import('/assets/data.js')).incarcaProprietari(db);
+    window.__pvCredit = await creditP;
     snap.forEach(doc=>{ (doc.data().proprietati||[]).forEach(p=>{ const st=(p.status||'').toLowerCase(); if(st==='activ'||st==='active') allProps.push({...p,_ownerId:doc.id}); }); });
     const prop = allProps.find(p => String(p.id) === String(id));
     if(!prop){ showError('Anunțul căutat nu mai este disponibil sau a fost retras.'); return; }
