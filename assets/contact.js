@@ -12,7 +12,10 @@
 window.IMONDO_CONTACT = {
   telefon:  '+40752942828',          // cu +40, fără spații
   whatsapp: '40752942828',           // fără +, fără spații
-  email:    'officeimondo@gmail.com'
+  email:    'officeimondo@gmail.com',
+  // textul din banda de sus a site-ului (și începutul textului din subsol), în română.
+  // Traducerile EN / ES / FR sunt în assets/i18n.js (tagline) — descrierile pentru Google sunt în fiecare pagină (vezi mai jos în raport).
+  slogan:   'Consultanță imobiliară în nordul și centrul Bucureștiului'
 };
 
 /* ── de aici în jos nu se modifică ── */

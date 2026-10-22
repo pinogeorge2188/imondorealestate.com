@@ -7,13 +7,13 @@
    ════════════════════════════════════════════ */
 window.T_SHARED = {
   ro:{
-    tagline:"Agenție imobiliară premium",
+    tagline:"Consultanță imobiliară în nordul și centrul Bucureștiului",
     nav_props:"Proprietăți",nav_sales:"Vânzări",nav_rent:"Închirieri",
     nav_projects:"Proiecte",nav_services:"Servicii",nav_zones:"Zone",
     nav_about:"Despre IMONDO",nav_contact:"Contact",nav_cta:"Consultanță gratuită",
     crumb_home:"Acasă",
     /* footer */
-    foot_p:"Agenție imobiliară premium în București. Transparență, profesionalism și rezultate reale — pentru fiecare client în parte.",
+    foot_p:"Consultanță imobiliară în nordul și centrul Bucureștiului. Transparență, profesionalism și rezultate reale — pentru fiecare client în parte.",
     fc1_h:"Proprietăți",fc1_1:"De vânzare",fc1_2:"De închiriat",fc1_3:"Proiecte rezidențiale",
     fc2_h:"Servicii",fc2_1:"Pentru proprietari",fc2_2:"Pentru cumpărători",fc2_3:"Pentru chiriași",
     fc3_h:"Contact",fc3_wa:"WhatsApp",
@@ -61,12 +61,12 @@ window.T_SHARED = {
     lf_what:"Ce cauți / detalii"
   },
   en:{
-    tagline:"Premium real estate agency",
+    tagline:"Real estate consultancy in northern and central Bucharest",
     nav_props:"Properties",nav_sales:"For sale",nav_rent:"For rent",
     nav_projects:"Projects",nav_services:"Services",nav_zones:"Areas",
     nav_about:"About IMONDO",nav_contact:"Contact",nav_cta:"Free consultation",
     crumb_home:"Home",
-    foot_p:"Premium real estate agency in Bucharest. Transparency, professionalism and real results — for every client.",
+    foot_p:"Real estate consultancy in northern and central Bucharest. Transparency, professionalism and real results — for every client.",
     fc1_h:"Properties",fc1_1:"For sale",fc1_2:"For rent",fc1_3:"Residential projects",
     fc2_h:"Services",fc2_1:"For owners",fc2_2:"For buyers",fc2_3:"For tenants",
     fc3_h:"Contact",fc3_wa:"WhatsApp",
@@ -109,12 +109,12 @@ window.T_SHARED = {
     lf_what:"What you're looking for / details"
   },
   es:{
-    tagline:"Agencia inmobiliaria premium",
+    tagline:"Consultoría inmobiliaria en el norte y el centro de Bucarest",
     nav_props:"Propiedades",nav_sales:"En venta",nav_rent:"En alquiler",
     nav_projects:"Proyectos",nav_services:"Servicios",nav_zones:"Zonas",
     nav_about:"Sobre IMONDO",nav_contact:"Contacto",nav_cta:"Consulta gratuita",
     crumb_home:"Inicio",
-    foot_p:"Agencia inmobiliaria premium en Bucarest. Transparencia, profesionalismo y resultados reales — para cada cliente.",
+    foot_p:"Consultoría inmobiliaria en el norte y el centro de Bucarest. Transparencia, profesionalismo y resultados reales — para cada cliente.",
     fc1_h:"Propiedades",fc1_1:"En venta",fc1_2:"En alquiler",fc1_3:"Proyectos residenciales",
     fc2_h:"Servicios",fc2_1:"Para propietarios",fc2_2:"Para compradores",fc2_3:"Para inquilinos",
     fc3_h:"Contacto",fc3_wa:"WhatsApp",
@@ -157,12 +157,12 @@ window.T_SHARED = {
     lf_what:"Qué buscas / detalles"
   },
   fr:{
-    tagline:"Agence immobilière premium",
+    tagline:"Conseil immobilier dans le nord et le centre de Bucarest",
     nav_props:"Propriétés",nav_sales:"À vendre",nav_rent:"À louer",
     nav_projects:"Projets",nav_services:"Services",nav_zones:"Quartiers",
     nav_about:"À propos d'IMONDO",nav_contact:"Contact",nav_cta:"Consultation gratuite",
     crumb_home:"Accueil",
-    foot_p:"Agence immobilière premium à Bucarest. Transparence, professionnalisme et résultats réels — pour chaque client.",
+    foot_p:"Conseil immobilier dans le nord et le centre de Bucarest. Transparence, professionnalisme et résultats réels — pour chaque client.",
     fc1_h:"Propriétés",fc1_1:"À vendre",fc1_2:"À louer",fc1_3:"Projets résidentiels",
     fc2_h:"Services",fc2_1:"Pour les propriétaires",fc2_2:"Pour les acheteurs",fc2_3:"Pour les locataires",
     fc3_h:"Contact",fc3_wa:"WhatsApp",
