@@ -286,7 +286,6 @@ function caracteristici(p, k){
   const etaj = () => { const e = String(p.etaj==null?'':p.etaj).trim(); if (!e) return ''; return e.indexOf('/') >= 0 ? e.replace(/\s*\/\s*/, ' / ') : e + (has(p.total_etaje) ? ' / ' + p.total_etaje : ''); };
   const R = [
     ['Tip proprietate', 'ahlc', p.tipologie],
-    ['Tip tranzacție', 'ahlc', tipTranz(p) === 'vanzare' ? 'Vânzare' : tipTranz(p) === 'inchiriere' ? 'Închiriere' : ''],
     ['Tip teren', 'l', p.subtip_teren],
     ['Subcategorie', 'c', p.tipologie === 'Spațiu comercial' ? p.subtip_comercial : ''],
     ['Tip locuință', 'ah', p.tip_locuinta],

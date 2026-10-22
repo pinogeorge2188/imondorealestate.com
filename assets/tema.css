@@ -20,13 +20,22 @@ html .ti{color:rgba(255,255,255,.62)}
 html .abadge strong{color:rgba(255,255,255,.7)}
 html .abadge span{color:rgba(255,255,255,.55)}
 
+/* ── ZI: AURIUL PENTRU TEXTUL MIC pe fundal deschis ──
+   --gold-text e definit AICI (rândul de mai jos): nuanța se poate ajusta direct, cu condiția să rămână ≥ 4,5:1 pe crem (#F9F5EE) și pe alb.
+   #836822: 4,87:1 pe crem, 5,29:1 pe alb. (#8A6F28 dă doar 4,41:1 pe crem.)
+   Se aplică DOAR la etichetele mici, textul în italic și textele auxiliare de sub titluri.
+   Butoanele, titlurile, chenarele și accentele rămân pe auriul de brand (--gold). Pe noapte: auriul de brand (trece deja). */
+html:root{--gold-text:#836822}
+html:not([data-theme="dark"]) :is(.tag,.lf-title,.serv-label,.pd-ag-tag,.ag-role,.cs-badge,.help-card a,.mob-nav .mob-label,.zone-note a,.founder-feat .ff-role,.founder-feat .ff-sign,
+  .sec-head h2 em,.coming-soon h2 em,.pj-error h2 em,.prop-error h2 em,.pd-similar h2 em,.pd-ag-foto span,[style*="color:var(--gold)"]):not(:is(.page-hero,.lead-form-sec,#hero,#trust,#owners,#founder,#process,.about-cta,.serv-cta,footer,.lang-bar,.mcta,.cbanner,.mhead) *){color:var(--gold-text)!important}
+
 /* ── NOAPTE ── */
 html[data-theme="dark"]{
   color-scheme:dark;
   --w:#F9F5EE;                       /* textul de pe fundal închis / auriu rămâne crem */
   --s0:#0D0D0D;--s1:#121110;--s2:#1A1816;--s3:#25221F;
   --ink:#F9F5EE;--ink2:#ECE5D8;--ink3:#D2CABB;--ink4:#ADA596;
-  --gold:#C9A84C;--gold2:#D9BC6A;--gold3:rgba(201,168,76,.12);
+  --gold:#C9A84C;--gold2:#D9BC6A;--gold3:rgba(201,168,76,.12);--gold-text:#C9A84C;
   --border:rgba(249,245,238,.12);--border2:rgba(201,168,76,.32);
   --card:#171513;--panou:#141311;
 }
@@ -62,6 +71,7 @@ html[data-theme="dark"] .pv-badge{background:#0D0D0D;color:#F9F5EE}
 html[data-theme="dark"] .pv-badge.i{background:#C9A84C;color:#0D0D0D}
 html[data-theme="dark"] .pv-gal button{background:#1A1816}
 html[data-theme="dark"] .pd-mapbox{border-color:rgba(249,245,238,.12)}
+html[data-theme="dark"] .pd-ag-foto{background:#1A1816}   /* cercul cu inițialele agentului (crem fix în pagină) */
 
 /* fotografii, schițe, hartă: neatinse (fără filtre, fără întunecare) */
 html[data-theme="dark"] :is(img,picture,video,.leaflet-container,.leaflet-tile){filter:none!important;opacity:1}
