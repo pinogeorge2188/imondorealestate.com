@@ -26,31 +26,19 @@ const isRentOf = p => tipTranz(p) === 'inchiriere';
 /* Normalizare insensibilă la diacritice (site "Herăstrău" vs CRM "Herastrau") */
 const norm = s => String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[șşȘŞ]/g,'s').replace(/[țţȚŢ]/g,'t').toLowerCase().trim();
 
-function fmtPrice(p){
-  const pret = p.pret || p.pret_nou || 0;
-  return pret ? new Intl.NumberFormat('de-DE').format(pret) + ' €' + (p.pret_plus_tva ? ' + TVA' : '') + (isRentOf(p) ? ' <small>/ lună</small>' : '') : 'Preț la cerere';
-}
-function titleOf(p){
-  const camere = p.camere || p.nrCamere || '';
-  const zona = p.zona || '';
-  return p.denumire || p.titlu || ((p.tipologie||p.tipProprietate||'Proprietate') + (camere ? ' ' + camere + ' camere' : '') + (zona ? ', ' + zona : ''));
-}
+const C = () => window.IMONDO_card, I = () => window.IMONDO_i18n;   // texte de card + traducere (assets/i18n.js)
+const escH = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 function card(p, base){
-  const isRent = isRentOf(p);
+  const isRent = isRentOf(p), titlu = C().titlu(p);
   const img = ((a,s)=>a.find(u=>!s.has(u))||a[0])((p.poze||p.imagini||[]).filter(Boolean), new Set(p.poze_schite||[])) || FALLBACK_IMG;   // copertă: prima fotografie care nu e schiță
   const url = base + 'proprietate.html?id=' + encodeURIComponent(p.id||'');
-  const specs = [
-    (p.camere||p.nrCamere) ? `🛏 ${p.camere||p.nrCamere} cam.` : null,
-    p.suprafata ? `📐 ${p.suprafata} mp` : null,
-    p.etaj ? `🏢 Et. ${p.etaj}` : null
-  ].filter(Boolean);
   return `<a class="pcard" href="${url}">
-    <div class="pi"><img src="${img}" alt="${titleOf(p)}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
-      <span class="ptag ${isRent?'ptag-i':'ptag-v'}">${isRent?L().list_rent:L().list_sale}</span>
+    <div class="pi"><img src="${img}" alt="${escH(titlu)}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
+      <span class="ptag ${isRent?'ptag-i':'ptag-v'}">${C().eticheta(p)}</span>
       <span class="pref">${p.id||''}</span></div>
-    <div class="pbody"><div class="pprice">${fmtPrice(p)}</div><div class="ptitle">${titleOf(p)}</div>
+    <div class="pbody"><div class="pprice">${C().pret(p)}</div><div class="ptitle" data-fara-traducere>${escH(titlu)}</div>
       <div class="ploc">📍 ${p.zona||'—'}</div>
-      <div class="pspecs">${specs.map(s=>`<span>${s}</span>`).join('')}</div></div>
+      <div class="pspecs">${C().specs(p).map(s=>`<span>${s}</span>`).join('')}</div></div>
   </a>`;
 }
 
@@ -75,13 +63,17 @@ window.initZoneProps = async function(opts){
     const list = all.filter(p => norm(p.zona) === norm(zona));
 
     if($('zoneLoading')) $('zoneLoading').style.display='none';
-    if(list.length){
-      $('zoneGrid').innerHTML = `<div class="pgrid">${list.map(p=>card(p,base)).join('')}</div>`;
-      if($('zoneMeta')) $('zoneMeta').innerHTML = `<span class="list-count"><strong>${list.length}</strong> <span data-t="count_label">${L().count_label}</span> · ${zona}</span>`;
-    } else {
-      $('zoneGrid').innerHTML = `<div class="list-empty"><div class="ico">🏠</div><h3>Momentan nu avem oferte active în ${zona}</h3><p>Revino curând sau spune-ne ce cauți — găsim împreună.</p><a href="${base}contact.html" class="btn btn-gd">Caut în ${zona} →</a></div>`;
-    }
-    if(window.IMONDO_setLang) window.IMONDO_setLang(document.documentElement.lang||'ro');
+    const deseneaza = () => {
+      if(list.length){
+        $('zoneGrid').innerHTML = `<div class="pgrid">${list.map(p=>card(p,base)).join('')}</div>`;
+        if($('zoneMeta')) $('zoneMeta').innerHTML = `<span class="list-count"><strong>${list.length}</strong> <span>${I().forma(list.length,'rezultate')}</span> · ${zona}</span>`;
+      } else {
+        $('zoneGrid').innerHTML = `<div class="list-empty"><div class="ico">🏠</div><h3>Momentan nu avem oferte active în ${zona}</h3><p>Revino curând sau spune-ne ce cauți — găsim împreună.</p><a href="${base}contact.html" class="btn btn-gd">Caut în ${zona} →</a></div>`;
+      }
+      if(window.IMONDO_setLang) window.IMONDO_setLang(document.documentElement.lang||'ro');
+    };
+    deseneaza();
+    document.addEventListener('imondo:lang', deseneaza);   // cardurile se refac în limba nouă
   }catch(err){
     console.warn('IMONDO zone-props:', err.message);
     if($('zoneLoading')) $('zoneLoading').innerHTML = '<p style="color:var(--ink4);font-size:.85rem">Nu am putut încărca proprietățile. Reîncarcă pagina.</p>';

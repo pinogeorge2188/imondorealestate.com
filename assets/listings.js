@@ -38,6 +38,8 @@ const ADAPTIVE = {
 
 const $ = id => document.getElementById(id);
 const L = () => (window.T_SHARED && window.T_SHARED[document.documentElement.lang||'ro']) || window.T_SHARED.ro;
+const C = () => window.IMONDO_card, I = () => window.IMONDO_i18n;   // texte de card + traducere (assets/i18n.js)
+const escH = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 /* Tip tranzacție canonic: 'vanzare' | 'inchiriere' | '' (lipsă). Insensibil la diacritice/majuscule
    — CRM salvează „Vânzare" / „Închiriere" (cu Î: „închiriere".includes("inchir") === false). */
 const tipTranz = p => { const n = String((p&&(p.tip_tranzactie||p.tipTranzactie))||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim(); return n.startsWith('vanz') ? 'vanzare' : n.startsWith('inchir') ? 'inchiriere' : ''; };
@@ -49,32 +51,18 @@ let PAGE_TYPE = 'vanzare';
 let pool = [];
 let f = { tip:'', zone:new Set(), camere:new Set(), supraf_min:'', supraf_max:'', etaj_min:'', etaj_max:'', buget:'', fac:new Set() };
 
-/* ── helperi card ── */
-function fmtPrice(p){
-  const pret = p.pret || p.pret_nou || 0;
-  return pret ? new Intl.NumberFormat('de-DE').format(pret) + ' €' + (p.pret_plus_tva ? ' + TVA' : '') + (isRentOf(p) ? ' <small>/ lună</small>' : '') : 'Preț la cerere';
-}
-function titleOf(p){
-  const camere = p.camere || p.nrCamere || '';
-  const zona = p.zona || '';
-  return p.denumire || p.titlu || ((p.tipologie||p.tipProprietate||'Proprietate') + (camere ? ' ' + camere + ' camere' : '') + (zona ? ', ' + zona : ''));
-}
+/* ── card (textele: assets/i18n.js → IMONDO_card, în limba curentă, cu singularul corect) ── */
 function card(p){
-  const isRent = isRentOf(p);
+  const isRent = isRentOf(p), titlu = C().titlu(p);
   const img = ((a,s)=>a.find(u=>!s.has(u))||a[0])((p.poze||p.imagini||[]).filter(Boolean), new Set(p.poze_schite||[])) || FALLBACK_IMG;   // copertă: prima fotografie care nu e schiță
   const url = 'proprietate.html?id=' + encodeURIComponent(p.id||'');
-  const specs = [
-    (p.camere||p.nrCamere) ? `🛏 ${p.camere||p.nrCamere} cam.` : null,
-    p.suprafata ? `📐 ${p.suprafata} mp` : null,
-    p.etaj ? `🏢 Et. ${p.etaj}` : null
-  ].filter(Boolean);
   return `<a class="pcard" href="${url}">
-    <div class="pi"><img src="${img}" alt="${titleOf(p)}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
-      <span class="ptag ${isRent?'ptag-i':'ptag-v'}">${isRent?L().list_rent:L().list_sale}</span>
+    <div class="pi"><img src="${img}" alt="${escH(titlu)}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
+      <span class="ptag ${isRent?'ptag-i':'ptag-v'}">${C().eticheta(p)}</span>
       <span class="pref">${p.id||''}</span></div>
-    <div class="pbody"><div class="pprice">${fmtPrice(p)}</div><div class="ptitle">${titleOf(p)}</div>
+    <div class="pbody"><div class="pprice">${C().pret(p)}</div><div class="ptitle" data-fara-traducere>${escH(titlu)}</div>
       <div class="ploc">📍 ${p.zona||'—'}</div>
-      <div class="pspecs">${specs.map(s=>`<span>${s}</span>`).join('')}</div></div>
+      <div class="pspecs">${C().specs(p).map(s=>`<span>${s}</span>`).join('')}</div></div>
   </a>`;
 }
 
@@ -111,12 +99,12 @@ function renderResults(list){
   $('listGrid').innerHTML = list.length
     ? `<div class="pgrid">${list.map(card).join('')}</div>`
     : `<div class="list-empty"><div class="ico">🔍</div><h3 data-t="empty_h">${L().empty_h}</h3><p data-t="empty_p">${L().empty_p}</p><button class="btn btn-gd" onclick="IMONDO_resetFilters()" data-t="empty_cta">${L().empty_cta}</button></div>`;
-  $('listMeta').innerHTML = `<span class="list-count"><strong>${list.length}</strong> <span data-t="count_label">${L().count_label}</span></span>`;
+  $('listMeta').innerHTML = `<span class="list-count"><strong>${list.length}</strong> <span>${I().forma(list.length,'rezultate')}</span></span>`;
 }
 
 /* ── construcție panou ── */
 function checkRow(name, val, label, checked){
-  return `<label class="lf-check"><input type="checkbox" data-f="${name}" value="${val}"${checked?' checked':''}>${label}</label>`;
+  return `<label class="lf-check"${name==='zone'?' data-fara-traducere':''}><input type="checkbox" data-f="${name}" value="${val}"${checked?' checked':''}>${label}</label>`;
 }
 function buildPanel(){
   const zones = [...new Set(pool.map(p=>p.zona).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'ro'));
@@ -125,7 +113,7 @@ function buildPanel(){
 
   $('listFilter').innerHTML = `<div class="lpanel">
     <div class="lp-types">
-      ${types.map(t=>`<button class="lp-type${f.tip===t?' on':''}" data-tip="${t}">${t===''?`<span data-t="filt_all">Toate</span>`:t}</button>`).join('')}
+      ${types.map(t=>`<button class="lp-type${f.tip===t?' on':''}" data-tip="${t}">${t===''?`<span data-t="filt_all">${L().filt_all}</span>`:I().tr(t)}</button>`).join('')}
     </div>
     <div class="lp-groups">
       <div class="lf-group" data-group="zona"><div class="lf-title" data-t="filt_zone">Zonă</div>
@@ -144,7 +132,7 @@ function buildPanel(){
         <div class="lf-range"><input type="text" inputmode="numeric" data-f="buget" placeholder="${L().filt_budget_ph}" value="${f.buget}"></div></div>
 
       <div class="lf-group" data-group="facilitati"><div class="lf-title" data-t="filt_facilities">Facilități</div>
-        <div class="lf-checks">${facs.length?facs.map(x=>checkRow('fac',x,x,f.fac.has(x))).join(''):'<span style="font-size:.78rem;color:var(--ink4)">—</span>'}</div></div>
+        <div class="lf-checks">${facs.length?facs.map(x=>checkRow('fac',x,I().tr(x),f.fac.has(x))).join(''):'<span style="font-size:.78rem;color:var(--ink4)">—</span>'}</div></div>
     </div>
     <div class="lf-reset"><button class="fb-reset" onclick="IMONDO_resetFilters()" data-t="filt_reset">Resetează</button></div>
   </div>`;
@@ -252,6 +240,8 @@ window.initListings = async function(opts){
     buildPanel();
     applyFilters();
     if(window.IMONDO_setLang) window.IMONDO_setLang(document.documentElement.lang||'ro');
+    // schimbarea limbii: filtrele și cardurile se refac în limba nouă (selecțiile rămân)
+    document.addEventListener('imondo:lang', () => { buildPanel(); applyFilters(); if(window.IMONDO_setLang) window.IMONDO_setLang(document.documentElement.lang||'ro'); });
   }catch(err){
     console.warn('IMONDO listings:', err.message);
     $('listLoading').innerHTML = '<p style="color:var(--ink4);font-size:.85rem">Nu am putut încărca proprietățile. Verifică conexiunea și reîncarcă pagina.</p>';
