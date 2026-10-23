@@ -20,8 +20,9 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0D0D0D">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="assets/fonts/Poppins-300-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/PlayfairDisplay-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/fonturi.css">   <!-- fonturile brandului, găzduite pe site -->
 <link rel="stylesheet" href="assets/shared.css">
 </head>
 <body>
@@ -42,7 +43,7 @@
   <div class="container">
     <div id="listFilter"></div>
     <div class="list-meta"><div id="listMeta"></div></div>
-    <div id="listLoading" class="list-loading"><div class="spin"></div><p style="font-size:.85rem;color:var(--ink4)">Se încarcă proprietățile...</p></div>
+    <div id="listLoading" class="list-loading"><div class="spin"></div><p style="font-size:.98rem;color:var(--ink4)">Se încarcă proprietățile...</p></div>
     <div id="listGrid"></div>
   </div>
 </section>
@@ -72,7 +73,7 @@
           <div class="fg"><label data-t="f_phone">Telefon</label><input type="tel" name="telefon"></div>
         </div>
         <div class="fg"><label data-t="lf_what">Ce cauți / detalii</label><textarea name="mesaj" placeholder="Zonă, nr. camere, buget lunar, perioadă..."></textarea></div>
-        <label class="fconsent" style="display:flex;gap:.6rem;align-items:flex-start;font-size:.78rem;line-height:1.55;color:var(--ink3);text-transform:none;letter-spacing:0;cursor:pointer">
+        <label class="fconsent" style="display:flex;gap:.6rem;align-items:flex-start;font-size:.98rem;line-height:1.55;color:var(--ink3);text-transform:none;letter-spacing:0;cursor:pointer">
           <input type="checkbox" name="acord_confidentialitate" value="da" required style="margin-top:.2rem;accent-color:#C9A84C;width:auto;flex-shrink:0">
           <span>Sunt de acord ca IMONDO să mă contacteze în legătură cu această solicitare și am citit <a href="confidentialitate.html" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:underline">Politica de confidențialitate</a>.</span>
         </label>
