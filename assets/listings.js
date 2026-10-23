@@ -21,7 +21,6 @@ const FIREBASE_CONFIG = window.IMONDO_FIREBASE_CONFIG || {
   messagingSenderId: "777057248353",
   appId: "1:777057248353:web:3a4fee4d6618451eb3f620"
 };
-const FALLBACK_IMG = 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&q=85';
 const TIPOLOGII = ['Apartament','Garsonieră','Casă/Vilă','Duplex','Teren','Spațiu comercial','Spațiu birouri'];
 
 /* Reguli adaptive: ce grupuri de filtre se afișează per tipologie */
@@ -39,7 +38,6 @@ const ADAPTIVE = {
 const $ = id => document.getElementById(id);
 const L = () => (window.T_SHARED && window.T_SHARED[document.documentElement.lang||'ro']) || window.T_SHARED.ro;
 const C = () => window.IMONDO_card, I = () => window.IMONDO_i18n;   // texte de card + traducere (assets/i18n.js)
-const escH = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 /* Tip tranzacție canonic: 'vanzare' | 'inchiriere' | '' (lipsă). Insensibil la diacritice/majuscule
    — CRM salvează „Vânzare" / „Închiriere" (cu Î: „închiriere".includes("inchir") === false). */
 const tipTranz = p => { const n = String((p&&(p.tip_tranzactie||p.tipTranzactie))||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim(); return n.startsWith('vanz') ? 'vanzare' : n.startsWith('inchir') ? 'inchiriere' : ''; };
@@ -51,20 +49,8 @@ let PAGE_TYPE = 'vanzare';
 let pool = [];
 let f = { tip:'', zone:new Set(), camere:new Set(), supraf_min:'', supraf_max:'', etaj_min:'', etaj_max:'', buget:'', fac:new Set() };
 
-/* ── card (textele: assets/i18n.js → IMONDO_card, în limba curentă, cu singularul corect) ── */
-function card(p){
-  const isRent = isRentOf(p), titlu = C().titlu(p);
-  const img = ((a,s)=>a.find(u=>!s.has(u))||a[0])((p.poze||p.imagini||[]).filter(Boolean), new Set(p.poze_schite||[])) || FALLBACK_IMG;   // copertă: prima fotografie care nu e schiță
-  const url = 'proprietate.html?id=' + encodeURIComponent(p.id||'');
-  return `<a class="pcard" href="${url}">
-    <div class="pi"><img src="${img}" alt="${escH(titlu)}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
-      <span class="ptag ${isRent?'ptag-i':'ptag-v'}">${C().eticheta(p)}</span>
-      <span class="pref">${p.id||''}</span></div>
-    <div class="pbody"><div class="pprice">${C().pret(p)}</div><div class="ptitle" data-fara-traducere>${escH(titlu)}</div>
-      <div class="ploc">📍 ${p.zona||'—'}</div>
-      <div class="pspecs">${C().specs(p).map(s=>`<span>${s}</span>`).join('')}</div></div>
-  </a>`;
-}
+/* ── card: assets/i18n.js → IMONDO_card.html (același pe prima pagină, liste, zone, similare) ── */
+const card = p => C().html(p);
 
 /* ── filtrare ── */
 function applyFilters(){

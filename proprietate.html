@@ -571,8 +571,7 @@ function render(p){
 
   const sim = allProps.filter(x => x.id !== p.id && tipTranz(x) && (isRentOf(x) === rent || (x.zona && x.zona === p.zona))).slice(0, 3);
   if (sim.length) {
-    $('pdSimilar').innerHTML = sim.map(x => { const img = (window.IMONDO_fotos ? IMONDO_fotos(x).cover : (x.poze||[])[0]) || FALLBACK_IMG;
-      return `<a class="pcard" href="proprietate.html?id=${encodeURIComponent(x.id||'')}"><div class="pi"><img src="${escH(img)}" alt="" loading="lazy"></div><div class="pbody"><div class="pprice">${IMONDO_card.pret(x)}</div><div class="ptitle" data-fara-traducere>${escH(titleOf(x))}</div><div class="ploc">📍 ${escH(x.zona||'—')}</div></div></a>`; }).join('');
+    $('pdSimilar').innerHTML = sim.map(x => IMONDO_card.html(x)).join('');   // același card ca în liste (assets/i18n.js)
     $('pdSimilarSec').style.display = '';
   }
 }

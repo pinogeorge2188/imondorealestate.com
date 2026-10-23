@@ -1318,36 +1318,10 @@ const FIREBASE_CONFIG = window.IMONDO_FIREBASE_CONFIG || {
 /* Tip tranzacție canonic, insensibil la diacritice (CRM: „Vânzare" / „Închiriere") */
 function tipTranz(p){ const n = String((p&&(p.tip_tranzactie||p.tipTranzactie))||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim(); return n.startsWith('vanz') ? 'vanzare' : n.startsWith('inchir') ? 'inchiriere' : ''; }
 
+/* cardul: assets/i18n.js → IMONDO_card.html (același pe prima pagină, liste, zone, similare); aici cu inimioara și animația */
 function buildPropCard(p, idx) {
   if (!tipTranz(p)) return ''; // fără tip tranzacție valid → nu se afișează (de completat în CRM)
-  const isRent = tipTranz(p) === 'inchiriere';
-  const pret = p.pret || p.pret_nou || 0;
-  const price = pret ? IMONDO_card.pret(p) : '—';   // texte de card: assets/i18n.js (limba curentă, singular corect)
-  // CRM uses 'poze' array for Cloudinary images
-  const img = ((a,s)=>a.find(u=>!s.has(u))||a[0])((p.poze||p.imagini||[]).filter(Boolean), new Set(p.poze_schite||[])) || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&q=85';   // prima fotografie care nu e schiță
-  const tagClass = isRent ? 'ptag-i' : 'ptag-v';
-  const tagText = IMONDO_card.eticheta(p);
-  const typeAttr = isRent ? 'inchiriere' : 'vanzare';
-  const ref = p.id || ('IMO-' + String(idx + 1).padStart(3, '0'));
-  const zona = p.zona || '—';
-  const titlu = String(IMONDO_card.titlu(Object.assign({}, p, { zona: p.zona || '—' }))).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  const specs = IMONDO_card.specs(p);
-  // Link către pagina individuală (rezolvă bug-ul data-prop/substring de la descrieri lungi)
-  const propUrl = 'proprietate.html?id=' + encodeURIComponent(p.id || '');
-  return `<a class="pcard" href="${propUrl}" data-type="${typeAttr}" style="opacity:0;animation:fadeInUp .5s ease ${idx * 0.08}s forwards;display:block">
-    <div class="pi">
-      <img src="${img}" alt="${titlu}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&q=85'">
-      <span class="ptag ${tagClass}">${tagText}</span>
-      <div class="pfav" onclick="event.preventDefault();event.stopPropagation()">♡</div>
-      <div class="pref">${ref}</div>
-    </div>
-    <div class="pbody">
-      <div class="pprice">${price}</div>
-      <div class="ptitle" data-fara-traducere>${titlu}</div>
-      <div class="ploc">📍 ${zona}</div>
-      <div class="pspecs">${specs.map(s=>`<span>${s}</span>`).join('')}</div>
-    </div>
-  </a>`;
+  return IMONDO_card.html(p, { fav: true, index: idx });
 }
 
 async function loadPropsFromFirebase() {
