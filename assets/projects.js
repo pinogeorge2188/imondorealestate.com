@@ -42,7 +42,7 @@ async function loadActiveProjects(){
 }
 
 function projectCard(p){
-  const img = (p.poze||[])[0] || FALLBACK_IMG;
+  const img = (p.poze||[]).filter(u => u && (p.poze_schite||[]).indexOf(u) < 0)[0] || (p.poze||[])[0] || FALLBACK_IMG;   // copertă: prima fotografie care nu e schiță
   const meta = [p.dezvoltator, p.zona, p.stadiu].filter(Boolean).join(' · ');
   return `<a class="projcard" href="${projUrl(p)}">
     <div class="projcard-img"><img src="${img}" alt="${p.nume_ansamblu||'Proiect rezidențial'}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
@@ -97,16 +97,6 @@ function showProjError(msg){
   const el = $('projError'); if(el){ const m=$('projErrorMsg'); if(m&&msg) m.textContent=msg; el.style.display='block'; }
 }
 
-let pdImgs=[], pdIdx=0;
-window.pjGo = i => { pdIdx=i; renderPjGallery(); };
-window.pjNav = d => window.pjGo((pdIdx+d+pdImgs.length)%pdImgs.length);
-function renderPjGallery(){
-  const g=$('pjGallery'); if(!g) return;
-  g.innerHTML = pdImgs.map((s,i)=>`<img src="${s}" class="${i===pdIdx?'on':''}" alt="Foto ${i+1}" onerror="this.src='${FALLBACK_IMG}'">`).join('')
-    + (pdImgs.length>1?`<button class="pd-prev" onclick="pjNav(-1)">‹</button><button class="pd-next" onclick="pjNav(1)">›</button>
-       <div class="pd-dots">${pdImgs.map((_,i)=>`<div class="pd-dot ${i===pdIdx?'on':''}" onclick="pjGo(${i})"></div>`).join('')}</div>`:'');
-}
-
 function renderProjectDetail(p){
   const nume = p.nume_ansamblu || 'Proiect rezidențial';
   const zona = p.zona || '';
@@ -118,9 +108,12 @@ function renderProjectDetail(p){
   $('ogDesc') && $('ogDesc').setAttribute('content', metaDesc);
   $('canonical') && $('canonical').setAttribute('href', 'https://imondorealestate.com/' + projUrl(p));
 
-  /* galerie */
-  pdImgs = (p.poze||[]).filter(Boolean); if(!pdImgs.length) pdImgs=[FALLBACK_IMG]; pdIdx=0; renderPjGallery();
-  if(p.stadiu) $('pjGallery').insertAdjacentHTML('beforeend', `<span class="pd-badge ptag-i">${p.stadiu}</span>`);
+  /* galerie: mozaicul comun (assets/galerie.js) — o mare + trei mici, „+N foto”, pe tot ecranul la click.
+     Înlocuiește caruselul vechi (toate pozele suprapuse, arătate prin opacitate), care se bloca pe tema de noapte. */
+  // planurile / randările marcate „Schiță” în CRM (poze_schite) NU intră în mozaic — au secțiunea lor, ca la proprietăți
+  const parti = IMONDO_galerie.imparte(p.poze, p.poze_schite), urm = () => { if (window.IMONDO_track) IMONDO_track('galerie_deschisa', { proiect: p.slug || p.id }); };
+  IMONDO_galerie.mozaic($('pjGallery'), { fotos: parti.fotos, eticheta: p.stadiu || '', etichetaAuriu: true, rezerva: FALLBACK_IMG, laDeschidere: urm });
+  if (parti.schite.length && $('pjSchiteSec')) { IMONDO_galerie.schite($('pjSchite'), parti.schite, urm); $('pjSchiteSec').style.display = ''; }
 
   $('pjName').textContent = nume;
   $('pjMeta').textContent = [p.dezvoltator, zona].filter(Boolean).join(' · ');

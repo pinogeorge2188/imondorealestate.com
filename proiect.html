@@ -70,7 +70,7 @@
 <!-- CONȚINUT -->
 <div class="pj-wrap" id="projDetail" style="display:none">
   <div class="container">
-    <div class="pd-gallery" id="pjGallery"></div>
+    <div class="pv-gal" id="pjGallery"></div>   <!-- mozaicul: assets/galerie.js, același cod ca pe pagina proprietății -->
     <div class="pj-grid">
       <div class="pj-main">
         <h1 class="pj-name" id="pjName"></h1>
@@ -78,6 +78,7 @@
         <div class="pj-from" id="pjFrom"></div>
         <div class="pd-specs" id="pjSpecs"></div>
         <div class="pd-sec"><h3>Despre ansamblu</h3><div class="pj-desc" id="pjDesc"></div></div>
+        <div class="pd-sec" id="pjSchiteSec" style="display:none"><h3>Schițe și planuri</h3><div class="pd-schite" id="pjSchite"></div></div>
         <div class="pd-sec" id="pjFacSec" style="display:none"><h3>Facilități ansamblu</h3><div class="pd-fac-list" id="pjFac"></div></div>
         <div class="pd-sec" id="pjResSec" style="display:none"><h3>Resurse</h3><div class="pj-res" id="pjRes"></div></div>
         <div class="pd-sec" id="pjMapSec" style="display:none">
@@ -108,6 +109,8 @@ window.IMONDO_PAGE = { active:'projects', crumbs:[
 <script src="assets/i18n.js"></script>
 <script src="assets/contact.js"></script>
 <script src="assets/include.js"></script>
+<script src="assets/lightbox.js"></script>
+<script src="assets/galerie.js"></script>
 <script src="assets/projects.js"></script>
 <script>initProjectDetail();</script>
 </body>

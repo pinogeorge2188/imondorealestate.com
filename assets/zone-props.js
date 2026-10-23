@@ -16,7 +16,6 @@ const FIREBASE_CONFIG = window.IMONDO_FIREBASE_CONFIG || {
   messagingSenderId: "777057248353",
   appId: "1:777057248353:web:3a4fee4d6618451eb3f620"
 };
-const FALLBACK_IMG = 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&q=85';
 const $ = id => document.getElementById(id);
 const L = () => (window.T_SHARED && window.T_SHARED[document.documentElement.lang||'ro']) || window.T_SHARED.ro;
 /* Tip tranzacție canonic: 'vanzare' | 'inchiriere' | '' (lipsă). Insensibil la diacritice/majuscule
@@ -27,20 +26,8 @@ const isRentOf = p => tipTranz(p) === 'inchiriere';
 const norm = s => String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[șşȘŞ]/g,'s').replace(/[țţȚŢ]/g,'t').toLowerCase().trim();
 
 const C = () => window.IMONDO_card, I = () => window.IMONDO_i18n;   // texte de card + traducere (assets/i18n.js)
-const escH = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-function card(p, base){
-  const isRent = isRentOf(p), titlu = C().titlu(p);
-  const img = ((a,s)=>a.find(u=>!s.has(u))||a[0])((p.poze||p.imagini||[]).filter(Boolean), new Set(p.poze_schite||[])) || FALLBACK_IMG;   // copertă: prima fotografie care nu e schiță
-  const url = base + 'proprietate.html?id=' + encodeURIComponent(p.id||'');
-  return `<a class="pcard" href="${url}">
-    <div class="pi"><img src="${img}" alt="${escH(titlu)}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
-      <span class="ptag ${isRent?'ptag-i':'ptag-v'}">${C().eticheta(p)}</span>
-      <span class="pref">${p.id||''}</span></div>
-    <div class="pbody"><div class="pprice">${C().pret(p)}</div><div class="ptitle" data-fara-traducere>${escH(titlu)}</div>
-      <div class="ploc">📍 ${p.zona||'—'}</div>
-      <div class="pspecs">${C().specs(p).map(s=>`<span>${s}</span>`).join('')}</div></div>
-  </a>`;
-}
+/* card: assets/i18n.js → IMONDO_card.html (același pe prima pagină, liste, zone, similare) */
+const card = (p, base) => C().html(p, { base });
 
 window.initZoneProps = async function(opts){
   const zona = (opts.zona||'').trim();

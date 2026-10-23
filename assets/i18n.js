@@ -412,12 +412,14 @@ window.T_SHARED = {
 })();
 
 /* ════════════════════════════════════════════════════════════════
-   CARDURILE DE PROPRIETATE (prima pagină, vânzări, închirieri, zone, „similare”) — aceleași texte peste tot,
+   CARDURILE DE PROPRIETATE (prima pagină, vânzări, închirieri, zone, „similare”) — același card și aceleași texte peste tot,
    în limba curentă, cu singularul corect („1 cameră”, „1 room”). Titlul scris de agent rămâne cum e.
    ════════════════════════════════════════════════════════════════ */
 (function(){
   var I = window.IMONDO_i18n;
   function nr(v) { var x = parseFloat(String(v == null ? '' : v).replace(/\s/g, '').replace(',', '.')); return isFinite(x) ? x : 0; }
+  var FALLBACK = 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&q=85';
+  function esc(v) { return String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
   function inchiriere(p) { var n = String((p && (p.tip_tranzactie || p.tipTranzactie)) || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim(); return n.indexOf('inchir') === 0; }
   window.IMONDO_card = {
     /* „300.000 € + TVA / lună” sau „Preț la cerere” (HTML: <small> pentru „/ lună”) */
@@ -433,6 +435,24 @@ window.T_SHARED = {
       return tip + (c ? ' ' + I.cu(c, 'camere') : '') + (p.zona ? ', ' + p.zona : '');
     },
     eticheta: function (p) { return I.tr(inchiriere(p) ? 'De închiriat' : 'De vânzare'); },
+    /* CARDUL ÎNTREG (24.10.2026) — același HTML pe prima pagină, vânzări, închirieri, zone și „similare”.
+       o.base: prefixul linkului ('../' pe zone) · o.fav: inimioara (prima pagină) · o.index: animația de intrare */
+    html: function (p, o) {
+      o = o || {};
+      var C = window.IMONDO_card, rent = inchiriere(p), titlu = C.titlu(p), all = (p.poze || p.imagini || []).filter(Boolean), sc = {};
+      (p.poze_schite || []).forEach(function (u) { sc[u] = 1; });
+      var img = all.filter(function (u) { return !sc[u]; })[0] || all[0] || FALLBACK;   // copertă: prima fotografie care nu e schiță
+      var url = (o.base || '') + 'proprietate.html?id=' + encodeURIComponent(p.id || '');
+      var anim = o.index != null ? ' style="opacity:0;animation:fadeInUp .5s ease ' + (o.index * 0.08) + 's forwards;display:block"' : '';
+      return '<a class="pcard" href="' + url + '" data-type="' + (rent ? 'inchiriere' : 'vanzare') + '"' + anim + '>'
+        + '<div class="pi"><img src="' + esc(img) + '" alt="' + esc(titlu) + '" loading="lazy" onerror="this.src=\'' + FALLBACK + '\'">'
+        + '<span class="ptag ' + (rent ? 'ptag-i' : 'ptag-v') + '">' + C.eticheta(p) + '</span>'
+        + (o.fav ? '<div class="pfav" onclick="event.preventDefault();event.stopPropagation()">♡</div>' : '')
+        + (p.id ? '<span class="pref">' + esc(p.id) + '</span>' : '') + '</div>'
+        + '<div class="pbody"><div class="pprice">' + C.pret(p) + '</div><div class="ptitle" data-fara-traducere>' + esc(titlu) + '</div>'
+        + '<div class="ploc">📍 ' + esc(p.zona || '—') + '</div>'
+        + '<div class="pspecs">' + C.specs(p).map(function (x) { return '<span>' + esc(x) + '</span>'; }).join('') + '</div></div></a>';
+    },
     /* rândul de sub preț: camere, suprafață, etaj */
     specs: function (p) {
       var en = I.limba() === 'en', c = p.camere || p.nrCamere, e = String(p.etaj == null ? '' : p.etaj).trim();
