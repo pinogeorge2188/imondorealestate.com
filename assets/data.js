@@ -14,12 +14,15 @@
 
    CALCULATORUL DE RATĂ (23.10.2026): cifrele vin în `index.credit` (scrise de CRM la regenerarea listei),
    deci pagina proprietății nu face nicio citire în plus → `snapshot.credit` (null dacă lipsesc).
+   Dacă lista întârzie peste 2 secunde și câștigă citirea directă, cifrele ajung DUPĂ: `creditCalculator()`
+   le dă când termină citirea listei (aceeași citire, nimic în plus) — pagina afișează calculatorul atunci.
    ════════════════════════════════════════════════════════════════ */
 const FS_URL = 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 const TIMEOUT_MS = 2000;
 const VIITOR_MAX_MS = 5 * 60 * 1000;
 let _incarcare = null;   // un singur proiect Firebase → o singură încărcare pe pagină
 let _credit = null;      // cifrele calculatorului din index (citit oricum); rămân și dacă lista cade pe citirea directă
+let _creditP = null;     // se rezolvă când s-a terminat citirea listei (oricât ar dura), cu cifrele sau null
 
 function ms(v) { if (v && typeof v.toMillis === 'function') return v.toMillis(); const t = Date.parse(v); return isFinite(t) ? t : 0; }
 
@@ -70,6 +73,7 @@ async function incarca(db) {
   let directP = null;
   const pornesteDirect = () => directP || (directP = direct(F, db));
   const cacheP = dinCache(F, db).catch(e => { console.warn('[IMONDO] lista site-ului:', e && e.message); return null; });
+  _creditP = cacheP.then(() => _credit, () => _credit);
   const primul = await Promise.race([cacheP, new Promise(r => setTimeout(() => r('timeout'), TIMEOUT_MS))]);
   if (primul && primul !== 'timeout') return primul;
   if (primul === null) return pornesteDirect();
@@ -85,6 +89,9 @@ function primulBun(ps) {
     ps.forEach(p => p.then(resolve, e => { ultima = e; if (--rest === 0) reject(ultima); }));
   });
 }
+
+/* cifrele calculatorului de rată (din index): imediat dacă lista a venit, altfel când vine; null dacă lipsesc */
+export function creditCalculator() { return _creditP || Promise.resolve(_credit); }
 
 /* o singură încărcare pe pagină (pagina principală o cere din două secțiuni); după o eroare se poate reîncerca */
 export function incarcaProprietari(db) {
