@@ -424,7 +424,7 @@ window.T_SHARED = {
     pret: function (p) {
       var pret = nr(p.pret || p.pret_nou);
       if (!pret || p.pret_la_cerere === true) return I.tr('Preț la cerere');
-      return new Intl.NumberFormat('de-DE').format(pret) + ' €' + (p.pret_plus_tva ? (I.limba() === 'en' ? ' + VAT' : ' + TVA') : '') + (inchiriere(p) ? ' <small>' + I.tr('/ lună') + '</small>' : '');
+      return new Intl.NumberFormat(I.limba() === 'en' ? 'en-GB' : 'de-DE').format(pret) + ' €' + (p.pret_plus_tva ? (I.limba() === 'en' ? ' + VAT' : ' + TVA') : '') + (inchiriere(p) ? ' <small>' + I.tr('/ lună') + '</small>' : '');
     },
     /* titlul: cel scris de agent; dacă lipsește, „Apartament 1 cameră, Floreasca” în limba curentă */
     titlu: function (p) {
