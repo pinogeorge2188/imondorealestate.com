@@ -42,7 +42,7 @@
   }
 
   const CSS = `
-.imck{position:fixed;left:0;right:0;bottom:0;z-index:9000;background:#1A1714;border-top:1px solid rgba(201,168,76,.25);padding:1.1rem 4%;display:flex;gap:1.2rem;align-items:center;justify-content:space-between;flex-wrap:wrap;font-family:'Jost','Poppins',sans-serif}
+.imck{position:fixed;left:0;right:0;bottom:0;z-index:9000;background:#1A1714;border-top:1px solid rgba(201,168,76,.25);padding:1.1rem 4%;display:flex;gap:1.2rem;align-items:center;justify-content:space-between;flex-wrap:wrap;font-family:'IMONDO Poppins','Poppins',sans-serif}
 .imck p{margin:0;font-size:.8rem;line-height:1.6;color:rgba(255,255,255,.72);max-width:680px}
 .imck a{color:#C9A84C}
 .imck-b{display:flex;gap:.6rem;flex-wrap:wrap}

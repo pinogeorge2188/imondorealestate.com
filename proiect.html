@@ -20,8 +20,9 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0D0D0D">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="assets/fonts/Poppins-300-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/PlayfairDisplay-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/fonturi.css">   <!-- fonturile brandului, găzduite pe site -->
 <link rel="stylesheet" href="assets/shared.css">
 <style>
 .pj-wrap{padding:40px 4% 90px}
@@ -31,18 +32,18 @@
 .pj-error h2{font-size:2rem;margin-bottom:1rem}.pj-error h2 em{color:var(--gold);font-style:italic}
 .pj-error p{color:var(--ink3);max-width:440px;margin:0 auto 2rem}
 .pj-grid{display:grid;grid-template-columns:1fr 340px;gap:3.5rem;align-items:start}
-.pj-name{font-family:'Cormorant Garamond',serif;font-size:2.4rem;color:var(--ink);line-height:1.1;margin-bottom:.4rem}
+.pj-name{font-family:'IMONDO Playfair','Playfair Display',serif;font-size:2.4rem;color:var(--ink);line-height:1.1;margin-bottom:.4rem}
 .pj-meta{font-size:.9rem;color:var(--ink4);margin-bottom:1.5rem}
-.pj-from{font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--gold);margin-bottom:1.8rem}
+.pj-from{font-family:'IMONDO Playfair','Playfair Display',serif;font-size:1.8rem;color:var(--gold);margin-bottom:1.8rem}
 .pj-desc{font-size:.92rem;color:var(--ink3);line-height:1.9;white-space:pre-line}
 .pj-aside{position:sticky;top:90px;border:1px solid var(--border);background:var(--w);padding:1.8rem}
-.pj-aside h4{font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:.3rem}
+.pj-aside h4{font-family:'IMONDO Playfair','Playfair Display',serif;font-size:1.5rem;margin-bottom:.3rem}
 .pj-aside .sub{font-size:.8rem;color:var(--ink4);margin-bottom:1.4rem}
 .pj-aside .btn{width:100%;justify-content:center;margin-bottom:.7rem}
 .pj-res{display:flex;flex-wrap:wrap;gap:.7rem}
 .pd-mapbox{height:350px;border:1px solid var(--border);border-radius:12px;overflow:hidden}
 .pd-mapnote{font-size:.78rem;color:var(--ink4);margin-top:.6rem;text-align:center}
-.leaflet-container{font-family:'Jost',sans-serif}
+.leaflet-container{font-family:'IMONDO Poppins','Poppins',sans-serif}
 @media(max-width:900px){.pj-grid{grid-template-columns:1fr}.pj-aside{position:static}}
 </style>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">

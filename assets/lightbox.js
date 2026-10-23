@@ -11,7 +11,7 @@
   const CSS = `
 .imlb{position:fixed;inset:0;z-index:10000;background:#F9F5EE;display:none;flex-direction:column;touch-action:none;user-select:none;-webkit-user-select:none}
 .imlb.on{display:flex}
-.imlb-bar{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1rem;color:#0D0D0D;font-family:'Jost','Poppins',sans-serif;font-size:.85rem;letter-spacing:.06em;gap:.6rem}
+.imlb-bar{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1rem;color:#0D0D0D;font-family:'IMONDO Poppins','Poppins',sans-serif;font-size:.85rem;letter-spacing:.06em;gap:.6rem}
 .imlb-bar .imlb-lbl{color:#9A7B2F;text-transform:uppercase;font-size:.72rem;letter-spacing:.14em}
 .imlb-btns{display:flex;gap:.4rem}
 .imlb button{width:42px;height:42px;border:1px solid rgba(13,13,13,.18);background:rgba(255,255,255,.7);color:#0D0D0D;font-size:1.15rem;cursor:pointer;border-radius:50%;line-height:1;display:flex;align-items:center;justify-content:center;transition:.2s}
@@ -21,7 +21,7 @@
 .imlb-stage img{position:absolute;left:50%;top:50%;max-width:96%;max-height:96%;width:auto;height:auto;object-fit:contain;transform-origin:center center;will-change:transform;pointer-events:none}
 .imlb-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:2}
 .imlb-prev{left:.8rem}.imlb-next{right:.8rem}
-.imlb-hint{text-align:center;color:rgba(13,13,13,.45);font-family:'Jost','Poppins',sans-serif;font-size:.72rem;padding:.4rem 0 .8rem}
+.imlb-hint{text-align:center;color:rgba(13,13,13,.45);font-family:'IMONDO Poppins','Poppins',sans-serif;font-size:.72rem;padding:.4rem 0 .8rem}
 @media(max-width:600px){.imlb-nav{display:none!important}}`;
   let root, stage, img, cnt, lbl, list = [], idx = 0, z = 1, tx = 0, ty = 0;
   const ptr = new Map(); let pinch0 = null, pan0 = null, lastTap = 0, swipe0 = null;

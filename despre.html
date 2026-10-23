@@ -20,8 +20,9 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0D0D0D">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="assets/fonts/Poppins-300-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/PlayfairDisplay-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/fonturi.css">   <!-- fonturile brandului, găzduite pe site -->
 <link rel="stylesheet" href="assets/shared.css">
 <style>
 /* ECHIPĂ + FONDATOR (despre) */
@@ -32,7 +33,7 @@
 .founder-feat .ff-img{height:400px;overflow:hidden}
 .founder-feat .ff-img img{width:100%;height:100%;object-fit:cover;object-position:top}
 .founder-feat .tag{color:var(--gold)}
-.founder-feat h3{font-family:'Cormorant Garamond',serif;font-size:1.9rem;margin-bottom:.2rem}
+.founder-feat h3{font-family:'IMONDO Playfair','Playfair Display',serif;font-size:1.9rem;margin-bottom:.2rem}
 .founder-feat .ff-role{font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:1.2rem}
 .founder-feat .ff-quote{font-size:.92rem;color:var(--ink3);line-height:1.95;font-style:italic;margin-bottom:1rem}
 .founder-feat .ff-sign{font-size:.82rem;color:var(--gold);letter-spacing:.03em}
@@ -49,7 +50,7 @@
 .val-card:hover{background:var(--w)}
 .val-ico{color:var(--gold);margin-bottom:1.1rem;line-height:0;display:block}
 .val-ico svg{width:28px;height:28px}
-.val-card h4{font-family:'Cormorant Garamond',serif;font-size:1.35rem;margin-bottom:.5rem}
+.val-card h4{font-family:'IMONDO Playfair','Playfair Display',serif;font-size:1.35rem;margin-bottom:.5rem}
 .val-card p{font-size:.85rem;color:var(--ink3);line-height:1.8}
 /* CTA FINAL */
 .about-cta{background:var(--ink2);text-align:center;padding:90px 4%}
@@ -62,7 +63,7 @@
 @media(max-width:768px){.vals-grid{grid-template-columns:1fr}.team-grid{grid-template-columns:1fr}}
 .ag-avatar{width:100%;height:240px;display:flex;align-items:center;justify-content:center;background:var(--ink);position:relative;overflow:hidden}
 .ag-avatar::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#1a1a1a 0%,#0d0d0d 100%)}
-.ag-initials{position:relative;z-index:1;font-family:'Cormorant Garamond',serif;font-size:4.5rem;font-weight:300;color:var(--gold);letter-spacing:.1em}
+.ag-initials{position:relative;z-index:1;font-family:'IMONDO Playfair','Playfair Display',serif;font-size:4.5rem;font-weight:300;color:var(--gold);letter-spacing:.1em}
 .ag-avatar-line{position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--gold);z-index:1}
 .ag-body{padding:1.3rem;text-align:center}
 .ag-name{font-size:1.15rem;margin-bottom:.25rem}

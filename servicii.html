@@ -20,8 +20,9 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0D0D0D">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="assets/fonts/Poppins-300-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/PlayfairDisplay-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/fonturi.css">   <!-- fonturile brandului, găzduite pe site -->
 <link rel="stylesheet" href="assets/shared.css">
 <style>
 /* ── SERVICII — blocuri servicii + CTA (accent gold #C9A84C, la cererea clientului) ── */
@@ -32,7 +33,7 @@
 .serv-ico{width:76px;height:76px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:1px solid var(--border2);border-radius:50%}
 .serv-ico svg{width:38px;height:38px;display:block}
 .serv-label{font-size:.62rem;font-weight:500;letter-spacing:.28em;text-transform:uppercase;color:#C9A84C;display:block;margin-bottom:.7rem}
-.serv-title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:2rem;color:var(--ink);line-height:1.1;margin-bottom:1rem}
+.serv-title{font-family:'IMONDO Playfair','Playfair Display',serif;font-weight:400;font-size:2rem;color:var(--ink);line-height:1.1;margin-bottom:1rem}
 .serv-text{font-size:.95rem;color:var(--ink3);line-height:1.9;max-width:660px}
 @media(max-width:720px){
   .serv{padding:2.6rem 0}
@@ -42,7 +43,7 @@
 /* CTA final */
 .serv-cta{background:var(--ink);color:var(--w);text-align:center;padding:5rem 4%}
 .serv-cta .tag{color:#C9A84C}
-.serv-cta h2{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:2.6rem;color:var(--w);line-height:1.12;margin-bottom:1.1rem}
+.serv-cta h2{font-family:'IMONDO Playfair','Playfair Display',serif;font-weight:400;font-size:2.6rem;color:var(--w);line-height:1.12;margin-bottom:1.1rem}
 .serv-cta h2 em{color:#C9A84C;font-style:italic}
 .serv-cta p{max-width:560px;margin:0 auto 2.3rem;color:rgba(255,255,255,.72);font-size:1rem;line-height:1.85}
 .serv-cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
