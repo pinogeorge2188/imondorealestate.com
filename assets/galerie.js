@@ -10,6 +10,9 @@
      rezerva:    url                 — imaginea afișată când nu există nicio fotografie (fără click)
      laDeschidere: function (i) {}  — apelată când se deschide pe tot ecranul (statistici)
    })
+   IMONDO_galerie.schite(element, [url, ...], laDeschidere) — „Schițe și planuri”: grila separată, imaginea întreagă
+     (fără decupare), pe tot ecranul cu eticheta „Schiță”. Aceeași pe proprietăți și pe proiecte.
+   IMONDO_galerie.imparte(poze, poze_schite) → { fotos, schite } — schițele NU intră niciodată în mozaic.
    Stilul e aici (o singură dată); culorile de noapte sunt în assets/tema.css (.pv-gal, .pv-badge).
    ════════════════════════════════════════════════════════════════ */
 (function () {
@@ -23,8 +26,12 @@
     + '.pv-gal.n1{grid-template-columns:1fr}.pv-gal.n1 .big{grid-row:1/4}'
     + '.pv-gal.n2 .sm{grid-row:span 3}.pv-gal.n3 .sm{grid-row:span 1}.pv-gal.n3 .sm:nth-of-type(3){grid-row:2/4}'
     + ".pv-gal .more{position:absolute;inset:0;background:rgba(13,13,13,.55);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:1.05rem;font-weight:500;letter-spacing:.04em}"
-    + '.pv-badge{position:absolute;top:1rem;left:1rem;z-index:2;font-size:.62rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:.4rem .9rem;background:#0D0D0D;color:#fff}'
+    + ".pv-badge{position:absolute;top:1rem;left:1rem;z-index:2;font-family:'Poppins',sans-serif;font-size:.62rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:.4rem .9rem;background:#0D0D0D;color:#fff}"
     + '.pv-badge.i{background:#C9A84C;color:#0D0D0D}'
+    // schițele: fundal crem și pe tema de noapte — planurile sunt de obicei linii închise pe fond transparent
+    + '.pd-schite{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.8rem}'
+    + '.pd-schite button{display:block;aspect-ratio:4/3;width:100%;padding:.6rem;background:#F9F5EE;border:1px solid rgba(13,13,13,.09);cursor:zoom-in}'
+    + '.pd-schite img{width:100%;height:100%;object-fit:contain}'
     + '@media(max-width:960px){.pv-gal{height:auto;grid-template-columns:repeat(3,1fr);grid-template-rows:260px 90px}'
     + '.pv-gal .big{grid-row:1;grid-column:1/4}.pv-gal .sm{grid-row:2 !important}'
     + '.pv-gal.n1{grid-template-rows:260px}.pv-gal.n2 .sm{grid-column:1/4}}';
@@ -61,5 +68,21 @@
     if (window.IMONDO_lightbox) return go();
     var n = 0, t = setInterval(function () { if (window.IMONDO_lightbox || ++n > 40) { clearInterval(t); if (window.IMONDO_lightbox) go(); } }, 50);
   }
-  window.IMONDO_galerie = { mozaic: mozaic, deschide: deschide };
+  function imparte(poze, schite) {
+    var toate = (poze || []).filter(Boolean), sc = {}; (schite || []).forEach(function (u) { sc[u] = 1; });
+    return { fotos: toate.filter(function (u) { return !sc[u]; }), schite: toate.filter(function (u) { return sc[u]; }) };
+  }
+  function schite(el, urls, laDeschidere) {
+    if (!el) return;
+    urls = (urls || []).filter(Boolean);
+    var et = window.IMONDO_i18n ? IMONDO_i18n.tr('Schiță') : 'Schiță';
+    el.className = 'pd-schite';
+    el.innerHTML = urls.map(function (u, i) { return '<button type="button" data-i="' + i + '" aria-label="' + et + ' ' + (i + 1) + '"><img src="' + esc(u) + '" alt="' + et + ' ' + (i + 1) + '" loading="lazy"></button>'; }).join('');
+    el.onclick = function (ev) {
+      var b = ev.target.closest && ev.target.closest('button[data-i]'); if (!b) return;
+      var go = function () { window.IMONDO_lightbox.open(urls, +b.getAttribute('data-i'), et); if (laDeschidere) laDeschidere(); };
+      if (window.IMONDO_lightbox) go(); else deschide([], 0);   // lightbox.js se încarcă; al doilea click îl deschide
+    };
+  }
+  window.IMONDO_galerie = { mozaic: mozaic, deschide: deschide, schite: schite, imparte: imparte };
 })();

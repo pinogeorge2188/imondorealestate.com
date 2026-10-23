@@ -59,9 +59,6 @@
 .pv-desc p.ascuns{display:none}.pv-desc.tot p.ascuns{display:block}
 .pv-more{background:none;border:0;padding:0;color:var(--k);font-family:'Poppins',sans-serif;font-size:.84rem;font-weight:500;cursor:pointer;border-bottom:1px solid var(--g)}
 .pv-more:hover{color:var(--g)}
-.pd-schite{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.8rem}
-.pd-schite button{display:block;aspect-ratio:4/3;width:100%;padding:.6rem;background:var(--c);border:1px solid var(--ln);cursor:zoom-in}
-.pd-schite img{width:100%;height:100%;object-fit:contain}
 /* harta (neschimbată: cerc pe zonă implicit, pin doar cu „Afișează pinul exact pe site”) */
 .pd-mapbox{height:350px;border:1px solid var(--ln);overflow:hidden}
 .pd-mapnote{font-size:.78rem;color:var(--k4);margin-top:.6rem;text-align:center}
@@ -397,16 +394,15 @@ const rowsHtml = R => R.map(r => `<div class="pv-row"><dt>${escH(tr(r[0]))}</dt>
 /* galerie mozaic */
 let galImgs = [], galSchite = [];
 window.pdFull = i => { if (galImgs.length) IMONDO_galerie.deschide(galImgs, i || 0, () => imEv('galerie_deschisa')); };
-window.pdSchita = i => { if (window.IMONDO_lightbox) { IMONDO_lightbox.open(galSchite, i, tr('Schiță')); imEv('galerie_deschisa'); } };
 function renderGallery(p){
   // schițele NU intră niciodată în mozaic, nici când anunțul are doar schițe: ele au secțiunea „Schițe și planuri”
-  const toate = (p.poze || p.imagini || []).filter(Boolean), sc = new Set(p.poze_schite || []);
-  galImgs = toate.filter(u => !sc.has(u)); galSchite = toate.filter(u => sc.has(u));
+  const parti = IMONDO_galerie.imparte(p.poze || p.imagini, p.poze_schite);
+  galImgs = parti.fotos; galSchite = parti.schite;
   // mozaicul: assets/galerie.js (același cod ca pe paginile de proiect)
   IMONDO_galerie.mozaic($('pvGal'), { fotos: galImgs, eticheta: tipTranz(p) ? IMONDO_card.eticheta(p) : '', etichetaAuriu: isRentOf(p),
     rezerva: FALLBACK_IMG, laDeschidere: () => imEv('galerie_deschisa') });
   if (galSchite.length) {
-    $('pdSchite').innerHTML = galSchite.map((u, i) => `<button type="button" onclick="pdSchita(${i})" aria-label="${tr('Schiță')} ${i + 1}"><img src="${escH(u)}" alt="${tr('Schiță')} ${i + 1}" loading="lazy"></button>`).join('');
+    IMONDO_galerie.schite($('pdSchite'), galSchite, () => imEv('galerie_deschisa'));   // aceeași secțiune ca pe proiecte
     $('pdSchiteSec').style.display = '';
   }
 }
