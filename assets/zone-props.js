@@ -76,6 +76,6 @@ window.initZoneProps = async function(opts){
     document.addEventListener('imondo:lang', deseneaza);   // cardurile se refac în limba nouă
   }catch(err){
     console.warn('IMONDO zone-props:', err.message);
-    if($('zoneLoading')) $('zoneLoading').innerHTML = '<p style="color:var(--ink4);font-size:.85rem">Nu am putut încărca proprietățile. Reîncarcă pagina.</p>';
+    if($('zoneLoading')) $('zoneLoading').innerHTML = '<p style="color:var(--ink4);font-size:.98rem">Nu am putut încărca proprietățile. Reîncarcă pagina.</p>';
   }
 };

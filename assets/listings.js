@@ -117,7 +117,7 @@ function buildPanel(){
     </div>
     <div class="lp-groups">
       <div class="lf-group" data-group="zona"><div class="lf-title" data-t="filt_zone">Zonă</div>
-        <div class="lf-checks">${zones.length?zones.map(z=>checkRow('zone',z,z,[...f.zone].some(x=>norm(x)===norm(z)))).join(''):'<span style="font-size:.78rem;color:var(--ink4)">—</span>'}</div></div>
+        <div class="lf-checks">${zones.length?zones.map(z=>checkRow('zone',z,z,[...f.zone].some(x=>norm(x)===norm(z)))).join(''):'<span style="font-size:.98rem;color:var(--ink4)">—</span>'}</div></div>
 
       <div class="lf-group" data-group="camere"><div class="lf-title" data-t="filt_rooms">Camere</div>
         <div class="lf-checks">${['1','2','3'].map(c=>checkRow('camere',c,c,f.camere.has(c))).join('')}${checkRow('camere','4',L().filt_rooms4,f.camere.has('4'))}</div></div>
@@ -132,7 +132,7 @@ function buildPanel(){
         <div class="lf-range"><input type="text" inputmode="numeric" data-f="buget" placeholder="${L().filt_budget_ph}" value="${f.buget}"></div></div>
 
       <div class="lf-group" data-group="facilitati"><div class="lf-title" data-t="filt_facilities">Facilități</div>
-        <div class="lf-checks">${facs.length?facs.map(x=>checkRow('fac',x,I().tr(x),f.fac.has(x))).join(''):'<span style="font-size:.78rem;color:var(--ink4)">—</span>'}</div></div>
+        <div class="lf-checks">${facs.length?facs.map(x=>checkRow('fac',x,I().tr(x),f.fac.has(x))).join(''):'<span style="font-size:.98rem;color:var(--ink4)">—</span>'}</div></div>
     </div>
     <div class="lf-reset"><button class="fb-reset" onclick="IMONDO_resetFilters()" data-t="filt_reset">Resetează</button></div>
   </div>`;
@@ -244,6 +244,6 @@ window.initListings = async function(opts){
     document.addEventListener('imondo:lang', () => { buildPanel(); applyFilters(); if(window.IMONDO_setLang) window.IMONDO_setLang(document.documentElement.lang||'ro'); });
   }catch(err){
     console.warn('IMONDO listings:', err.message);
-    $('listLoading').innerHTML = '<p style="color:var(--ink4);font-size:.85rem">Nu am putut încărca proprietățile. Verifică conexiunea și reîncarcă pagina.</p>';
+    $('listLoading').innerHTML = '<p style="color:var(--ink4);font-size:.98rem">Nu am putut încărca proprietățile. Verifică conexiunea și reîncarcă pagina.</p>';
   }
 };

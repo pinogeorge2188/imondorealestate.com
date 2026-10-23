@@ -63,7 +63,7 @@
         <li><a href="${B}contact.html"${a('contact')} data-t="nav_contact">Contact</a></li>
       </ul>
       <div class="nav-r">
-        <a href="tel:${PHONE}" class="btn btn-ol" style="padding:.6rem 1.1rem;font-size:.62rem">${PHONE_FMT}</a>
+        <a href="tel:${PHONE}" class="btn btn-ol" style="padding:.6rem 1.1rem;font-size:.91rem">${PHONE_FMT}</a>
         <a href="${B}contact.html" class="btn btn-dk" data-t="nav_cta">Consultanță gratuită</a>
       </div>
       <button class="hbg" id="hbg"><span></span><span></span><span></span></button>
@@ -114,7 +114,7 @@
         <span class="fcopy" data-t="leg_copy">© 2025 IMONDO REAL ESTATE S.R.L. · CUI RO 44477606</span>
       </div>
       <div class="fbot-row">
-        <span class="fcopy" style="font-size:.62rem">IMONDO REAL ESTATE S.R.L. · CUI RO 44477606 · București, Sector 1, România · Toate drepturile rezervate</span>
+        <span class="fcopy" style="font-size:.98rem">IMONDO REAL ESTATE S.R.L. · CUI RO 44477606 · București, Sector 1, România · Toate drepturile rezervate</span>
         <div class="lang-switch" style="gap:.4rem">
           <button class="lang-btn on" data-lang="ro" style="color:rgba(255,255,255,.4);border-color:transparent">RO</button>
           <button class="lang-btn" data-lang="en" style="color:rgba(255,255,255,.4);border-color:transparent">EN</button>
