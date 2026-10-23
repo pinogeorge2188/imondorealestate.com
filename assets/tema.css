@@ -74,7 +74,9 @@ html[data-theme="dark"] .pd-mapbox{border-color:rgba(249,245,238,.12)}
 html[data-theme="dark"] .pd-ag-foto{background:#1A1816}   /* cercul cu inițialele agentului (crem fix în pagină) */
 
 /* fotografii, schițe, hartă: neatinse (fără filtre, fără întunecare) */
-html[data-theme="dark"] :is(img,picture,video,.leaflet-container,.leaflet-tile){filter:none!important;opacity:1}
+/* fără opacity aici (24.10.2026): forța opacity:1 pe TOATE imaginile bloca galeriile care arată o singură fotografie
+   prin opacitate (galeria veche de proiect, cu toate pozele suprapuse) — pe noapte se vedeau toate deodată */
+html[data-theme="dark"] :is(img,picture,video,.leaflet-container,.leaflet-tile){filter:none!important}
 
 /* comutatorul */
 .tema-btn{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;padding:0;margin:0;border:1px solid rgba(255,255,255,.28);border-radius:50%;background:transparent;color:rgba(255,255,255,.85);cursor:pointer;transition:border-color .2s,color .2s;flex-shrink:0}
