@@ -15,11 +15,13 @@
   function aplica(t) {
     root.setAttribute('data-theme', t);
     var m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute('content', '#0D0D0D');
+    var tr = function (x) { return window.IMONDO_i18n ? IMONDO_i18n.tr(x) : x; };   // eticheta în limba paginii
     document.querySelectorAll('.tema-btn').forEach(function (b) {
       var noapte = t === 'dark';
       b.innerHTML = noapte ? SUN : MOON;
-      b.setAttribute('aria-label', noapte ? 'Treci la tema de zi' : 'Treci la tema de noapte');
-      b.setAttribute('title', noapte ? 'Temă de zi' : 'Temă de noapte');
+      b.removeAttribute('data-ro-aria-label'); b.removeAttribute('data-ro-title');
+      b.setAttribute('aria-label', tr(noapte ? 'Treci la tema de zi' : 'Treci la tema de noapte'));
+      b.setAttribute('title', tr(noapte ? 'Temă de zi' : 'Temă de noapte'));
       b.setAttribute('aria-pressed', noapte ? 'true' : 'false');
     });
   }
@@ -35,6 +37,7 @@
     return true;
   }
   window.IMONDO_tema = { comuta: comuta, aplica: aplica, monteaza: monteaza };
+  document.addEventListener('imondo:lang', function () { aplica(curenta()); });
   // fără alegere salvată, tema urmează sistemul și când acesta se schimbă
   if (window.matchMedia) { var mq = matchMedia('(prefers-color-scheme: dark)'), f = function () { if (!salvata()) aplica(sistem()); };
     if (mq.addEventListener) mq.addEventListener('change', f); else if (mq.addListener) mq.addListener(f); }

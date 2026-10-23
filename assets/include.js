@@ -39,8 +39,6 @@
       <div class="lang-switch">
         <button class="lang-btn on" data-lang="ro">RO</button>
         <button class="lang-btn" data-lang="en">EN</button>
-        <button class="lang-btn" data-lang="es">ES</button>
-        <button class="lang-btn" data-lang="fr">FR</button>
       </div>
     </div>
     <div class="lang-bar-contact">
@@ -120,8 +118,6 @@
         <div class="lang-switch" style="gap:.4rem">
           <button class="lang-btn on" data-lang="ro" style="color:rgba(255,255,255,.4);border-color:transparent">RO</button>
           <button class="lang-btn" data-lang="en" style="color:rgba(255,255,255,.4);border-color:transparent">EN</button>
-          <button class="lang-btn" data-lang="es" style="color:rgba(255,255,255,.4);border-color:transparent">ES</button>
-          <button class="lang-btn" data-lang="fr" style="color:rgba(255,255,255,.4);border-color:transparent">FR</button>
         </div>
       </div>
     </div>
@@ -146,14 +142,13 @@
     document.querySelectorAll('a.wa, #mctaWa').forEach(a=>a.setAttribute('href', url));
   })();
 
-  /* ── LIMBĂ ── */
-  let curLang = 'ro';
+  /* ── LIMBĂ (RO / EN; alegerea se ține minte între pagini — assets/i18n.js) ── */
   function setLang(lang){
-    curLang = lang;
-    document.documentElement.lang = lang;
+    lang = lang === 'en' ? 'en' : 'ro';
     const d = T[lang]; if(!d) return;
     document.querySelectorAll('[data-t]').forEach(el=>{ const k=el.dataset.t; if(d[k]) el.textContent=d[k]; });
     document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('on', b.dataset.lang===lang));
+    if (window.IMONDO_i18n) IMONDO_i18n.aplica(lang); else document.documentElement.lang = lang;
   }
   window.IMONDO_setLang = setLang;
   document.querySelectorAll('.lang-btn').forEach(b=>b.addEventListener('click',()=>setLang(b.dataset.lang)));
@@ -204,7 +199,7 @@
     const btn = f.querySelector('button[type=submit]');
     const ok = (f.parentNode && f.parentNode.querySelector('.fok')) || f.querySelector('.fok');
     const orig = btn ? btn.textContent : '';
-    if(btn){ btn.textContent='Se trimite...'; btn.disabled=true; }
+    if(btn){ btn.textContent= window.IMONDO_i18n ? IMONDO_i18n.tr('Se trimite...') : 'Se trimite...'; btn.disabled=true; }
     f.style.opacity='.6'; f.style.pointerEvents='none';
     try{
       const res = await fetch(f.action, {method:'POST', body:new FormData(f), headers:{'Accept':'application/json'}});
@@ -212,12 +207,12 @@
       f.style.display='none'; if(ok) ok.style.display='block';
       imTrack('formular_trimis');
     }catch(_){
-      if(btn){ btn.textContent='Eroare — reîncearcă'; btn.disabled=false; }
+      if(btn){ btn.textContent= window.IMONDO_i18n ? IMONDO_i18n.tr('Eroare — reîncearcă') : 'Eroare — reîncearcă'; btn.disabled=false; }
       f.style.opacity='1'; f.style.pointerEvents='auto';
       setTimeout(()=>{ if(btn) btn.textContent=orig; }, 2500);
     }
   });
 
-  /* aplică limba implicită (RO) pentru a sincroniza eventualele texte injectate */
-  setLang('ro');
+  /* limba aleasă de vizitator (implicit RO), aplicată și textelor injectate */
+  setLang(window.IMONDO_i18n ? IMONDO_i18n.initiala() : 'ro');
 })();

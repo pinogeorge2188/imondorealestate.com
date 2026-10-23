@@ -68,7 +68,7 @@ window.initProjectsList = async function(){
     // featured întâi
     list.sort((a,b)=> (b.featured?1:0) - (a.featured?1:0));
     $('projGrid').innerHTML = `<div class="proj-grid">${list.map(projectCard).join('')}</div>`;
-    if($('projMeta')) $('projMeta').innerHTML = `<span class="list-count"><strong>${list.length}</strong> proiecte rezidențiale</span>`;
+    if($('projMeta')) $('projMeta').innerHTML = `<span class="list-count"><strong>${list.length}</strong> ${window.IMONDO_i18n ? IMONDO_i18n.forma(list.length, 'proiecte') : 'proiecte rezidențiale'}</span>`;   // „1 proiect rezidențial”
   }catch(err){
     console.warn('IMONDO proiecte:', err.message);
     if($('projLoading')) $('projLoading').innerHTML = '<p style="color:var(--ink4);font-size:.85rem">Nu am putut încărca proiectele. Reîncarcă pagina.</p>';

@@ -3,7 +3,7 @@
    Traduceri partajate pentru paginile interioare
    (header, footer, breadcrumb, schelete pagini).
    index.html are propriul T{} inline (Varianta B).
-   Orice text nou → în toate 4 limbile cu data-t.
+   Orice text nou → în ambele limbi (RO, EN) cu data-t. Spaniola și franceza scoase (23.10.2026).
    ════════════════════════════════════════════ */
 window.T_SHARED = {
   ro:{
@@ -108,100 +108,339 @@ window.T_SHARED = {
     lf_rent_tag:"For tenants",lf_rent_h:"Looking for a",lf_rent_h_em:"home to rent?",lf_rent_p:"Tell us what you're looking for. We present only verified options, with serious landlords and clear contracts.",lf_rent_p1:"Verified property portfolio",lf_rent_p2:"Efficient viewings, no wasted time",lf_rent_p3:"Contract signing assistance",
     lf_what:"What you're looking for / details"
   },
-  es:{
-    tagline:"Consultoría inmobiliaria en el norte y el centro de Bucarest",
-    nav_props:"Propiedades",nav_sales:"En venta",nav_rent:"En alquiler",
-    nav_projects:"Proyectos",nav_services:"Servicios",nav_zones:"Zonas",
-    nav_about:"Sobre IMONDO",nav_contact:"Contacto",nav_cta:"Consulta gratuita",
-    crumb_home:"Inicio",
-    foot_p:"Consultoría inmobiliaria en el norte y el centro de Bucarest. Transparencia, profesionalismo y resultados reales — para cada cliente.",
-    fc1_h:"Propiedades",fc1_1:"En venta",fc1_2:"En alquiler",fc1_3:"Proyectos residenciales",
-    fc2_h:"Servicios",fc2_1:"Para propietarios",fc2_2:"Para compradores",fc2_3:"Para inquilinos",
-    fc3_h:"Contacto",fc3_wa:"WhatsApp",
-    leg1:"Política de Privacidad",leg2:"Términos y Condiciones",leg3:"Política de Cookies",
-    leg_copy:"© 2025 IMONDO REAL ESTATE S.R.L. · CUI RO 44477606",
-    sales_eyebrow:"Cartera seleccionada",sales_h:"Propiedades en venta",sales_h_em:"en Bucarest & Ilfov",
-    sales_sub:"Apartamentos, casas y villas cuidadosamente seleccionados. Filtra por zona, tipo, habitaciones y presupuesto para encontrar la propiedad ideal.",
-    rent_eyebrow:"Cartera seleccionada",rent_h:"Propiedades en alquiler",rent_h_em:"en Bucarest & Ilfov",
-    rent_sub:"Viviendas verificadas, propietarios serios. Filtra por zona, tipo, habitaciones y presupuesto para encontrar la propiedad ideal.",
-    proj_eyebrow:"Nuevos desarrollos",proj_h:"Proyectos",proj_h_em:"residenciales",
-    proj_sub:"Nuevos desarrollos residenciales en Bucarest e Ilfov — seleccionados, con promotores de confianza.",
-    proj_cta:"Avísame cuando esté listo",
-    serv_eyebrow:"Lo que hacemos",serv_h:"Servicios completos,",serv_h_em:"sin compromisos",
-    serv_sub:"No vendemos propiedades. Acompañamos a las personas en una de las decisiones financieras más importantes de su vida — desde la primera conversación hasta mucho después de recibir las llaves.",
-    sv1_l:"Para propietarios",sv1_h:"Venta",sv1_p:"Valoramos tu propiedad de forma justa, basándonos en transacciones reales de la zona, no en lo que te gustaría oír. Nos encargamos de la fotografía profesional, la presentación, la promoción en las plataformas más eficaces y el filtrado de compradores, para que no pierdas fines de semana en visitas sin resultado. Negociamos en tu interés y te acompañamos hasta la notaría.",
-    sv2_l:"Para compradores",sv2_h:"Adquisición",sv2_p:"Buscamos la propiedad adecuada, incluso fuera de los anuncios públicos. Comprobamos la situación jurídica antes de que te encariñes con una vivienda, te señalamos lo que no se ve a primera vista y negociamos el precio a tu favor. Si una propiedad no es una buena elección, te lo decimos — aunque eso signifique seguir buscando.",
-    sv3_l:"Propietarios e inquilinos",sv3_h:"Alquiler",sv3_p:"Para propietarios: inquilinos verificados, no el primero que llama. Comprobamos la estabilidad financiera y la seriedad, para que tu propiedad esté en buenas manos. Para inquilinos: encontramos la vivienda que se ajusta a tu presupuesto y estilo de vida, con un contrato claro y sin sorpresas.",
-    sv4_l:"Para inversores",sv4_h:"Inversión inmobiliaria",sv4_p:"Con seis años de experiencia en los mercados financieros, vemos una propiedad como una decisión a largo plazo, no solo como una vivienda. Analizamos la rentabilidad real, el potencial de la zona y los riesgos que la mayoría ignora. Te guiamos hacia la inversión que tiene sentido para tus objetivos, no para nuestra comisión.",
-    sv5_l:"Todo lo que viene después de la decisión",sv5_h:"Asesoramiento integral",sv5_p:"Financiación — te ponemos en contacto con los brókeres de crédito adecuados para tu perfil. Notaría y seguros — coordinamos todo el proceso. Reformas, acondicionamiento y diseño de interiores — colaboramos con equipos verificados. Fotografía inmobiliaria profesional, incluso para las propiedades que publicamos.",
-    sv_cta_tag:"Primer paso",sv_cta_h:"Hablemos de tu situación",sv_cta_p:"Cada propiedad y cada cliente son diferentes. Cuéntanos qué tienes en mente y te diremos con honestidad si podemos ayudarte y cómo.",sv_cta_b1:"Solicita una consulta gratuita",sv_cta_b2:"Habla por WhatsApp",
-    about_eyebrow:"Nuestra historia",about_h:"Una agencia construida",about_h_em:"sobre confianza real.",
-    about_sub:"Fundada en 2019 por George Țigăneșteanu. Conoce nuestro equipo y valores.",
-    contact_eyebrow:"Contáctanos",contact_h:"Hablemos",contact_h_em:"juntos.",
-    contact_p:"Ya sea que quieras vender, comprar o entender el mercado — estamos aquí. Sin presión, sin compromisos. Solo una conversación sincera.",
-    c_phone:"Teléfono",c_email:"Email",c_addr:"Dirección",c_prog:"Horario",
-    c_hours:"Lun–Vie: 09:00–19:00 · Sáb: 10:00–16:00",
-    f_fname:"Nombre *",f_lname:"Apellido *",f_email:"Email *",f_phone:"Teléfono",f_subject:"Asunto",
-    fs1:"Quiero vender una propiedad",fs2:"Quiero comprar",fs3:"Quiero alquilar",fs4:"Valoración gratuita",fs5:"Consultoría de inversiones",
-    f_msg:"Mensaje",f_send:"Enviar mensaje →",f_ok:"✦ ¡Gracias! Te contactaremos en un máximo de 2 horas.",
-    filt_type:"Tipo de propiedad",filt_zone:"Zona",filt_rooms:"Habitaciones",filt_budget:"Presupuesto máx. (€)",
-    filt_all:"Todas",filt_any:"Cualquiera",filt_reset:"Restablecer",filt_budget_ph:"ej: 250000",
-    list_sale:"En venta",list_rent:"En alquiler",count_label:"resultados",
-    filt_area:"Superficie (m²)",filt_floor:"Planta",filt_facilities:"Comodidades",filt_min:"mín",filt_max:"máx",filt_rooms4:"4+",
-    empty_h:"No se encontraron propiedades",empty_p:"Intenta ajustar los filtros o vuelve pronto — añadimos anuncios constantemente.",empty_cta:"Restablecer filtros",
-    mcta_call:"Llamar",mcta_wa:"WhatsApp",mcta_eval:"Valoración",
-    f_fname:"Nombre *",f_lname:"Apellido *",f_email:"Email *",f_phone:"Teléfono",f_msg:"Mensaje",f_send:"Enviar →",f_ok:"✦ ¡Gracias! Te contactaremos en un máximo de 2 horas.",
-    lf_own_tag:"Para propietarios",lf_own_h:"Vende o alquila",lf_own_h_em:"con IMONDO",lf_own_p:"Cuéntanos sobre tu propiedad. Recibes una valoración gratuita y una estrategia clara, sin compromiso.",lf_own_p1:"Valoración justa al precio real de mercado",lf_own_p2:"Marketing premium y compradores precalificados",lf_own_p3:"Un solo consultor, de principio a fin",lf_own_intent:"Quiero...",lf_own_opt1:"Vender una propiedad",lf_own_opt2:"Alquilar una propiedad",
-    lf_buy_tag:"Para compradores",lf_buy_h:"¿Buscas",lf_buy_h_em:"comprar?",lf_buy_p:"Cuéntanos qué buscas y tu presupuesto. Te enviamos propiedades adecuadas, incluidas ofertas off-market.",lf_buy_p1:"Acceso a propiedades off-market",lf_buy_p2:"Asesoramiento honesto sobre precios y zonas",lf_buy_p3:"Negociación a tu favor",
-    lf_rent_tag:"Para inquilinos",lf_rent_h:"¿Buscas una",lf_rent_h_em:"vivienda en alquiler?",lf_rent_p:"Cuéntanos qué buscas. Presentamos solo opciones verificadas, con propietarios serios y contratos claros.",lf_rent_p1:"Cartera verificada de propiedades",lf_rent_p2:"Visitas eficientes, sin perder tiempo",lf_rent_p3:"Asistencia en la firma del contrato",
-    lf_what:"Qué buscas / detalles"
-  },
-  fr:{
-    tagline:"Conseil immobilier dans le nord et le centre de Bucarest",
-    nav_props:"Propriétés",nav_sales:"À vendre",nav_rent:"À louer",
-    nav_projects:"Projets",nav_services:"Services",nav_zones:"Quartiers",
-    nav_about:"À propos d'IMONDO",nav_contact:"Contact",nav_cta:"Consultation gratuite",
-    crumb_home:"Accueil",
-    foot_p:"Conseil immobilier dans le nord et le centre de Bucarest. Transparence, professionnalisme et résultats réels — pour chaque client.",
-    fc1_h:"Propriétés",fc1_1:"À vendre",fc1_2:"À louer",fc1_3:"Projets résidentiels",
-    fc2_h:"Services",fc2_1:"Pour les propriétaires",fc2_2:"Pour les acheteurs",fc2_3:"Pour les locataires",
-    fc3_h:"Contact",fc3_wa:"WhatsApp",
-    leg1:"Politique de Confidentialité",leg2:"Conditions Générales",leg3:"Politique de Cookies",
-    leg_copy:"© 2025 IMONDO REAL ESTATE S.R.L. · CUI RO 44477606",
-    sales_eyebrow:"Portefeuille sélectionné",sales_h:"Propriétés à vendre",sales_h_em:"à Bucarest & Ilfov",
-    sales_sub:"Appartements, maisons et villas soigneusement sélectionnés. Filtrez par quartier, type, pièces et budget pour trouver le bien idéal.",
-    rent_eyebrow:"Portefeuille sélectionné",rent_h:"Propriétés à louer",rent_h_em:"à Bucarest & Ilfov",
-    rent_sub:"Logements vérifiés, propriétaires sérieux. Filtrez par quartier, type, pièces et budget pour trouver le bien idéal.",
-    proj_eyebrow:"Nouveaux développements",proj_h:"Projets",proj_h_em:"résidentiels",
-    proj_sub:"Nouveaux ensembles résidentiels à Bucarest et Ilfov — sélectionnés, avec des promoteurs de confiance.",
-    proj_cta:"Prévenez-moi quand c'est prêt",
-    serv_eyebrow:"Ce que nous faisons",serv_h:"Services complets,",serv_h_em:"sans compromis",
-    serv_sub:"Nous ne vendons pas des biens. Nous accompagnons des personnes dans l'une des décisions financières les plus importantes de leur vie — de la première conversation jusqu'à bien après la remise des clés.",
-    sv1_l:"Pour les propriétaires",sv1_h:"Vente",sv1_p:"Nous estimons votre bien avec justesse, sur la base des transactions réelles du quartier, et non de ce que vous aimeriez entendre. Nous prenons en charge la photographie professionnelle, la présentation, la promotion sur les plateformes les plus performantes et la sélection des acheteurs, pour que vous ne perdiez pas vos week-ends en visites sans suite. Nous négocions dans votre intérêt et vous accompagnons jusqu'au notaire.",
-    sv2_l:"Pour les acheteurs",sv2_h:"Acquisition",sv2_p:"Nous recherchons le bien qu'il vous faut, y compris en dehors des annonces publiques. Nous vérifions la situation juridique avant que vous ne vous attachiez à un logement, nous vous signalons ce qui ne se voit pas au premier regard et nous négocions le prix en votre faveur. Si un bien n'est pas un bon choix, nous vous le disons — même si cela implique de continuer à chercher.",
-    sv3_l:"Propriétaires et locataires",sv3_h:"Location",sv3_p:"Pour les propriétaires : des locataires vérifiés, pas le premier qui appelle. Nous vérifions la stabilité financière et le sérieux, afin que votre bien soit entre de bonnes mains. Pour les locataires : nous trouvons le logement adapté à votre budget et à votre mode de vie, avec un contrat clair et sans surprises.",
-    sv4_l:"Pour les investisseurs",sv4_h:"Investissement immobilier",sv4_p:"Forts de six ans d'expérience sur les marchés financiers, nous considérons un bien comme une décision à long terme, et pas seulement comme un logement. Nous analysons le rendement réel, le potentiel du quartier et les risques que la plupart ignorent. Nous vous orientons vers l'investissement qui a du sens pour vos objectifs, pas pour notre commission.",
-    sv5_l:"Tout ce qui vient après la décision",sv5_h:"Conseil complet",sv5_p:"Financement — nous vous mettons en relation avec les courtiers en crédit adaptés à votre profil. Notaire et assurances — nous coordonnons l'ensemble du processus. Rénovation, aménagement et décoration d'intérieur — nous collaborons avec des équipes vérifiées. Photographie immobilière professionnelle, y compris pour les biens que nous publions.",
-    sv_cta_tag:"Première étape",sv_cta_h:"Parlons de votre situation",sv_cta_p:"Chaque bien et chaque client sont différents. Dites-nous ce que vous avez en tête et nous vous dirons honnêtement si et comment nous pouvons vous aider.",sv_cta_b1:"Demandez une consultation gratuite",sv_cta_b2:"Discuter sur WhatsApp",
-    about_eyebrow:"Notre histoire",about_h:"Une agence construite",about_h_em:"sur une confiance réelle.",
-    about_sub:"Fondée en 2019 par George Țigăneșteanu. Découvrez notre équipe et nos valeurs.",
-    contact_eyebrow:"Contactez-nous",contact_h:"Parlons",contact_h_em:"ensemble.",
-    contact_p:"Que vous souhaitiez vendre, acheter ou comprendre le marché — nous sommes là. Sans pression, sans engagement. Juste une conversation sincère.",
-    c_phone:"Téléphone",c_email:"Email",c_addr:"Adresse",c_prog:"Horaires",
-    c_hours:"Lun–Ven: 09:00–19:00 · Sam: 10:00–16:00",
-    f_fname:"Prénom *",f_lname:"Nom *",f_email:"Email *",f_phone:"Téléphone",f_subject:"Sujet",
-    fs1:"Je veux vendre une propriété",fs2:"Je veux acheter",fs3:"Je veux louer",fs4:"Estimation gratuite",fs5:"Conseil en investissement",
-    f_msg:"Message",f_send:"Envoyer le message →",f_ok:"✦ Merci! Nous vous contactons dans 2 heures maximum.",
-    filt_type:"Type de bien",filt_zone:"Quartier",filt_rooms:"Pièces",filt_budget:"Budget max (€)",
-    filt_all:"Tous",filt_any:"Indifférent",filt_reset:"Réinitialiser",filt_budget_ph:"ex: 250000",
-    list_sale:"À vendre",list_rent:"À louer",count_label:"résultats",
-    filt_area:"Surface (m²)",filt_floor:"Étage",filt_facilities:"Équipements",filt_min:"min",filt_max:"max",filt_rooms4:"4+",
-    empty_h:"Aucun bien trouvé",empty_p:"Essayez d'ajuster les filtres ou revenez bientôt — nous ajoutons des annonces en permanence.",empty_cta:"Réinitialiser les filtres",
-    mcta_call:"Appeler",mcta_wa:"WhatsApp",mcta_eval:"Estimation",
-    f_fname:"Prénom *",f_lname:"Nom *",f_email:"Email *",f_phone:"Téléphone",f_msg:"Message",f_send:"Envoyer →",f_ok:"✦ Merci! Nous vous contactons dans 2 heures maximum.",
-    lf_own_tag:"Pour les propriétaires",lf_own_h:"Vendez ou louez",lf_own_h_em:"avec IMONDO",lf_own_p:"Parlez-nous de votre bien. Vous recevez une estimation gratuite et une stratégie claire, sans engagement.",lf_own_p1:"Estimation juste au prix réel du marché",lf_own_p2:"Marketing premium et acheteurs pré-qualifiés",lf_own_p3:"Un seul consultant, de A à Z",lf_own_intent:"Je veux...",lf_own_opt1:"Vendre un bien",lf_own_opt2:"Mettre un bien en location",
-    lf_buy_tag:"Pour les acheteurs",lf_buy_h:"Vous cherchez à",lf_buy_h_em:"acheter ?",lf_buy_p:"Dites-nous ce que vous cherchez et votre budget. Nous vous envoyons des biens adaptés, y compris des offres off-market.",lf_buy_p1:"Accès aux biens off-market",lf_buy_p2:"Conseils honnêtes sur les prix et les quartiers",lf_buy_p3:"Négociation en votre faveur",
-    lf_rent_tag:"Pour les locataires",lf_rent_h:"Vous cherchez un",lf_rent_h_em:"logement à louer ?",lf_rent_p:"Dites-nous ce que vous cherchez. Nous présentons uniquement des options vérifiées, avec des propriétaires sérieux et des contrats clairs.",lf_rent_p1:"Portefeuille de biens vérifié",lf_rent_p2:"Visites efficaces, sans perte de temps",lf_rent_p3:"Assistance à la signature du contrat",
-    lf_what:"Ce que vous cherchez / détails"
-  }
 };
+
+/* ════════════════════════════════════════════════════════════════
+   LIMBA (23.10.2026) — doar română și engleză.
+   • Alegerea se ține minte (localStorage „imondo_lang”) și se aplică pe orice pagină deschisă după.
+   • Adresa paginii NU se schimbă: varianta engleză e doar în browser (Google indexează româna).
+   • Textele fixe ale interfeței: dicționarul EN de mai jos (text românesc exact → text englez).
+     Se aplică singur și pe ce apare după încărcare (carduri, filtre, banner cookie-uri, galerie).
+   • Ce scriu agenții (titlu, descriere) și articolele de zonă NU trec prin dicționar
+     (marcate cu data-fara-traducere).
+   • Pluralul: IMONDO_i18n.cu(1,'camere') → „1 cameră”, (3) → „3 camere”, (20) → „20 de camere”; EN: room / rooms.
+   ════════════════════════════════════════════════════════════════ */
+(function(){
+  var KEY = 'imondo_lang', LIMBI = ['ro', 'en'];
+
+  /* substantivele care pot ajunge la 1: [singular, plural] */
+  var PL = {
+    camere:          { ro: ['cameră', 'camere'],                 en: ['room', 'rooms'] },
+    bai:             { ro: ['baie', 'băi'],                      en: ['bathroom', 'bathrooms'] },
+    bucatarii:       { ro: ['bucătărie', 'bucătării'],           en: ['kitchen', 'kitchens'] },
+    balcoane:        { ro: ['balcon', 'balcoane'],               en: ['balcony', 'balconies'] },
+    terase:          { ro: ['terasă', 'terase'],                 en: ['terrace', 'terraces'] },
+    locuri_parcare:  { ro: ['loc de parcare', 'locuri de parcare'], en: ['parking space', 'parking spaces'] },
+    niveluri:        { ro: ['nivel', 'niveluri'],                en: ['level', 'levels'] },
+    garaje:          { ro: ['garaj', 'garaje'],                  en: ['garage', 'garages'] },
+    inchise:         { ro: ['închis', 'închise'],                en: ['enclosed', 'enclosed'] },
+    proiecte:        { ro: ['proiect rezidențial', 'proiecte rezidențiale'], en: ['residential project', 'residential projects'] },
+    rezultate:       { ro: ['rezultat', 'rezultate'],            en: ['result', 'results'] }
+  };
+
+  /* TEXT ROMÂNESC EXACT → ENGLEZĂ. Un text nou de interfață se adaugă aici (altfel rămâne în română pe EN). */
+  var EN = {
+    /* comune: formulare, subsol, banda de sus, cookie-uri, temă */
+    'Sunt de acord ca IMONDO să mă contacteze în legătură cu această solicitare și am citit': 'I agree that IMONDO may contact me about this request, and I have read the',
+    'Politica de confidențialitate': 'Privacy Policy',
+    'Setări cookie-uri': 'Cookie settings',
+    'București, Sector 1': 'Bucharest, Sector 1',
+    'România': 'Romania',
+    'București': 'Bucharest',
+    'IMONDO REAL ESTATE S.R.L. · CUI RO 44477606 · București, Sector 1, România · Toate drepturile rezervate': 'IMONDO REAL ESTATE S.R.L. · CUI RO 44477606 · Bucharest, Sector 1, Romania · All rights reserved',
+    'ANPC — SAL': 'ANPC — ADR', 'Soluționarea Alternativă a Litigiilor': 'Alternative Dispute Resolution',
+    'SOL — Soluționare Online Litigii': 'ODR — Online Dispute Resolution', 'SOL': 'ODR',
+    'Treci la tema de noapte': 'Switch to dark theme', 'Treci la tema de zi': 'Switch to light theme',
+    'Temă de noapte': 'Dark theme', 'Temă de zi': 'Light theme',
+    'Cookie-uri': 'Cookies',
+    'Folosim cookie-uri strict necesare pentru funcționarea site-ului și, doar cu acordul tău, cookie-uri de analiză (Google Analytics).': 'We use cookies that are strictly necessary for the site to work and, only with your consent, analytics cookies (Google Analytics).',
+    'Politica de cookie-uri': 'Cookie Policy', 'Refuz opționalele': 'Decline optional', 'Accept toate': 'Accept all',
+    'Se trimite...': 'Sending...', 'Eroare — reîncearcă': 'Error — try again',
+    'Nume *': 'Name *', 'Telefon *': 'Phone *', 'Telefon': 'Phone', 'Mesaj': 'Message', 'Trimite →': 'Send →',
+    '✦ Mulțumim! Te contactăm în maximum 2 ore.': '✦ Thank you! We will contact you within 2 hours.',
+    'Zonă, nr. camere, buget lunar, perioadă...': 'Area, number of rooms, monthly budget, period...',
+    'Zonă, nr. camere, buget, tip proprietate...': 'Area, number of rooms, budget, property type...',
+    'Zonă, tip proprietate, suprafață...': 'Area, property type, size...',
+    'Detaliu': 'Details', 'Vânzări': 'Sales', 'Închirieri': 'Rentals', 'Servicii': 'Services', 'Proiecte': 'Projects',
+    /* galeria pe tot ecranul */
+    'Micșorează': 'Zoom out', 'Mărește': 'Zoom in', 'Închide': 'Close', 'Anterioara': 'Previous', 'Următoarea': 'Next',
+    'Dublu-click sau ciupește pentru zoom': 'Double-click or pinch to zoom', 'Schiță': 'Floor plan',
+    /* prima pagină */
+    'București · Romania · Est. 2019': 'Bucharest · Romania · Est. 2019',
+    'Parc & Lac · S1': 'Park & Lake · S1', 'Exclusivist · S1': 'Exclusive · S1', 'Istoric · S5-6': 'Historic · S5-6',
+    'Vile · S1': 'Villas · S1', 'Vile · Ilfov': 'Villas · Ilfov', 'Ilfov Nord': 'North Ilfov',
+    /* liste, carduri, filtre */
+    'De vânzare': 'For sale', 'De închiriat': 'For rent', 'Preț la cerere': 'Price on request', '/ lună': '/ month',
+    'Nu am putut încărca proprietățile. Verifică conexiunea și reîncarcă pagina.': 'We could not load the properties. Check your connection and reload the page.',
+    'Nu am putut încărca proprietățile. Reîncarcă pagina.': 'We could not load the properties. Please reload the page.',
+    'Se încarcă proprietățile...': 'Loading properties...',
+    'Revino curând sau spune-ne ce cauți — găsim împreună.': 'Check back soon or tell us what you are looking for — we will find it together.',
+    /* tipuri de proprietate */
+    'Apartament': 'Apartment', 'Garsonieră': 'Studio', 'Penthouse': 'Penthouse', 'Casă/Vilă': 'House/Villa', 'Casă individuală': 'Detached house',
+    'Duplex': 'Duplex', 'Teren': 'Land', 'Spațiu comercial': 'Commercial space', 'Spațiu birouri': 'Office space', 'Proprietate': 'Property',
+    /* facilitățile din filtre (valorile vechi, fără diacritice) */
+    'Aer conditionat': 'Air conditioning', 'Centrala proprie': 'Own central heating', 'Terasa': 'Terrace', 'Boxa': 'Storage unit',
+    'Lift': 'Elevator', 'Interfon': 'Intercom', 'Curte': 'Yard', 'Piscina': 'Swimming pool', 'Paza': 'Security', 'Parcare': 'Parking',
+    /* pagina proprietății: părțile fixe */
+    'Se încarcă proprietatea...': 'Loading property...', 'Proprietatea nu a fost găsită': 'Property not found',
+    'Anunțul căutat nu mai este disponibil sau a fost retras.': 'This listing is no longer available or has been withdrawn.',
+    'Lipsește identificatorul proprietății din adresă.': 'The property identifier is missing from the address.',
+    'Nu am putut încărca proprietatea. Verifică conexiunea și încearcă din nou.': 'We could not load the property. Check your connection and try again.',
+    'Vezi proprietățile': 'View properties', 'Descriere': 'Description', 'Caracteristici': 'Property details', 'Facilități': 'Amenities',
+    'Finisaje': 'Finishes', 'Schițe și planuri': 'Floor plans', 'Localizare': 'Location', 'Calculator de rată': 'Mortgage calculator',
+    'Avans (%)': 'Down payment (%)', 'Perioadă (ani)': 'Term (years)', 'Dobândă anuală': 'Annual interest rate', 'Rata lunară estimată': 'Estimated monthly payment',
+    'Finanțare': 'Financing',
+    'Înainte să te hotărăști asupra unei proprietăți, merită să știi exact cu ce buget lucrezi. Sună-ne și analizăm împreună situația ta, ca să găsim varianta care ți se potrivește.': 'Before you decide on a property, it is worth knowing exactly what budget you are working with. Call us and we will look at your situation together to find the option that suits you.',
+    'Sună ·': 'Call ·', 'Programează o vizionare': 'Book a viewing', 'Consultant dedicat': 'Dedicated consultant',
+    'Ai o întrebare despre această proprietate?': 'Have a question about this property?',
+    'Întreabă despre această proprietate': 'Ask about this property',
+    'Scrie-ne întrebarea ta. Răspundem pe email, fără să te sunăm dacă nu ne ceri.': 'Write your question. We reply by email and will not call you unless you ask us to.',
+    'Telefon (opțional)': 'Phone (optional)', 'Email *': 'Email *', 'Întrebarea ta': 'Your question',
+    'Când ți-ar conveni? Zile și interval orar.': 'When would suit you? Days and time window.',
+    'Vreau și ajutor cu finanțarea': 'I would also like help with financing',
+    'Proprietăți similare': 'Similar properties', 'Vezi mai mult': 'Show more', 'Vezi mai puțin': 'Show less',
+    'Deschide în Google Maps ↗': 'Open in Google Maps ↗',
+    'Poziția proprietății. Adresa exactă se comunică la programarea vizionării.': 'Property location. The exact address is shared when a viewing is booked.',
+    /* proiecte */
+    'Proiect rezidențial': 'Residential project', 'proiect rezidențial': 'residential project', 'proiecte rezidențiale': 'residential projects', 'Despre ansamblu': 'About the development', 'Facilități ansamblu': 'Development amenities',
+    'Interesat?': 'Interested?', 'Resurse': 'Resources', 'Eroare': 'Error', 'Proiectul nu a fost': 'Project not', 'găsit': 'found',
+    'Solicită detalii, disponibilitate și prețuri actualizate pentru acest ansamblu.': 'Ask for details, availability and up-to-date prices for this development.',
+    '📞 Sună acum': '📞 Call now', 'Trimite mesaj →': 'Send a message →', 'Vezi proiectele →': 'View projects →', 'Detalii →': 'Details →',
+    'Locație aproximativă a ansamblului.': 'Approximate location of the development.',
+    'Ansamblul căutat nu este disponibil sau a fost retras.': 'This development is no longer available or has been withdrawn.',
+    'Proiectul căutat nu este disponibil sau a fost retras.': 'This project is no longer available or has been withdrawn.',
+    'Lipsește identificatorul proiectului din adresă.': 'The project identifier is missing from the address.',
+    'Nu am putut încărca proiectul. Verifică conexiunea și reîncarcă.': 'We could not load the project. Check your connection and reload.',
+    'Nu am putut încărca proiectele. Reîncarcă pagina.': 'We could not load the projects. Please reload the page.',
+    'Se încarcă proiectul...': 'Loading project...', 'Se încarcă proiectele...': 'Loading projects...',
+    'Proiecte în pregătire': 'Projects in preparation',
+    'Momentan nu avem ansambluri publicate. Revino curând sau lasă-ne datele tale.': 'We have no developments published at the moment. Check back soon or leave us your details.',
+    '🎥 Tur virtual': '🎥 Virtual tour', '📄 Broșură PDF': '📄 PDF brochure', 'Hartă:': 'Map:', 'Suprafețe': 'Areas',
+    /* despre */
+    'Echipa noastră': 'Our team', 'Oamenii din spatele': 'The people behind', 'Fondatorul': 'The founder',
+    'Fondator & Broker Owner': 'Founder & Broker Owner', '— George Țigăneșteanu, Fondator & Broker Owner': '— George Țigăneșteanu, Founder & Broker Owner',
+    'Consultant Imobiliar': 'Real Estate Consultant', 'Ce ne ghidează': 'What guides us', 'Valorile care stau la baza': 'The values behind',
+    'fiecărei colaborări': 'every collaboration', 'Onestitate': 'Honesty', 'Transparență': 'Transparency', 'Dedicare': 'Dedication', 'Expertiză': 'Expertise',
+    'Îți spunem adevărul despre prețuri și piață, chiar dacă nu e ce vrei să auzi. Preferăm o conversație sinceră unei vânzări forțate.': 'We tell you the truth about prices and the market, even when it is not what you want to hear. We prefer an honest conversation to a forced sale.',
+    'Fără surprize, fără costuri ascunse. Știi mereu unde te afli în proces și ce urmează.': 'No surprises, no hidden costs. You always know where you are in the process and what comes next.',
+    'Nu lucrăm pe volum. Dedicăm timp real fiecărui client și ne implicăm personal în fiecare tranzacție, de la prima discuție până la predarea cheilor.': 'We do not work on volume. We give every client real time and are personally involved in every transaction, from the first conversation to the handover of the keys.',
+    'Cunoaștem piața din București cartier cu cartier, stradă cu stradă. Iar experiența în investiții ne permite să te ghidăm dincolo de o simplă achiziție.': 'We know the Bucharest market neighbourhood by neighbourhood, street by street. And our investment experience lets us guide you beyond a simple purchase.',
+    'Hai să vorbim despre': 'Let’s talk about', 'proprietatea ta': 'your property',
+    'Fie că vrei să vinzi, să cumperi sau să investești, suntem aici să te ghidăm cu onestitate și profesionalism.': 'Whether you want to sell, buy or invest, we are here to guide you with honesty and professionalism.',
+    'Solicită o evaluare gratuită →': 'Request a free valuation →', 'Discută pe WhatsApp': 'Chat on WhatsApp',
+    /* zone */
+    'Imobiliare': 'Real estate in', 'Proprietăți în': 'Properties in',
+
+    /* ── CARACTERISTICI: etichete ── */
+    'Camere': 'Rooms', 'Cameră': 'Room', 'Băi': 'Bathrooms', 'Baie': 'Bathroom', 'Suprafață utilă': 'Usable area', 'Suprafață utilă totală': 'Total usable area',
+    'Tip proprietate': 'Property type', 'Tip teren': 'Land type', 'Subcategorie': 'Subcategory', 'Tip locuință': 'Home type',
+    'Compartimentare': 'Layout', 'Confort': 'Comfort category', 'Bucătării': 'Kitchens', 'Bucătărie': 'Kitchen',
+    'Suprafață construită': 'Built area', 'Supr. utilă totală': 'Total usable area', 'Suprafață teren': 'Plot area',
+    'Suprafață desfășurată': 'Gross floor area', 'Suprafață totală clădiri': 'Total building area', 'Suprafață platformă': 'Platform area',
+    'Balcoane': 'Balconies', 'Balcon': 'Balcony', 'Terase': 'Terraces', 'Terasă': 'Terrace', 'Etaj': 'Floor', 'Nr. niveluri': 'Number of levels',
+    'Nr. niveluri imobil': 'Floors in building', 'Niveluri': 'Levels', 'Nivel': 'Level', 'An construcție': 'Year built', 'An renovare': 'Year renovated',
+    'Tip imobil': 'Building type', 'Tip proprietate / imobil': 'Property / building type', 'Structură clădire': 'Building structure',
+    'Perioada construcției': 'Construction period', 'Stadiu construcție': 'Construction stage', 'Stare interior': 'Interior condition',
+    'Mobilat': 'Furnished', 'Garaje': 'Garages', 'Garaj': 'Garage', 'Locuri de parcare': 'Parking spaces', 'Loc de parcare': 'Parking space',
+    'Clasă birouri': 'Office class', 'Grad de ocupare': 'Occupancy rate', 'Stare imobil': 'Building condition', 'Vad': 'Footfall location',
+    'Recomandare utilizare': 'Recommended use', 'Număr camere': 'Number of rooms', 'Suprafață cameră': 'Room size', 'Coridor': 'Corridor',
+    'Venit mediu pe zi': 'Average daily revenue', 'Ocupare medie': 'Average occupancy', 'RevPAR': 'RevPAR', 'Clasificare': 'Classification',
+    'Front stradal': 'Street frontage', 'Nr. fronturi stradale': 'Number of street frontages', 'Înclinație': 'Slope', 'Lățime drum acces': 'Access road width',
+    'P.O.T.': 'Site coverage (P.O.T.)', 'C.U.T.': 'Floor area ratio (C.U.T.)', 'Regim înălțime': 'Height regime', 'Construcții pe teren': 'Buildings on the plot',
+    'Lot din parcelare': 'Lot in a subdivision', 'Destinație': 'Designated use', 'Clasă energetică': 'Energy class', 'Disponibil din': 'Available from',
+    'Casă pasivă': 'Passive house', 'Da': 'Yes',
+    /* grupuri de dotări */
+    'Utilități': 'Utilities', 'Încălzire': 'Heating', 'Climatizare': 'Air conditioning', 'Internet': 'Internet', 'Spații utile': 'Storage and utility rooms',
+    'Facilități imobil': 'Building amenities', 'Servicii imobil': 'Building services', 'Electrocasnice': 'Appliances', 'Contorizare': 'Metering',
+    'Diverse': 'Other', 'Servicii hoteliere': 'Hotel services', 'Dotări': 'Equipment', 'Acces': 'Access', 'Amenajare străzi': 'Street development',
+    'Alte caracteristici': 'Other features', 'Pereți': 'Walls', 'Podele': 'Floors', 'Ferestre termopan': 'Double-glazed windows', 'Uși interior': 'Interior doors',
+    'Ușă intrare': 'Entrance door', 'Rulouri / obloane': 'Roller shutters', 'Jaluzele': 'Blinds', 'Izolații termice': 'Thermal insulation',
+
+    /* ── VALORI (din CRM / nomenclatorul Imobiliare.ro) ── */
+    'Decomandat': 'Separate rooms (decomandat)', 'Semidecomandat': 'Semi-separate rooms', 'Nedecomandat': 'Walk-through rooms', 'Circular': 'Circular layout',
+    'Confort 1': 'Category 1', 'Confort 2': 'Category 2', 'Confort 3': 'Category 3', 'Confort lux': 'Luxury', 'Lux': 'Luxury',
+    'Nou': 'New', 'Renovat': 'Renovated', 'Bună': 'Good', 'Necesită renovare': 'Needs renovation',
+    'Complet': 'Fully furnished', 'Parțial': 'Partly furnished', 'Nemobilat': 'Unfurnished', 'Mobilat complet': 'Fully furnished', 'Parțial mobilat': 'Partly furnished',
+    'Subteran': 'Underground', 'Supraterană': 'Above ground', 'Loc parcare': 'Parking space',
+    'Centrală bloc': 'Building central heating', 'Alt sistem': 'Other system',
+    'Stradal': 'Street-front', 'Mall': 'Mall', 'Zonă business': 'Business district',
+    'Există': 'Existing', 'În construcție': 'Under construction', 'Proiect': 'Project', 'Finalizată': 'Completed', 'La gri': 'Shell and core', 'La roșu': 'Structure only',
+    'Modernizat': 'Modernised', 'Nemodernizat': 'Not modernised',
+    'Pentru investiție': 'Investment', 'Pentru utilizare proprie': 'Own use', 'Există și produce venituri': 'Operating and generating income',
+    'Construcții': 'Building land', 'Agricol': 'Agricultural', 'Investiții': 'Investment', 'Pădure': 'Forest', 'Livadă': 'Orchard', 'Fâneață': 'Hayfield', 'Pășune': 'Pasture', 'Heleșteu': 'Pond',
+    'Spații comerciale': 'Commercial spaces', 'Spații industriale': 'Industrial spaces', 'Proprietăți speciale': 'Special properties',
+    'Teren pentru investiții': 'Investment land', 'Hoteluri / Casă de oaspeți': 'Hotels / guesthouses', 'Birouri': 'Offices',
+    'Interior': 'Interior', 'Exterior': 'Exterior', 'Intravilan': 'Inside the built-up area', 'Extravilan': 'Outside the built-up area',
+    'Rezidențial': 'Residential', 'Comercial': 'Commercial', 'Industrial': 'Industrial', 'De vacanță': 'Holiday',
+    'Triplex': 'Triplex', 'Înșiruită': 'Terraced', 'Altele': 'Other',
+    'Bloc de apartamente': 'Apartment building', 'Centru comercial': 'Shopping centre', 'Spațiu stradal': 'Street-front space', 'Showroom': 'Showroom',
+    'Depozitare': 'Storage', 'Logistică': 'Logistics', 'Producție/Servicii': 'Production/services', 'Clădire de birouri': 'Office building', 'Clădire mixtă': 'Mixed-use building',
+    'Beton': 'Concrete', 'Cărămidă': 'Brick', 'BCA': 'AAC blocks', 'Lemn': 'Wood', 'Metalică': 'Steel', 'Chirpici/Văiugă': 'Adobe', 'Zidărie': 'Masonry',
+    'Pereți sandwich': 'Sandwich panels', 'Prefabricate': 'Prefabricated',
+    'Înainte de 1941': 'Before 1941', 'Între 1941 și 1977': '1941–1977', 'Între 1978 și 1990': '1978–1990', 'Între 1991 și 2000': '1991–2000',
+    'Între 2001 și 2010': '2001–2010', 'După 2010': 'After 2010',
+    'Parter': 'Ground floor', 'Demisol': 'Semi-basement', 'Mansardă': 'Attic', 'Ultimele 2 etaje': 'Top two floors', 'Subsol': 'Basement',
+    'Tabla': 'Metal sheet', 'Tablă': 'Metal sheet', 'Țiglă': 'Tiles', 'Țiglă ceramică': 'Ceramic tiles', 'Țiglă metalică': 'Metal tiles', 'Șindrilă': 'Shingles',
+    'Șindrilă bituminoasă': 'Bitumen shingles', 'Terasă (acoperiș plat)': 'Flat roof',
+    'Imediat': 'Immediately', 'Plan': 'Flat', 'Ușor înclinat': 'Gentle slope', 'Înclinat': 'Sloping', 'Debara': 'Closet', 'Cămară': 'Pantry', 'Boxă': 'Storage unit',
+    'Curent': 'Electricity', 'Apă': 'Water', 'Gaze': 'Gas', 'Canalizare': 'Sewerage', 'Căldură': 'Heating', 'Convector gaz': 'Gas convector',
+    'Panouri infraroșu': 'Infrared panels', 'Alte metode electrice': 'Other electric heating', 'Panouri solare': 'Solar panels', 'Fibră optică': 'Fibre optic',
+    'Aer condiționat': 'Air conditioning', 'Utilată': 'Equipped', 'Contorizare individuală': 'Individual metering', 'Piscină': 'Swimming pool', 'Pază': 'Security',
+    /* dotările din nomenclator */
+    'CATV': 'Cable TV', 'Telefon internațional': 'International phone line', 'Fosa septică': 'Septic tank', 'Centrală telefonică': 'Telephone exchange',
+    'Curent trifazic': 'Three-phase power', 'Cablu': 'Cable', 'Electricitate': 'Electricity', 'Sistem irigație': 'Irrigation system', 'Acces rutier': 'Road access',
+    'Calorifere': 'Radiators', 'Centrală imobil': 'Building central heating', 'Centrală proprie': 'Own central heating', 'Încălzire pardoseală': 'Underfloor heating',
+    'Soba/Teracotă': 'Tiled stove', 'Termoficare': 'District heating', 'Pompă caldură': 'Heat pump', 'Aeroterme': 'Air heaters', 'Ventiloconvectoare': 'Fan coil units',
+    'Wireless': 'Wireless', 'Dial-up': 'Dial-up', 'WC Serviciu': 'Guest toilet', 'Boxă la subsol': 'Basement storage unit', 'Pivniță': 'Cellar', 'Dressing': 'Walk-in wardrobe',
+    'Cramă': 'Wine cellar', 'Spațiu depozitare': 'Storage space', 'Dependințe': 'Outbuildings', 'Anexe': 'Annexes', 'Spații agrement': 'Leisure areas', 'Grădină': 'Garden',
+    'Uscătorie': 'Drying room', 'Piscină exterioară': 'Outdoor pool', 'Piscină Privată': 'Private pool', 'Piscină Comună': 'Shared pool', 'Piscină interioară': 'Indoor pool',
+    'Acoperiș': 'Roof', 'Curte comună': 'Shared yard', 'Videointerfon': 'Video intercom', 'Saună': 'Sauna', 'Spa': 'Spa',
+    'Sală de fitness privată': 'Private gym', 'Sală de fitness comună': 'Shared gym', 'Grădină amenajată': 'Landscaped garden', 'Administrare': 'Property management',
+    'Menaj': 'Housekeeping', 'Supraveghere video': 'Video surveillance', 'Faianță': 'Wall tiles', 'Vopsea lavabilă': 'Washable paint', 'Vinarom': 'Vinarom',
+    'Var': 'Lime wash', 'Humă': 'Clay', 'Lambriu': 'Wood panelling', 'Tapet': 'Wallpaper', 'Dușumea': 'Floorboards', 'Gresie': 'Floor tiles', 'Marmură': 'Marble',
+    'Mochetă': 'Carpet', 'Parchet': 'Parquet', 'Linoleum': 'Linoleum', 'PVC': 'PVC', 'Aluminiu': 'Aluminium', 'Celulare': 'Honeycomb', 'Panel': 'Panel', 'Sticlă': 'Glass',
+    'Pal': 'Chipboard', 'Metal': 'Metal', 'Orizontale': 'Horizontal', 'Verticale': 'Vertical', 'Mobilată': 'Furnished', 'Parțial mobilată': 'Partly furnished',
+    'Parțial utilată': 'Partly equipped', 'DVD': 'DVD', 'Fier de călcat': 'Iron', 'Cafetieră': 'Coffee maker', 'Uscător păr': 'Hair dryer', 'Prăjitor pâine': 'Toaster',
+    'Hi-Fi': 'Hi-Fi', 'Mașină de spălat': 'Washing machine', 'Sandwich-maker': 'Sandwich maker', 'Frigider': 'Fridge', 'Cuptor microunde': 'Microwave', 'Aragaz': 'Cooker',
+    'Hotă': 'Cooker hood', 'Mașină spălat vase': 'Dishwasher', 'Robot bucătărie': 'Food processor', 'Aspirator': 'Vacuum cleaner', 'TV': 'TV', 'Contor gaz': 'Gas meter',
+    'Apometre': 'Water meters', 'Contor căldură': 'Heat meter', 'Șemineu': 'Fireplace', 'Scară interioară': 'Interior staircase', 'Jacuzzi': 'Jacuzzi',
+    'Senzor de fum': 'Smoke detector', 'Sistem de alarmă': 'Alarm system', 'Telecomandă poartă garaj': 'Remote-controlled garage door',
+    'Telecomandă poartă acces auto': 'Remote-controlled driveway gate', 'Curățenie': 'Cleaning', 'Lenjerie de pat': 'Bed linen', 'Prosoape': 'Towels',
+    'Transfer aeroport/gară': 'Airport/station transfer', 'Tur oraș': 'City tour', 'Asfaltate': 'Asphalt', 'Betonate': 'Concrete', 'Pietruite': 'Gravel',
+    'De pământ': 'Dirt road', 'Neamenajate': 'Undeveloped', 'Iluminat stradal': 'Street lighting', 'Mijloace de transport în comun': 'Public transport',
+    'Rampă': 'Loading ramp', 'Macara': 'Crane', 'Pod rulant': 'Overhead crane', 'Instalație încălzire': 'Heating system', 'Iluminat': 'Lighting',
+    'Ferestre/luminatoare': 'Windows/skylights', 'Cale ferată': 'Railway', 'Acces TIR': 'HGV access', 'Cale rutieră': 'Road'
+  };
+
+  /* texte care conțin o valoare (zona, numele proiectului): [tipar, înlocuire] */
+  var EN_RE = [
+    [/^Zonă · (.+)$/, function (m, r) { return 'Area · ' + r.replace('Nord București', 'North Bucharest').replace('Ilfov Nord', 'North Ilfov').replace('Exclusivist', 'Exclusive').replace('Parc & Lac', 'Park & Lake').replace('Istoric', 'Historic'); }],
+    [/^Proprietăți de vânzare și închiriere în (.+), cu IMONDO Real Estate\.$/, 'Properties for sale and for rent in $1, with IMONDO Real Estate.'],
+    [/^Momentan nu avem oferte active în (.+)$/, 'We have no active listings in $1 at the moment'],
+    [/^Caut în (.+) →$/, 'Looking in $1 →'],
+    [/^Se încarcă proprietățile din (.+)\.\.\.$/, 'Loading properties in $1...'],
+    [/^Proiect rezidențial în (.+)$/, 'Residential project in $1'],
+    [/^Ansamblu rezidențial în (.+)$/, 'Residential development in $1'],
+    [/^Zona proprietății \(aproximativ, (\d+) m\)\. Adresa exactă se comunică la programarea vizionării\.$/, 'Property area (approximate, $1 m). The exact address is shared when a viewing is booked.'],
+    [/^(.+) — deschide în Google Maps ↗$/, '$1 — open in Google Maps ↗'],
+    [/^Etaj (\d+)$/, 'Floor $1'],
+    [/^· (.+)$/, function (m, r) { return '· ' + (EN[r] || r); }]
+  ];
+
+  function salvata() { try { var l = localStorage.getItem(KEY); return LIMBI.indexOf(l) >= 0 ? l : null; } catch (e) { return null; } }
+  function limba() { return document.documentElement.lang === 'en' ? 'en' : 'ro'; }
+  function curat(s) { return String(s == null ? '' : s).replace(/\s+/g, ' ').trim(); }
+
+  /* RO → limba curentă (text exact din dicționar sau tipar); necunoscut → rămâne cum e */
+  function tr(s, lang) {
+    lang = lang || limba(); if (lang !== 'en' || s == null) return s;
+    var k = curat(s); if (!k) return s;
+    if (Object.prototype.hasOwnProperty.call(EN, k)) return EN[k];
+    for (var i = 0; i < EN_RE.length; i++) { if (EN_RE[i][0].test(k)) return k.replace(EN_RE[i][0], EN_RE[i][1]); }
+    return s;
+  }
+  function areTraducere(s) { var k = curat(s); return Object.prototype.hasOwnProperty.call(EN, k) || EN_RE.some(function (r) { return r[0].test(k); }); }
+
+  /* numărul cere singular doar la 1; în română „de” de la 20 în sus (20 de camere, 101 camere) */
+  function n_(v) { var x = parseFloat(String(v == null ? '' : v).replace(',', '.')); return isFinite(x) ? x : NaN; }
+  function forma(v, cheie, lang) {
+    lang = lang || limba(); var f = (PL[cheie] || {})[lang]; if (!f) return cheie;
+    return n_(v) === 1 ? f[0] : f[1];
+  }
+  function cu(v, cheie, lang) {
+    lang = lang || limba(); var x = n_(v), de = lang === 'ro' && isFinite(x) && x === Math.floor(x) && (x % 100 === 0 ? x > 0 : x % 100 >= 20) ? 'de ' : '';
+    return v + ' ' + de + forma(v, cheie, lang);
+  }
+  function mare(s) { s = String(s || ''); return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  /* traducerea textelor fixe din pagină; originalul se ține minte, ca revenirea la RO să fie exactă */
+  var ORIG = typeof WeakMap === 'function' ? new WeakMap() : null, ATR = ['placeholder', 'aria-label', 'title'];
+  function exclus(el) { return !el || !!el.closest('script,style,noscript,[data-fara-traducere]'); }
+  function fraze(root) {
+    if (!ORIG || !document.body) return;
+    root = root || document.body; var lang = limba();
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), n, lista = [];
+    while ((n = w.nextNode())) lista.push(n);
+    lista.forEach(function (n) {
+      if (exclus(n.parentElement)) return;
+      if (lang === 'en') {
+        var o = ORIG.has(n) ? ORIG.get(n) : n.nodeValue;
+        if (ORIG.has(n) && n.nodeValue !== ORIG.get(n).en) { ORIG.delete(n); o = n.nodeValue; }   // textul s-a schimbat între timp: îl luăm de la capăt
+        var ro = typeof o === 'string' ? o : o.ro;
+        if (!areTraducere(ro)) return;
+        var m = /^(\s*)([\s\S]*?)(\s*)$/.exec(ro), en = m[1] + tr(m[2], 'en') + m[3];
+        if (n.nodeValue !== en) n.nodeValue = en;
+        ORIG.set(n, { ro: ro, en: en });
+      } else if (ORIG.has(n)) {
+        var v = ORIG.get(n); if (n.nodeValue === v.en) n.nodeValue = v.ro; ORIG.delete(n);
+      }
+    });
+    (root.querySelectorAll ? root.querySelectorAll('[' + ATR.join('],[') + ']') : []).forEach(function (el) {
+      if (exclus(el)) return;
+      ATR.forEach(function (a) {
+        var v = el.getAttribute(a); if (v == null) return;
+        var d = 'data-ro-' + a, ro = el.getAttribute(d);
+        if (lang === 'en') { if (ro == null || (v !== tr(ro, 'en'))) { ro = v; } if (!areTraducere(ro)) return; el.setAttribute(d, ro); el.setAttribute(a, tr(ro, 'en')); }
+        else if (ro != null) { el.setAttribute(a, ro); el.removeAttribute(d); }
+      });
+    });
+  }
+
+  /* ce apare după încărcare (carduri, filtre, banner cookie-uri, galerie) se traduce singur */
+  var obs = null, t = null;
+  function urmareste() {
+    if (obs || typeof MutationObserver !== 'function' || !document.body) return;
+    obs = new MutationObserver(function () { if (limba() !== 'en') return; clearTimeout(t); t = setTimeout(function () { fraze(document.body); }, 0); });
+    obs.observe(document.body, { childList: true, subtree: true });
+  }
+
+  /* aplică limba: atributul lang, alegerea ținută minte, textele fixe, apoi anunță paginile (re-randare) */
+  function aplica(lang) {
+    if (LIMBI.indexOf(lang) < 0) lang = 'ro';
+    var schimbat = limba() !== lang;
+    document.documentElement.lang = lang;
+    try { localStorage.setItem(KEY, lang); } catch (e) {}
+    if (document.body) { fraze(document.body); urmareste(); }
+    else document.addEventListener('DOMContentLoaded', function () { fraze(document.body); urmareste(); }, { once: true });
+    if (schimbat) { try { document.dispatchEvent(new CustomEvent('imondo:lang', { detail: { lang: lang } })); } catch (e) {} }
+  }
+
+  window.IMONDO_i18n = { limba: limba, initiala: function () { return salvata() || 'ro'; }, aplica: aplica, tr: tr, areTraducere: areTraducere,
+    forma: forma, cu: cu, mare: mare, fraze: fraze, EN: EN, PL: PL };
+  /* <html lang> corect încă de la încărcare: paginile randate înainte de setLang folosesc deja limba aleasă */
+  if (salvata() === 'en') document.documentElement.lang = 'en';
+})();
+
+/* ════════════════════════════════════════════════════════════════
+   CARDURILE DE PROPRIETATE (prima pagină, vânzări, închirieri, zone, „similare”) — aceleași texte peste tot,
+   în limba curentă, cu singularul corect („1 cameră”, „1 room”). Titlul scris de agent rămâne cum e.
+   ════════════════════════════════════════════════════════════════ */
+(function(){
+  var I = window.IMONDO_i18n;
+  function nr(v) { var x = parseFloat(String(v == null ? '' : v).replace(/\s/g, '').replace(',', '.')); return isFinite(x) ? x : 0; }
+  function inchiriere(p) { var n = String((p && (p.tip_tranzactie || p.tipTranzactie)) || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim(); return n.indexOf('inchir') === 0; }
+  window.IMONDO_card = {
+    /* „300.000 € + TVA / lună” sau „Preț la cerere” (HTML: <small> pentru „/ lună”) */
+    pret: function (p) {
+      var pret = nr(p.pret || p.pret_nou);
+      if (!pret || p.pret_la_cerere === true) return I.tr('Preț la cerere');
+      return new Intl.NumberFormat(I.limba() === 'en' ? 'en-GB' : 'de-DE').format(pret) + ' €' + (p.pret_plus_tva ? (I.limba() === 'en' ? ' + VAT' : ' + TVA') : '') + (inchiriere(p) ? ' <small>' + I.tr('/ lună') + '</small>' : '');
+    },
+    /* titlul: cel scris de agent; dacă lipsește, „Apartament 1 cameră, Floreasca” în limba curentă */
+    titlu: function (p) {
+      if (p.denumire || p.titlu) return p.denumire || p.titlu;
+      var c = p.camere || p.nrCamere || '', tip = I.tr(p.tipologie || p.tipProprietate || 'Proprietate');
+      return tip + (c ? ' ' + I.cu(c, 'camere') : '') + (p.zona ? ', ' + p.zona : '');
+    },
+    eticheta: function (p) { return I.tr(inchiriere(p) ? 'De închiriat' : 'De vânzare'); },
+    /* rândul de sub preț: camere, suprafață, etaj */
+    specs: function (p) {
+      var en = I.limba() === 'en', c = p.camere || p.nrCamere, e = String(p.etaj == null ? '' : p.etaj).trim();
+      return [
+        c ? '🛏 ' + I.cu(c, 'camere') : null,
+        p.suprafata ? '📐 ' + p.suprafata + (en ? ' sqm' : ' mp') : null,
+        e ? '🏢 ' + (/^\d/.test(e) ? (en ? 'Floor ' : 'Et. ') + e : I.tr(e)) : null
+      ].filter(Boolean);
+    }
+  };
+})();

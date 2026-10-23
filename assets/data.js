@@ -11,11 +11,15 @@
 
    Rezultatul are aceeași formă ca un QuerySnapshot (forEach → doc.id, doc.data()), deci paginile
    rămân neschimbate. O singură încărcare pe pagină, oricâte secțiuni o cer.
+
+   CALCULATORUL DE RATĂ (23.10.2026): cifrele vin în `index.credit` (scrise de CRM la regenerarea listei),
+   deci pagina proprietății nu face nicio citire în plus → `snapshot.credit` (null dacă lipsesc).
    ════════════════════════════════════════════════════════════════ */
 const FS_URL = 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 const TIMEOUT_MS = 2000;
 const VIITOR_MAX_MS = 5 * 60 * 1000;
 let _incarcare = null;   // un singur proiect Firebase → o singură încărcare pe pagină
+let _credit = null;      // cifrele calculatorului din index (citit oricum); rămân și dacă lista cade pe citirea directă
 
 function ms(v) { if (v && typeof v.toMillis === 'function') return v.toMillis(); const t = Date.parse(v); return isFinite(t) ? t : 0; }
 
@@ -37,6 +41,7 @@ async function dinCache(F, db) {
   const snap = await F.getDocs(F.collection(db, 'site_cache'));
   const by = {}; snap.forEach(d => { by[d.id] = d.data(); });
   const idx = by.index;
+  if (idx && idx.credit) _credit = idx.credit;
   if (!idx || !(idx.K > 0)) return null;
   const owners = {};
   for (let i = 0; i < idx.K; i++) {
@@ -84,7 +89,7 @@ function primulBun(ps) {
 /* o singură încărcare pe pagină (pagina principală o cere din două secțiuni); după o eroare se poate reîncerca */
 export function incarcaProprietari(db) {
   if (!_incarcare) {
-    _incarcare = incarca(db).then(s => { if (window.IMONDO_DEBUG || /[?&]imondo_debug/.test(location.search)) console.info('[IMONDO] proprietăți din: ' + s.sursa); return s; });
+    _incarcare = incarca(db).then(s => { s.credit = _credit; if (window.IMONDO_DEBUG || /[?&]imondo_debug/.test(location.search)) console.info('[IMONDO] proprietăți din: ' + s.sursa); return s; });
     _incarcare.catch(() => { _incarcare = null; });
   }
   return _incarcare;

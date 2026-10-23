@@ -111,6 +111,10 @@
 .pv-btn.gd{background:var(--g);border-color:var(--g);color:var(--k)}.pv-btn.gd:hover{filter:brightness(1.05)}
 .pd-ag-form{padding:1rem 0 0;margin-top:.6rem}
 .pd-ag-ftitle{font-family:'Playfair Display',serif;font-size:1.1rem}
+/* „Ai o întrebare…?” — discret, sub butoane; deschide formularul fără vizionare (23.10.2026) */
+.pv-intreb{display:block;margin:.9rem auto 0;background:none;border:0;padding:0 0 1px;font-family:'Poppins',sans-serif;font-size:.8rem;color:var(--k3);cursor:pointer;border-bottom:1px solid rgba(201,168,76,.6);text-align:center}
+.pv-intreb:hover,.pv-intreb:focus-visible{color:var(--k);border-bottom-color:var(--g);outline:none}
+.pd-ag-nota{font-size:.76rem;line-height:1.5;color:var(--k3);margin:.2rem 0 .3rem}
 .pv-panel .ref{margin-top:1rem;font-size:.72rem;color:var(--k4)}
 /* similare */
 .pd-similar{background:var(--c, #F9F5EE);padding:80px 4%}
@@ -148,12 +152,12 @@
   <div class="pv-grid">
     <main>
       <header class="pv-head">
-        <h1 id="pvTitle"></h1>
+        <h1 id="pvTitle" data-fara-traducere></h1>
         <div class="pv-meta"><span id="pvLoc"></span><span class="ref" id="pvRef"></span></div>
         <div class="pv-mprice" id="pvMPrice"></div>
       </header>
       <div class="pv-tiles" id="pvTiles"></div>
-      <section class="pv-sec" id="pvDescSec"><h2>Descriere</h2><div class="pv-desc" id="pvDesc"></div><button type="button" class="pv-more" id="pvMore" style="display:none">Vezi mai mult</button></section>
+      <section class="pv-sec" id="pvDescSec"><h2>Descriere</h2><div class="pv-desc" id="pvDesc" data-fara-traducere></div><button type="button" class="pv-more" id="pvMore" style="display:none">Vezi mai mult</button></section>
       <section class="pv-sec" id="pvCarSec" style="display:none"><h2>Caracteristici</h2><dl class="pv-rows" id="pvCar"></dl></section>
       <section class="pv-sec" id="pvFacSec" style="display:none"><h2>Facilități</h2><dl class="pv-rows" id="pvFac"></dl></section>
       <section class="pv-sec" id="pvFinSec" style="display:none"><h2>Finisaje</h2><dl class="pv-rows" id="pvFin"></dl></section>
@@ -188,7 +192,7 @@
       <div class="pv-ppm" id="pvPpm"></div>
       <div class="pv-ag">
         <div class="pd-ag-foto" id="pdAgFoto"><span>IM</span></div>
-        <div><div class="pd-ag-nume" id="pdAgNume">IMONDO Real Estate</div><div class="pd-ag-rol" id="pdAgRol">Consultant dedicat</div></div>
+        <div><div class="pd-ag-nume" id="pdAgNume" data-fara-traducere>IMONDO Real Estate</div><div class="pd-ag-rol" id="pdAgRol">Consultant dedicat</div></div>
       </div>
       <div class="pv-btns">
         <a id="pdAgTel" class="pv-btn pr" href="tel:+40752942828">Sună · <span id="pdAgTelTxt">+40 752 942 828</span></a>
@@ -196,8 +200,10 @@
         <button type="button" class="pv-btn" data-cerere="vizionare">Programează o vizionare</button>
         <a id="pdAgMail" class="pv-btn" href="mailto:officeimondo@gmail.com">Email<span id="pdAgMailTxt" style="display:none"></span></a>
       </div>
+      <button type="button" class="pv-intreb" data-cerere="intrebare">Ai o întrebare despre această proprietate?</button>
         <form class="cform pd-ag-form" id="pdAgForm" action="https://formspree.io/f/mwvzagkq" method="POST" data-lead="proprietate" style="display:none">
           <div class="pd-ag-ftitle" id="pdAgFTitle">Programează o vizionare</div>
+          <p class="pd-ag-nota" id="pdAgNota" style="display:none"></p>
           <input type="hidden" name="sursa" value="pagina proprietății">
           <input type="hidden" name="tip_cerere" id="pdAgTip" value="vizionare">
           <input type="hidden" name="proprietate_ref" id="pdAgRef" value="">
@@ -205,8 +211,8 @@
           <input type="hidden" name="broker" id="pdAgBroker" value="">
           <input type="hidden" name="_subject" id="pdAgSubj" value="Cerere de pe pagina proprietății">
           <div class="fg"><label for="pdAgN">Nume *</label><input id="pdAgN" type="text" name="nume" required autocomplete="name"></div>
-          <div class="fg"><label for="pdAgT">Telefon *</label><input id="pdAgT" type="tel" name="telefon" required autocomplete="tel"></div>
-          <div class="fg"><label for="pdAgE">Email</label><input id="pdAgE" type="email" name="email" autocomplete="email"></div>
+          <div class="fg"><label for="pdAgT" id="pdAgTLab">Telefon *</label><input id="pdAgT" type="tel" name="telefon" required autocomplete="tel"></div>
+          <div class="fg"><label for="pdAgE" id="pdAgELab">Email</label><input id="pdAgE" type="email" name="email" autocomplete="email"></div>
           <div class="fg"><label for="pdAgMsg">Mesaj</label><textarea id="pdAgMsg" name="mesaj"></textarea></div>
           <label style="display:flex;gap:.6rem;align-items:center;font-size:.82rem;color:var(--k3,#5E574C);text-transform:none;letter-spacing:0;cursor:pointer">
             <input type="checkbox" name="ajutor_finantare" value="da" id="pdAgFin" style="accent-color:#C9A84C;width:auto;flex-shrink:0"> Vreau și ajutor cu finanțarea
@@ -259,7 +265,10 @@ function imEv(name){ const a = [name, { property_id: String(curId) }]; if (windo
 const escH = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const has = v => v!==undefined && v!==null && v!==false && String(v).trim()!=='' && !(Array.isArray(v) && !v.length);
 const num = v => { const x = parseFloat(String(v==null?'':v).replace(/\s/g,'').replace(',','.')); return isFinite(x) ? x : 0; };
-const fmtN = (n, d) => new Intl.NumberFormat('ro-RO', { maximumFractionDigits: d || 0 }).format(n);
+/* limba (assets/i18n.js): tr = text românesc → limba curentă; tx = (română, engleză) pentru frazele compuse */
+const I = window.IMONDO_i18n, tr = s => I.tr(s), tx = (ro, en) => I.limba() === 'en' ? en : ro;
+const fmtN = (n, d) => new Intl.NumberFormat(I.limba() === 'en' ? 'en-GB' : 'ro-RO', { maximumFractionDigits: d || 0 }).format(n);
+const MP = () => tx(' mp', ' sqm');
 
 /* etichetele opțiunilor de dotări — aceleași ca în CRM (nomenclatorul Imobiliare.ro, 19.10.2026) */
 const DOT = {"general":{"catv":"CATV","gas":"Gaze","international-phone":"Telefon internațional","phone":"Telefon","power":"Curent","sewerage":"Canalizare","water":"Apă","solar-panels":"Panouri solare","septic-tank":"Fosa septică","telephone-exchange":"Centrală telefonică","three-phase-power":"Curent trifazic","cable":"Cablu","electricity":"Electricitate","irrigation-system":"Sistem irigație","road-access":"Acces rutier","gases":"Gaze","gas-convector":"Convector gaz","infrared-panels":"Panouri infraroșu","other-electrical-methods":"Alte metode electrice"},"heating":{"other-electrical-methods":"Alte metode electrice","radiators":"Calorifere","central-building":"Centrală imobil","central-heating":"Centrală proprie","gas-convector":"Convector gaz","underfloor-heating":"Încălzire pardoseală","infrared-panels":"Panouri infraroșu","tile-stove":"Soba/Teracotă","district-heating":"Termoficare","heat-pump":"Pompă caldură"},"conditioning":{"air-conditioning":"Aer condiționat","air-heaters":"Aeroterme","fan-coil-units":"Ventiloconvectoare"},"internet":{"cable":"Cablu","optic-fibre":"Fibră optică","wireless":"Wireless","dial-up":"Dial-up"},"utility_spaces":{"terrace":"Terasă","service-toilet":"WC Serviciu","basement-storage":"Boxă la subsol","closet":"Debara","basement":"Pivniță","dressing":"Dressing","cellar":"Cramă","storage-space":"Spațiu depozitare","dependencyes":"Dependințe","annexes":"Anexe"},"real_estate_facilities":{"leisure-areas":"Spații agrement","garden":"Grădină","dryer":"Uscătorie","outdoor-pool":"Piscină exterioară","private-pool":"Piscină Privată","common-pool":"Piscină Comună","indoor-pool":"Piscină interioară","elevator":"Lift","intercom":"Interfon","roof":"Acoperiș","yard":"Curte","common-yard":"Curte comună","video-intercom":"Videointerfon","sauna":"Saună","spa":"Spa","private-gym":"Sală de fitness privată","common-gym":"Sală de fitness comună","decorated-garden":"Grădină amenajată"},"real_estate_services":{"administration":"Administrare","housekeeping":"Menaj","security":"Pază","video-surveillance":"Supraveghere video"},"walls":{"faience":"Faianță","washable-paint":"Vopsea lavabilă","vinarom":"Vinarom","lime":"Var","dirt-clay":"Humă","paneling":"Lambriu","wallpaper":"Tapet"},"flooring":{"floor":"Dușumea","floor-tiles":"Gresie","marble":"Marmură","carpet":"Mochetă","parquet":"Parchet","linoleum":"Linoleum"},"double_pane_windows":{"pvc":"PVC","wood":"Lemn","aluminum":"Aluminiu"},"interior_doors":{"cell-phones":"Celulare","wood":"Lemn","panel":"Panel","pvc":"PVC","glass":"Sticlă"},"entrance_door":{"pal":"Pal","wood":"Lemn","metal":"Metal","pvc":"PVC","parquet":"Parchet"},"shutters":{"pvc":"PVC","wood":"Lemn","aluminum":"Aluminiu"},"blind":{"horizontal":"Orizontale","vertical":"Verticale"},"thermal_insulation":{"exterior":"Exterior","interior":"Interior"},"kitchen":{"furnished":"Mobilată","partially-furnished":"Parțial mobilată","equipped":"Utilată","partially-equipped":"Parțial utilată"},"appliances":{"dvd":"DVD","iron":"Fier de călcat","coffee-maker":"Cafetieră","hair-dryer":"Uscător păr","toaster":"Prăjitor pâine","hi-fi":"Hi-Fi","washing-machine":"Mașină de spălat","sandwich-maker":"Sandwich-maker","fridge":"Frigider","microwave":"Cuptor microunde","stove":"Aragaz","hood":"Hotă","dishwasher":"Mașină spălat vase","kitchen-robot":"Robot bucătărie","vacuum-cleaner":"Aspirator","tv":"TV"},"meters":{"gas-meter":"Contor gaz","water-meter":"Apometre","heat-meter":"Contor căldură"},"miscellaneous":{"fireplace":"Șemineu","interior-staircase":"Scară interioară","jacuzzi":"Jacuzzi","smoke-sensor":"Senzor de fum","alarm-system":"Sistem de alarmă","garage-door-remote-control":"Telecomandă poartă garaj","car-door-remote-control":"Telecomandă poartă acces auto"},"hotel_services":{"cleaning":"Curățenie","bed-sheets":"Lenjerie de pat","towels":"Prosoape","airport-transfer-station":"Transfer aeroport/gară","city-tour":"Tur oraș"},"street_development":{"asphalt":"Asfaltate","concrete":"Betonate","paving":"Pietruite","dirt-road":"De pământ","undeveloped":"Neamenajate","street-lighting":"Iluminat stradal","public-transportation":"Mijloace de transport în comun"},"features":{"ramp":"Rampă","crane":"Macara","slide-bridge":"Pod rulant","elevator":"Lift","heating-system":"Instalație încălzire","lighting":"Iluminat","conditioning":"Climatizare","windows-light-sources":"Ferestre/luminatoare"},"access":{"railway":"Cale ferată","truck-access":"Acces TIR","road":"Cale rutieră"}};
@@ -275,12 +284,11 @@ function kindOf(t){
 }
 function tipTranz(p){ const n = n0(p && (p.tip_tranzactie||p.tipTranzactie)); return n.startsWith('vanz') ? 'vanzare' : n.startsWith('inchir') ? 'inchiriere' : ''; }
 const isRentOf = p => tipTranz(p) === 'inchiriere';
-function titleOf(p){
-  const camere = p.camere || p.nrCamere || '';
-  return p.denumire || p.titlu || ((p.tipologie||'Proprietate') + (camere ? ' ' + camere + ' camere' : '') + (p.zona ? ', ' + p.zona : ''));
-}
-const mp = v => has(v) ? fmtN(num(v), 2) + ' mp' : '';
+const titleOf = p => IMONDO_card.titlu(p);   // titlul agentului; fără titlu: „Apartament 1 cameră, Floreasca”
+const mp = v => has(v) ? fmtN(num(v), 2) + MP() : '';
 const da = v => v === true ? 'Da' : '';
+/* eticheta la singular când valoarea e 1 („Bucătărie: 1”, „Balcon: 1”); în română, traducerea o face rowsHtml */
+const sg = (v, cheie) => I.mare(I.forma(v, cheie, 'ro'));
 
 /* suprafața de referință (placă + preț pe mp): utilă la locuințe, utilă totală la spații, teren la terenuri */
 function ariaRef(p, k){
@@ -299,19 +307,19 @@ function caracteristici(p, k){
     ['Tip locuință', 'ah', p.tip_locuinta],
     ['Compartimentare', 'a', p.compartimentare],
     ['Confort', 'a', p.confort],
-    ['Bucătării', 'ah', p.bucatarii],
+    [sg(p.bucatarii, 'bucatarii'), 'ah', p.bucatarii],
     ['Suprafață construită', 'ah', mp(p.suprafata_construita)],
     ['Supr. utilă totală', 'a', mp(p.suprafata_utila_totala)],
     ['Suprafață teren', 'hc', mp(p.suprafata_teren)],
     ['Suprafață desfășurată', 'h', mp(p.suprafata_desfasurata)],
     ['Suprafață totală clădiri', 'c', mp(p.suprafata_totala_cladiri)],
     ['Suprafață platformă', 'c', mp(p.suprafata_platforma)],
-    ['Balcoane', 'ah', has(p.balcoane) ? p.balcoane + (num(p.balcoane_inchise) ? ' (' + p.balcoane_inchise + ' închise)' : '') : ''],
-    ['Terase', 'h', has(p.nr_terase) ? p.nr_terase + (has(p.suprafata_terase) ? ', ' + mp(p.suprafata_terase) : '') : ''],
+    [sg(p.balcoane, 'balcoane'), 'ah', has(p.balcoane) ? p.balcoane + (num(p.balcoane_inchise) ? ' (' + I.cu(p.balcoane_inchise, 'inchise') + ')' : '') : ''],
+    [sg(p.nr_terase, 'terase'), 'h', has(p.nr_terase) ? p.nr_terase + (has(p.suprafata_terase) ? ', ' + mp(p.suprafata_terase) : '') : ''],
     ['Etaj', p.tipologie === 'Duplex' ? 'h' : 'a', etaj()],
     ['Nr. niveluri', 'h', p.nr_niveluri],
     ['Nr. niveluri imobil', 'c', p.total_etaje],
-    ['Niveluri', 'hc', (p.niveluri||[]).join(', ')],
+    [(p.niveluri||[]).length === 1 ? 'Nivel' : 'Niveluri', 'hc', (p.niveluri||[]).join(', ')],
     ['An construcție', 'ahc', p.an_constructie],
     ['An renovare', 'ahc', p.an_renovare],
     ['Tip imobil', 'ac', p.tip_imobil],
@@ -322,8 +330,8 @@ function caracteristici(p, k){
     ['Stare interior', 'ah', p.stare_finisaj],            // „Stare finisaj” mutată aici din secțiunea Finisaje
     ['Mobilat', 'ah', p.mobilat],
     ['Parcare', 'ah', p.parcare && p.parcare !== 'Fără' ? p.parcare : ''],
-    ['Garaje', 'ah', p.garaje],
-    ['Locuri parcare', 'c', p.locuri_parcare],
+    [sg(p.garaje, 'garaje'), 'ah', p.garaje],
+    [sg(p.locuri_parcare, 'locuri_parcare'), 'c', p.locuri_parcare],
     ['Clasă birouri', 'c', p.clasa_birouri],
     ['Grad de ocupare', 'c', has(p.grad_ocupare) ? p.grad_ocupare + '%' : ''],
     ['Stare imobil', 'c', p.stare_imobil],
@@ -348,7 +356,7 @@ function caracteristici(p, k){
     ['Lot din parcelare', 'l', da(p.lot_parcelare)],
     ['Destinație', 'l', (p.scop||[]).join(', ')],
     ['Clasă energetică', 'ahc', p.clasa_energetica],
-    ['Disponibil din', 'ahlc', p.data_disponibilitate ? new Date(p.data_disponibilitate).toLocaleDateString('ro-RO') : ''],
+    ['Disponibil din', 'ahlc', p.data_disponibilitate ? new Date(p.data_disponibilitate).toLocaleDateString(I.limba() === 'en' ? 'en-GB' : 'ro-RO') : ''],
     ['Casă pasivă', 'h', da(p.casa_pasiva)]
   ];
   // dubluri (22.10.2026): un rând care repetă ce spune deja alt rând sau o placă nu se mai afișează
@@ -395,39 +403,45 @@ function dotari(p, k){
   const rows = list => list.filter(g => (GR_KIND[g[0]] || 'ah').includes(k) && G[g[0]] && G[g[0]].length).map(g => [g[1], G[g[0]].join(', ')]);
   return { fac: rows(FAC_GR), fin: rows(FIN_GR) };
 }
-const rowsHtml = R => R.map(r => `<div class="pv-row"><dt>${escH(r[0])}</dt><dd>${escH(r[r.length - 1])}</dd></div>`).join('');
+const trVal = v => String(v).split(', ').map(x => x.split(' / ').map(tr).join(' / ')).join(', ');
+const rowsHtml = R => R.map(r => `<div class="pv-row"><dt>${escH(tr(r[0]))}</dt><dd>${escH(trVal(r[r.length - 1]))}</dd></div>`).join('');
 
 /* galerie mozaic */
 let galImgs = [], galSchite = [];
 window.pdFull = i => { if (galImgs.length && window.IMONDO_lightbox) { IMONDO_lightbox.open(galImgs, i || 0); imEv('galerie_deschisa'); } };
-window.pdSchita = i => { if (window.IMONDO_lightbox) { IMONDO_lightbox.open(galSchite, i, 'Schiță'); imEv('galerie_deschisa'); } };
+window.pdSchita = i => { if (window.IMONDO_lightbox) { IMONDO_lightbox.open(galSchite, i, tr('Schiță')); imEv('galerie_deschisa'); } };
 function renderGallery(p){
-  const fs = window.IMONDO_fotos ? IMONDO_fotos(p) : { fotos: (p.poze||[]).filter(Boolean), schite: [] };
-  galImgs = fs.fotos; galSchite = fs.schite;
+  // schițele NU intră niciodată în mozaic, nici când anunțul are doar schițe: ele au secțiunea „Schițe și planuri”
+  const toate = (p.poze || p.imagini || []).filter(Boolean), sc = new Set(p.poze_schite || []);
+  galImgs = toate.filter(u => !sc.has(u)); galSchite = toate.filter(u => sc.has(u));
   const rent = isRentOf(p), shown = galImgs.length ? galImgs.slice(0, 4) : [FALLBACK_IMG], rest = galImgs.length - 4;
   const g = $('pvGal'); g.className = 'pv-gal n' + Math.min(shown.length, 4);
-  const badge = tipTranz(p) ? `<span class="pv-badge ${rent ? 'i' : ''}">${rent ? 'De închiriat' : 'De vânzare'}</span>` : '';
-  g.innerHTML = shown.map((u, i) => `<button type="button" class="${i ? 'sm' : 'big'}" ${galImgs.length ? `onclick="pdFull(${i})"` : ''} aria-label="Fotografia ${i + 1}${galImgs.length ? ', deschide pe tot ecranul' : ''}">
-      <img src="${escH(u)}" alt="Foto ${i + 1}" ${i ? 'loading="lazy"' : ''} onerror="this.src='${FALLBACK_IMG}'">${i === 0 ? badge : ''}${i === 3 && rest > 0 ? `<span class="more">+${rest} foto</span>` : ''}</button>`).join('');
+  const badge = tipTranz(p) ? `<span class="pv-badge ${rent ? 'i' : ''}">${IMONDO_card.eticheta(p)}</span>` : '';
+  g.innerHTML = shown.map((u, i) => `<button type="button" class="${i ? 'sm' : 'big'}" ${galImgs.length ? `onclick="pdFull(${i})"` : ''} aria-label="${tx('Fotografia', 'Photo')} ${i + 1}${galImgs.length ? tx(', deschide pe tot ecranul', ', open full screen') : ''}">
+      <img src="${escH(u)}" alt="${tx('Foto', 'Photo')} ${i + 1}" ${i ? 'loading="lazy"' : ''} onerror="this.src='${FALLBACK_IMG}'">${i === 0 ? badge : ''}${i === 3 && rest > 0 ? `<span class="more">+${rest} ${tx('foto', 'photos')}</span>` : ''}</button>`).join('');
   if (galSchite.length) {
-    $('pdSchite').innerHTML = galSchite.map((u, i) => `<button type="button" onclick="pdSchita(${i})" aria-label="Schiță ${i + 1}"><img src="${escH(u)}" alt="Schiță ${i + 1}" loading="lazy"></button>`).join('');
+    $('pdSchite').innerHTML = galSchite.map((u, i) => `<button type="button" onclick="pdSchita(${i})" aria-label="${tr('Schiță')} ${i + 1}"><img src="${escH(u)}" alt="${tr('Schiță')} ${i + 1}" loading="lazy"></button>`).join('');
     $('pdSchiteSec').style.display = '';
   }
 }
 
 /* descriere: primele trei paragrafe, apoi „Vezi mai mult” */
 function renderDesc(p){
-  const txt = p.descriere || ('Proprietate ' + (p.tipologie || '') + ' în ' + (p.zona || 'București') + '. Contactați-ne pentru detalii complete și vizionare.');
+  const txt = p.descriere || tx('Proprietate ' + (p.tipologie || '') + ' în ' + (p.zona || 'București') + '. Contactați-ne pentru detalii complete și vizionare.',
+    tr(p.tipologie || 'Proprietate') + ' in ' + (p.zona || 'Bucharest') + '. Contact us for full details and a viewing.');
   const par = String(txt).split(/\n+/).map(s => s.trim()).filter(Boolean);
   $('pvDesc').innerHTML = par.map((s, i) => `<p class="${i >= 3 ? 'ascuns' : ''}">${escH(s)}</p>`).join('');
   if (par.length > 3) {
     const b = $('pvMore'); b.style.display = '';
-    b.onclick = () => { const on = $('pvDesc').classList.toggle('tot'); b.textContent = on ? 'Vezi mai puțin' : 'Vezi mai mult'; };
+    const txtB = () => tr($('pvDesc').classList.contains('tot') ? 'Vezi mai puțin' : 'Vezi mai mult');
+    b.textContent = txtB();
+    b.onclick = () => { $('pvDesc').classList.toggle('tot'); b.textContent = txtB(); };
   }
 }
 
 /* calculator de rată: anuitate, rată lunară constantă. Dobânda = IRCC + marja băncii, din setările CRM
-   (site_cache/credit, publicate din Panou). Fără setări valide, calculatorul nu apare — nicio cifră scrisă în cod. */
+   (publicate din Panou; vin cu lista site-ului, în site_cache/index — nicio citire în plus). Fără setări valide,
+   calculatorul nu apare — nicio cifră scrisă în cod. */
 function rataLunara(credit, dobAn, ani){
   const n = Math.round(ani * 12), r = dobAn / 100 / 12;
   if (!(credit > 0) || !(n > 0)) return 0;
@@ -442,30 +456,30 @@ function renderCalc(p, cr){
   if (!cr || !(cr.ircc >= 0) || !(cr.marja >= 0)) return;
   const dob = Math.round((cr.ircc + cr.marja) * 100) / 100;
   $('pvCalcSec').style.display = '';
-  $('pvAvans').value = cr.avans != null ? cr.avans : '';
-  $('pvAni').value = cr.perioada != null ? cr.perioada : '';
+  if (!renderCalc._initial) { renderCalc._initial = 1; $('pvAvans').value = cr.avans != null ? cr.avans : ''; $('pvAni').value = cr.perioada != null ? cr.perioada : ''; }   // la schimbarea limbii rămân cifrele vizitatorului
   $('pvDob').textContent = pct(dob);
   const zi = String(cr.valabil_la || '').slice(0, 10).split('-').reverse().join('.');
-  $('pvCalcNota').textContent = 'Estimare pe baza IRCC ' + pct(cr.ircc) + ' plus marjă ' + pct(cr.marja) + (zi ? ', valabilă la data ' + zi : '') + '. Nu reprezintă o ofertă de creditare.';
+  $('pvCalcNota').textContent = tx('Estimare pe baza IRCC ' + pct(cr.ircc) + ' plus marjă ' + pct(cr.marja) + (zi ? ', valabilă la data ' + zi : '') + '. Nu reprezintă o ofertă de creditare.',
+    'Estimate based on the IRCC index (' + pct(cr.ircc) + ') plus a bank margin of ' + pct(cr.marja) + (zi ? ', valid on ' + zi : '') + '. This is not a loan offer.');
   const upd = () => {
     const av = Math.min(95, Math.max(0, num($('pvAvans').value))), credit = pret * (1 - av / 100);
     const rata = rataLunara(credit, dob, num($('pvAni').value));
     $('pvRata').textContent = rata ? fmtN(Math.round(rata)) + ' €' : '—';
-    $('pvCredit').textContent = 'Credit: ' + fmtN(Math.round(credit)) + ' € · avans ' + fmtN(Math.round(pret - credit)) + ' €';
+    $('pvCredit').textContent = tx('Credit: ', 'Loan: ') + fmtN(Math.round(credit)) + ' € · ' + tx('avans ', 'down payment ') + fmtN(Math.round(pret - credit)) + ' €';
   };
-  ['pvAvans', 'pvAni'].forEach(id => $(id).addEventListener('input', upd));
+  window.__pvCalcUpd = upd;
+  if (!renderCalc._ascultat) { renderCalc._ascultat = 1; ['pvAvans', 'pvAni'].forEach(id => $(id).addEventListener('input', () => window.__pvCalcUpd && window.__pvCalcUpd())); }
   upd();
 }
 /* finanțare: numărul și WhatsApp-ul AGENȚIEI (assets/contact.js) */
 function renderFinantare(){
   const C = window.IMONDO_CONTACT || {}, tel = String(C.telefon || '').replace(/[^\d+]/g, ''), wa = String(C.whatsapp || tel).replace(/\D/g, '');
   if (tel) { $('pvFinTel').href = 'tel:' + tel; $('pvFinTelTxt').textContent = tel.replace(/^\+40(\d{3})(\d{3})(\d{3})$/, '+40 $1 $2 $3'); }
-  if (wa) $('pvFinWa').href = 'https://wa.me/' + wa + '?text=' + encodeURIComponent('Bună ziua! Aș vrea să discutăm despre finanțarea unei proprietăți de pe imondorealestate.com.');
+  if (wa) $('pvFinWa').href = 'https://wa.me/' + wa + '?text=' + encodeURIComponent(tx('Bună ziua! Aș vrea să discutăm despre finanțarea unei proprietăți de pe imondorealestate.com.', 'Hello! I would like to talk about financing a property listed on imondorealestate.com.'));
 }
 /* bifa „Vreau și ajutor cu finanțarea” → subiectul emailului spune asta din prima */
-document.addEventListener('change', ev => {
-  if (ev.target && ev.target.id === 'pdAgFin') $('pdAgSubj').value = (ev.target.checked ? '[FINANȚARE] ' : '') + 'Cerere de pe pagina proprietății — ref. ' + ($('pdAgRef').value || '');
-});
+function subiect(){ $('pdAgSubj').value = ($('pdAgTip').value === 'intrebare' ? '[ÎNTREBARE] ' : '') + ($('pdAgFin').checked ? '[FINANȚARE] ' : '') + 'Cerere de pe pagina proprietății — ref. ' + ($('pdAgRef').value || ''); }
+document.addEventListener('change', ev => { if (ev.target && ev.target.id === 'pdAgFin') subiect(); });
 
 /* BROKERUL RESPONSABIL: agent_uid → assets/agenti.js; altfel datele agenției */
 function renderBroker(p, agentUid, titlu){
@@ -475,22 +489,40 @@ function renderBroker(p, agentUid, titlu){
   const tel = String(ag.telefon || '').replace(/[^\d+]/g, ''), wa = String(ag.whatsapp || tel).replace(/\D/g, '');
   const ini = String(ag.nume || '').split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase();
   $('pdAgNume').textContent = ag.nume || '';
-  $('pdAgRol').textContent = ag.rol || '';
+  $('pdAgRol').textContent = tr(ag.rol || '');
   $('pdAgFoto').innerHTML = ag.foto ? `<img src="${escH(ag.foto)}" alt="${escH(ag.nume)}" loading="lazy">` : `<span>${escH(ini)}</span>`;
   if (tel) { $('pdAgTel').href = 'tel:' + tel; $('pdAgTelTxt').textContent = tel.replace(/^\+40(\d{3})(\d{3})(\d{3})$/, '+40 $1 $2 $3'); } else $('pdAgTel').style.display = 'none';
   if (ag.email) { $('pdAgMail').href = 'mailto:' + ag.email; $('pdAgMailTxt').textContent = ag.email; } else $('pdAgMail').style.display = 'none';
-  const waText = encodeURIComponent('Bună ziua! Sunt interesat(ă) de proprietatea "' + titlu + '" (ref. ' + (p.id||'') + ') de pe imondorealestate.com. Aș dori mai multe detalii.');
+  const waText = encodeURIComponent(tx('Bună ziua! Sunt interesat(ă) de proprietatea "' + titlu + '" (ref. ' + (p.id||'') + ') de pe imondorealestate.com. Aș dori mai multe detalii.',
+    'Hello! I am interested in the property "' + titlu + '" (ref. ' + (p.id||'') + ') on imondorealestate.com. I would like more details.'));
   if (wa) $('pdWa').href = 'https://wa.me/' + wa + '?text=' + waText;
   $('pdAgRef').value = p.id || ''; $('pdAgTitlu').value = titlu; $('pdAgBroker').value = ag.nume || '';
 }
+/* FORMULARUL din panou: „Programează o vizionare” sau „Ai o întrebare…?” (23.10.2026).
+   Întrebarea: telefonul e opțional, emailul obligatoriu — pentru cine vrea doar să întrebe, fără să fie sunat. */
+let modForm = '';
+function modFormular(mod){
+  modForm = mod; const q = mod === 'intrebare';
+  $('pdAgTip').value = mod;
+  $('pdAgFTitle').textContent = tr(q ? 'Întreabă despre această proprietate' : 'Programează o vizionare');
+  $('pdAgNota').textContent = q ? tr('Scrie-ne întrebarea ta. Răspundem pe email, fără să te sunăm dacă nu ne ceri.') : '';
+  $('pdAgNota').style.display = q ? '' : 'none';
+  $('pdAgMsg').placeholder = tr(q ? 'Întrebarea ta' : 'Când ți-ar conveni? Zile și interval orar.');
+  $('pdAgMsg').removeAttribute('data-ro-placeholder');
+  $('pdAgMsg').required = q;
+  $('pdAgT').required = !q; $('pdAgE').required = q;
+  $('pdAgTLab').textContent = tr(q ? 'Telefon (opțional)' : 'Telefon *');
+  $('pdAgELab').textContent = q ? 'Email *' : 'Email';
+  subiect();
+}
 document.addEventListener('click', ev => {
   const b = ev.target.closest('[data-cerere]'); if (!b) return;
-  $('pdAgTip').value = 'vizionare'; $('pdAgFTitle').textContent = 'Programează o vizionare';
-  $('pdAgMsg').placeholder = 'Când ți-ar conveni? Zile și interval orar.';
-  $('pdAgForm').style.display = 'flex'; $('pvPanel').style.position = 'static'; $('pdAgN').focus();
+  modFormular(b.dataset.cerere === 'intrebare' ? 'intrebare' : 'vizionare');
+  $('pdAgForm').style.display = 'flex'; $('pvPanel').style.position = 'static';
+  (b.dataset.cerere === 'intrebare' ? $('pdAgMsg') : $('pdAgN')).focus();
 });
 
-function showError(msg){ $('propLoading').style.display='none'; $('propContent').style.display='none'; if(msg) $('propErrorMsg').textContent = msg; $('propError').style.display='block'; }
+function showError(msg){ $('propLoading').style.display='none'; $('propContent').style.display='none'; if(msg) $('propErrorMsg').textContent = tr(msg); $('propError').style.display='block'; }
 function getId(){ return new URLSearchParams(location.search).get('id'); }
 
 let allProps = [];
@@ -503,8 +535,8 @@ function render(p){
   $('ogDesc').setAttribute('content', metaDesc);
   document.querySelector('meta[name=description]').setAttribute('content', metaDesc);
   $('canonical').setAttribute('href', 'https://imondorealestate.com/proprietate.html?id=' + encodeURIComponent(p.id || ''));
-  /* schema pentru Google (dinamic): tipul după categorie, adresa doar la nivel de zonă / localitate */
-  try {
+  /* schema pentru Google (dinamic): tipul după categorie, adresa doar la nivel de zonă / localitate — o singură dată */
+  if (!render._schema) try { render._schema = 1;
     const pretNum = num(p.pret || p.pret_nou), r = zonaRegiune(zona);
     const ld = { '@context': 'https://schema.org', '@type': { a: 'Apartment', h: 'SingleFamilyResidence' }[k] || 'Place', name: titlu,
       description: String(p.descriere || metaDesc).slice(0, 300), image: (window.IMONDO_fotos ? IMONDO_fotos(p).fotos : (p.poze || [])).slice(0, 5),
@@ -516,22 +548,23 @@ function render(p){
   } catch (e) {}
   renderGallery(p);
   $('pvTitle').textContent = titlu;
-  $('pvLoc').textContent = '📍 ' + zonaText(zona);
+  $('pvLoc').textContent = '📍 ' + tr(zonaText(zona));
   $('pvRef').textContent = 'ID ' + (p.id || '—');
   $('pdRef').textContent = 'Ref. ' + (p.id || '—');
 
   /* preț + preț pe metru pătrat (calculat) */
   const pret = num(p.pret || p.pret_nou), arie = ariaRef(p, k), laCerere = p.pret_la_cerere === true || !pret;
-  $('pvPrice').innerHTML = laCerere ? 'Preț la cerere' : fmtN(pret) + ' €' + (p.pret_plus_tva ? ' + TVA' : '') + (rent ? ' <small>/ lună</small>' : '');
-  $('pvPpm').textContent = !laCerere && arie ? fmtN(pret / arie, rent ? 1 : 0) + ' €/mp' + (rent ? ' / lună' : '') : '';
+  const luna = tr('/ lună');
+  $('pvPrice').innerHTML = laCerere ? tr('Preț la cerere') : fmtN(pret) + ' €' + (p.pret_plus_tva ? tx(' + TVA', ' + VAT') : '') + (rent ? ' <small>' + luna + '</small>' : '');
+  $('pvPpm').textContent = !laCerere && arie ? fmtN(pret / arie, rent ? 1 : 0) + tx(' €/mp', ' €/sqm') + (rent ? ' ' + luna : '') : '';
   // pe telefon panoul ajunge sub conținut: prețul apare și sub titlu
-  $('pvMPrice').innerHTML = $('pvPrice').innerHTML.replace(/<small>[^<]*<\/small>/, rent ? ' <small>/ lună</small>' : '') + ($('pvPpm').textContent ? ' <small>' + escH($('pvPpm').textContent) + '</small>' : '');
+  $('pvMPrice').innerHTML = $('pvPrice').innerHTML.replace(/<small>[^<]*<\/small>/, rent ? ' <small>' + luna + '</small>' : '') + ($('pvPpm').textContent ? ' <small>' + escH($('pvPpm').textContent) + '</small>' : '');
 
-  /* trei plăci: camere, suprafață utilă, băi (doar cele cu valoare) */
+  /* trei plăci: camere, suprafață utilă, băi (doar cele cu valoare); „1 CAMERĂ”, „1 BAIE” la singular */
   const tiles = [
-    ['Camere', (k === 'a' || k === 'h') && has(p.camere) ? p.camere : ''],
-    [k === 'l' ? 'Suprafață teren' : k === 'c' ? 'Suprafață utilă totală' : 'Suprafață utilă', arie ? fmtN(arie, 2) + ' mp' : ''],
-    ['Băi', (k === 'a' || k === 'h') && has(p.bai) ? p.bai : '']
+    [I.mare(I.forma(p.camere, 'camere')), (k === 'a' || k === 'h') && has(p.camere) ? p.camere : ''],
+    [tr(k === 'l' ? 'Suprafață teren' : k === 'c' ? 'Suprafață utilă totală' : 'Suprafață utilă'), arie ? fmtN(arie, 2) + MP() : ''],
+    [I.mare(I.forma(p.bai, 'bai')), (k === 'a' || k === 'h') && has(p.bai) ? p.bai : '']
   ].filter(t => has(t[1]));
   $('pvTiles').innerHTML = tiles.map(t => `<div class="pv-tile"><b>${escH(t[1])}</b><span>${escH(t[0])}</span></div>`).join('');
   if (!tiles.length) $('pvTiles').style.display = 'none';
@@ -545,6 +578,7 @@ function render(p){
 
   renderHarta(p, zona);
   renderCalc(p, window.__pvCredit);
+  if (modForm) modFormular(modForm);
   renderFinantare();
   renderBroker(p, p._agentUid, titlu);
   $('propLoading').style.display='none'; $('propContent').style.display='';
@@ -552,7 +586,7 @@ function render(p){
   const sim = allProps.filter(x => x.id !== p.id && tipTranz(x) && (isRentOf(x) === rent || (x.zona && x.zona === p.zona))).slice(0, 3);
   if (sim.length) {
     $('pdSimilar').innerHTML = sim.map(x => { const img = (window.IMONDO_fotos ? IMONDO_fotos(x).cover : (x.poze||[])[0]) || FALLBACK_IMG;
-      return `<a class="pcard" href="proprietate.html?id=${encodeURIComponent(x.id||'')}"><div class="pi"><img src="${escH(img)}" alt="" loading="lazy"></div><div class="pbody"><div class="pprice">${num(x.pret) ? fmtN(num(x.pret)) + ' €' : 'Preț la cerere'}</div><div class="ptitle">${escH(titleOf(x))}</div><div class="ploc">📍 ${escH(x.zona||'—')}</div></div></a>`; }).join('');
+      return `<a class="pcard" href="proprietate.html?id=${encodeURIComponent(x.id||'')}"><div class="pi"><img src="${escH(img)}" alt="" loading="lazy"></div><div class="pbody"><div class="pprice">${IMONDO_card.pret(x)}</div><div class="ptitle" data-fara-traducere>${escH(titleOf(x))}</div><div class="ploc">📍 ${escH(x.zona||'—')}</div></div></a>`; }).join('');
     $('pdSimilarSec').style.display = '';
   }
 }
@@ -580,14 +614,15 @@ function renderHarta(p, zona){
   if (pin) link.href = 'https://www.google.com/maps/search/?api=1&query=' + lat + ',' + lng;
   else link.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(zona ? (zonaRegiune(zona).reg === 'Ilfov' ? zonaText(zona) : zona + ', București') : 'București');
   const faraHarta = (!pin && !zc) || !window.L;
-  $('pdMapText').textContent = faraHarta && zona ? zonaText(zona) + ' — deschide în Google Maps ↗' : 'Deschide în Google Maps ↗';
+  $('pdMapText').textContent = tr(faraHarta && zona ? zonaText(zona) + ' — deschide în Google Maps ↗' : 'Deschide în Google Maps ↗');
   if (!pin && !zc) { $('pdMapReal').style.display = 'none'; if (!zona) $('pdLocSec').style.display = 'none'; return; }
   if (!window.L) {
     if (document.readyState !== 'complete' && !renderHarta._asteapta) { renderHarta._asteapta = 1; window.addEventListener('load', () => renderHarta(p, zona), { once: true }); }
     $('pdMapReal').style.display = 'none'; return; }
   $('pdMapReal').style.display = '';
-  $('pdMapNote').textContent = pin ? 'Poziția proprietății. Adresa exactă se comunică la programarea vizionării.'
-    : 'Zona proprietății (aproximativ, ' + (window.IMONDO_RAZA_ZONA_M || 450) + ' m). Adresa exactă se comunică la programarea vizionării.';
+  $('pdMapNote').textContent = tr(pin ? 'Poziția proprietății. Adresa exactă se comunică la programarea vizionării.'
+    : 'Zona proprietății (aproximativ, ' + (window.IMONDO_RAZA_ZONA_M || 450) + ' m). Adresa exactă se comunică la programarea vizionării.');
+  if (window.__pdHarta) return;   // la schimbarea limbii: doar textele, harta rămâne
   const c = pin ? [lat, lng] : zc;
   const map = L.map('pdMapCanvas', { scrollWheelZoom: false, attributionControl: true }).setView(c, pin ? 16 : 15);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(map);
@@ -602,20 +637,20 @@ async function init(){
   if(!id){ showError('Lipsește identificatorul proprietății din adresă.'); return; }
   try{
     const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js');
-    const { getFirestore, getDoc, doc } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+    const { getFirestore } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
     const appId = 'imondo-prop';
     const fbApp = getApps().find(a=>a.name===appId) || initializeApp(FIREBASE_CONFIG, appId);
     const db = getFirestore(fbApp);
-    // setările calculatorului (publicate din CRM); dacă citirea eșuează, calculatorul nu apare — restul paginii merge
-    const creditP = getDoc(doc(db, 'site_cache', 'credit')).then(d => d && d.exists() ? d.data() : null).catch(() => null);
+    // setările calculatorului vin cu lista (site_cache/index.credit) — nicio citire în plus; lipsă → calculatorul nu apare
     const snap = await (await import('/assets/data.js')).incarcaProprietari(db);
-    window.__pvCredit = await creditP;
+    window.__pvCredit = snap.credit || null;
     snap.forEach(doc=>{ (doc.data().proprietati||[]).forEach(p=>{ const st=(p.status||'').toLowerCase(); if(st==='activ'||st==='active') allProps.push({...p,_ownerId:doc.id}); }); });
     const prop = allProps.find(p => String(p.id) === String(id));
     if(!prop){ showError('Anunțul căutat nu mai este disponibil sau a fost retras.'); return; }
     snap.forEach(d => { if (d.id === prop._ownerId) prop._agentUid = (d.data() || {}).agent_uid || ''; });
     curId = prop.id;
     render(prop);
+    document.addEventListener('imondo:lang', () => render(prop));   // schimbarea limbii: pagina se reface în limba nouă
     imEv('vizualizare_proprietate');
   }catch(err){
     console.warn('IMONDO proprietate:', err.message);
