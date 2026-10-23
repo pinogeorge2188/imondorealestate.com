@@ -642,7 +642,7 @@ async function init(){
     const fbApp = getApps().find(a=>a.name===appId) || initializeApp(FIREBASE_CONFIG, appId);
     const db = getFirestore(fbApp);
     // setările calculatorului vin cu lista (site_cache/index.credit) — nicio citire în plus; lipsă → calculatorul nu apare
-    const snap = await (await import('/assets/data.js')).incarcaProprietari(db);
+    const D = await import('/assets/data.js?v=20261023'), snap = await D.incarcaProprietari(db);   // ?v= : nu amesteca pagina nouă cu un data.js vechi din cache
     window.__pvCredit = snap.credit || null;
     snap.forEach(doc=>{ (doc.data().proprietati||[]).forEach(p=>{ const st=(p.status||'').toLowerCase(); if(st==='activ'||st==='active') allProps.push({...p,_ownerId:doc.id}); }); });
     const prop = allProps.find(p => String(p.id) === String(id));
@@ -651,6 +651,8 @@ async function init(){
     curId = prop.id;
     render(prop);
     document.addEventListener('imondo:lang', () => render(prop));   // schimbarea limbii: pagina se reface în limba nouă
+    // lista a întârziat (a câștigat citirea directă): calculatorul apare când sosesc cifrele, din aceeași citire
+    if (!window.__pvCredit && D.creditCalculator) D.creditCalculator().then(cr => { if (cr && !window.__pvCredit) { window.__pvCredit = cr; renderCalc(prop, cr); } });
     imEv('vizualizare_proprietate');
   }catch(err){
     console.warn('IMONDO proprietate:', err.message);
